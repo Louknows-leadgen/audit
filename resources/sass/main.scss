@@ -784,6 +784,7 @@ div[data-tabcontent].actv{
 
 .app-checkbox:hover .checkmark{
   background-color: #ccc;
+  cursor: pointer;
 }
 
 .app-checkbox input:checked ~ .checkmark{

@@ -1,6 +1,28 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="box">
+			<div class="row mb-3">
+				<div class="col-md-4">
+					<button class="btn btn-secondary select-all">Select All</button>
+					<button class="btn btn-secondary deselect-all">Deselect All</button>
+				</div>
+				<div class="col-md-5 d-flex">
+					<label class="mr-2 my-0 align-self-center">Assign to:</label>
+					<div class="flex-grow-1">
+						<select class="custom-select">
+							@foreach($teams as $team)
+								<option value="{{ $team->code }}">
+									{{ $team->name }}
+								</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary">Assign</button>
+				</div>
+			</div>
+
 			<table class="table table-bordered table-responsive w-100 d-block d-md-table">
 				<thead>
 					<tr>

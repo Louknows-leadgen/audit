@@ -195,7 +195,12 @@ $(document).ready(function(){
 	//-----------------------------------------------------------------------------
 
 
-
+	$(document).on('click','.select-all',function(){
+		$('.app-checkbox input').prop('checked',true);
+	});
+	$(document).on('click','.deselect-all',function(){
+		$('.app-checkbox input').prop('checked',false);
+	});
 
 
 });
