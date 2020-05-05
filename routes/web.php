@@ -13,7 +13,11 @@
 
 Route::get('/','SuperAdminController@index')->name('root');
 Route::get('/admin','AdminController@index')->name('admin.index');
+
 Route::get('/supervisor','SupervisorController@index')->name('supervisor.index');
+Route::get('/search-calls','SupervisorController@search_calls')->name('supervisor.search_calls');
+Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');
+
 Route::get('/auditor','AuditorController@index')->name('auditor.index');
 
 Route::get('/account','UserController@index')->name('user.index');

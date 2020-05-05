@@ -34,6 +34,7 @@ $(document).ready(function(){
 				dateFormat: 'mm/dd/YYYY',
 				timeFormat: "GG:ii A",
 				timeIncrement: false,
+				timeStepMinutes: 1,
 				timeSeconds: false
 			});
 		};
@@ -202,6 +203,62 @@ $(document).ready(function(){
 		$('.app-checkbox input').prop('checked',false);
 	});
 
+
+	$(document).on('submit','.calllogs-search',function(e){
+		e.preventDefault();
+
+		var form = $(this);
+		var method = form.attr('method');
+		var url = form.attr('action');
+		var form_data = {};
+		var result_container = $('.calllogs-list');
+
+		form.find('[name]').each(function(){
+			// form_data[this.name] = this.value;
+			form_data[this.name] = $(this).val();
+			
+		});
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: form_data,
+			success: function(response){
+				result_container.empty()
+								.append(response);
+			}
+		});
+	});
+
+	$(document).on('submit','.calllog-form',function(e){
+		e.preventDefault();
+
+		var form = $(this);
+		var url = form.attr('action');
+		var method = form.attr('method');
+		var calllogs = form.find('[name]:checked');
+		var assigned_team = form.find('[name="assigned_team"]');
+		var calllogs_cntnr = $('.calllogs-list');
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: {
+				calllogs: calllogs,
+				assigned_team: assigned_team
+			},
+			success: function(response){
+				
+			}
+		});
+
+	});
 
 });
 

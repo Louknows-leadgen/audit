@@ -22,9 +22,24 @@ class SupervisorController extends Controller
     	$dispositions = Disposition::all();
 
     	// default from and to date
-    	$currentDt_raw = new DateTime("now", new DateTimeZone('Asia/Kuala_Lumpur'));
-    	$curr_dt = $currentDt_raw->format('m/d/Y, H:i:s');
+    	$from_raw = new DateTime("yesterday", new DateTimeZone('Asia/Kuala_Lumpur'));
+    	$from_dt = $from_raw->format('m/d/Y g:i A');
+    	$to_dt = date('m/d/Y g:i A',strtotime('+23 hour +59 minutes',strtotime($from_dt)));
 
-    	return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','curr_dt'));
+    	return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','from_dt','to_dt'));
+    }
+
+    public function search_calls(Request $request){
+    	$from = $request->from;
+    	$to = $request->to;
+    	$sid = $request->sid;
+    	$campaign = $request->campaign;
+    	$dispo = $request->dispo;
+    	$calls = CallLog::search_call_logs($from,$to,$sid,$campaign,$dispo);
+    	return view('call_log.search_result',compact('calls'));
+    }
+
+    public function assign_calls(Request $request){
+        return 'test';
     }
 }
