@@ -203,6 +203,19 @@ $(document).ready(function(){
 		$('.app-checkbox input').prop('checked',false);
 	});
 
+	$(document).on('click','.select-custom',function(){
+		var select_input = $('.input-select-custom').val();
+		var rows = $('.calllogs-list').children();
+
+		rows.each(function(idx,el){
+			if(idx < select_input)
+				$(el).find('.app-checkbox input').prop('checked',true);
+			else
+				return false;
+		});
+
+	});
+
 
 	$(document).on('submit','.calllogs-search',function(e){
 		e.preventDefault();
@@ -236,9 +249,15 @@ $(document).ready(function(){
 		var form = $(this);
 		var url = form.attr('action');
 		var method = form.attr('method');
-		var calllogs = form.find('[name]:checked');
-		var assigned_team = form.find('[name="assigned_team"]');
+		var clogs = form.find('[name]:checked');
+		var assigned_team = form.find('[name="assigned_team"]').val();
 		var calllogs_cntnr = $('.calllogs-list');
+		var notif = $('.cl-alert');
+
+		var calls = [];
+		clogs.each(function(){
+			calls.push(this.value);
+		});
 
 		$.ajaxSetup({
 	        headers: {
@@ -250,11 +269,35 @@ $(document).ready(function(){
 			url: url,
 			method: method,
 			data: {
-				calllogs: calllogs,
+				calllogs: calls,
 				assigned_team: assigned_team
 			},
 			success: function(response){
-				
+				notif.children('strong').empty();
+				notif.children('span').empty();
+
+				if(!$.isEmptyObject(response.errors)){
+					notif.children('strong').append('Error! ');
+                    for (var key in response.errors) {
+					    if (Object.prototype.hasOwnProperty.call(response.errors, key)) {
+					        notif.children('span').append(response.errors[key]);
+
+					        notif.removeClass('alert-success alert-danger')
+					             .addClass('alert-danger');
+					    }
+					}
+                }else{
+                	form.find('[name]:checked').parents('tr').children().fadeOut(700);
+                	notif.children('strong').append('Success! ');
+                	notif.children('span').append(response.success);
+                	notif.removeClass('alert-success alert-danger')
+                		 .addClass('alert-success');
+                }
+                notif.fadeIn(300,function(){
+                	setTimeout(function(){
+                		notif.fadeOut(300);
+                	},2000);
+                });
 			}
 		});
 

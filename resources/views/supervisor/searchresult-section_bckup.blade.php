@@ -8,31 +8,32 @@
 		<div class="box">
 			<form class="calllog-form" action="{{ route('supervisor.assign_calls') }}" method="post">
 				<div class="row mb-3">
-					<div class="col-md-7 mb-2">
-						<div class="d-flex align-items-start">
-							<div class="input-group mr-2">
-								<input type="number" class="form-control input-select-custom">
-								<div class="input-group-append">
-									<span class="btn btn-secondary select-custom">Select</span>
-								</div>
-							</div>
-							<div class="btn btn-secondary w-75 mr-2 select-all">Select All</div>
-							<div class="btn btn-secondary w-75 mr-2 deselect-all">Deselect All</div>
-						</div>
+					<div class="col-md-4">
+						<span class="btn btn-secondary select-all">Select All</span>
+						<span class="btn btn-secondary deselect-all">Deselect All</span>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-5 d-flex">
+						<label class="mr-2 my-0 align-self-center">Assign to:</label>
+						<div class="flex-grow-1">
 							<select class="custom-select" name="assigned_team">
-								<optgroup label="Teams/Group">
-									@foreach($teams as $team)
-										<option value="{{ $team->code }}">
-											{{ $team->name }}
-										</option>
-									@endforeach
-								</optgroup>
+								@foreach($teams as $team)
+									<option value="{{ $team->code }}">
+										{{ $team->name }}
+									</option>
+								@endforeach
 							</select>
+						</div>
 					</div>
 					<div class="col-md-2">
 						<button class="btn btn-primary">Assign</button>
+					</div>
+					<div class="col-md-3">
+						<div class="input-group mt-2">
+							<input type="number" class="form-control">
+							<div class="input-group-append">
+								<span class="btn btn-secondary" type="submit">Select</span>
+							</div>
+						</div>
 					</div>
 				</div>
 

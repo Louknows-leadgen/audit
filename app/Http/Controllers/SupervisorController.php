@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\CallLog;
 use App\Models\Team;
@@ -15,7 +16,7 @@ class SupervisorController extends Controller
 {
     //
     public function index(){
-    	$calllogs = CallLog::all();
+    	$calllogs = CallLog::available_calllogs();
     	$teams = Team::all();
     	$servers = Server::all();
     	$campaigns = Campaign::all();
@@ -40,6 +41,22 @@ class SupervisorController extends Controller
     }
 
     public function assign_calls(Request $request){
-        return 'test';
+        $validator = Validator::make($request->all(),[
+            'calllogs' => 'required'
+        ],[
+            'calllogs.required' => 'No selected call logs'
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
+        }else{
+            $calllogs = $request->calllogs;
+            foreach ($calllogs as $calllog) {
+                $c = CallLog::find($calllog);
+                $c->team_code = $request->assigned_team;
+                $c->save();
+            }
+            return response()->json(['success'=>'Assigned call logs']);
+        }
     }
 }

@@ -50,8 +50,13 @@ class CallLog extends Model
                  ->whereIn('server_ip',$sid)
                  ->whereIn('campaign',$campaign)
                  ->whereIn('dispo',$dispo)
+                 ->whereNull('team_code')
                  ->get();
 
         return $calls;
+    }
+
+    public static function available_calllogs(){
+        return self::whereNull('team_code')->get();
     }
 }
