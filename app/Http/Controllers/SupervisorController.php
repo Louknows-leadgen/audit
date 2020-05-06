@@ -53,8 +53,11 @@ class SupervisorController extends Controller
             $calllogs = $request->calllogs;
             foreach ($calllogs as $calllog) {
                 $c = CallLog::find($calllog);
-                $c->team_code = $request->assigned_team;
-                $c->save();
+                // make sure calllog is not yet assigned before assigning it
+                if(!isset($c->team_code)){
+                    $c->team_code = $request->assigned_team;
+                    $c->save();
+                }
             }
             return response()->json(['success'=>'Assigned call logs']);
         }

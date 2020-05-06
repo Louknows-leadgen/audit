@@ -251,7 +251,6 @@ $(document).ready(function(){
 		var method = form.attr('method');
 		var clogs = form.find('[name]:checked');
 		var assigned_team = form.find('[name="assigned_team"]').val();
-		var calllogs_cntnr = $('.calllogs-list');
 		var notif = $('.cl-alert');
 
 		var calls = [];
@@ -287,12 +286,17 @@ $(document).ready(function(){
 					    }
 					}
                 }else{
-                	form.find('[name]:checked').parents('tr').children().fadeOut(700);
+                	var rows = form.find('[name]:checked').parents('tr');
+                	rows.children().fadeOut(700,function(){
+                		rows.remove();
+                	});
+
                 	notif.children('strong').append('Success! ');
                 	notif.children('span').append(response.success);
                 	notif.removeClass('alert-success alert-danger')
                 		 .addClass('alert-success');
                 }
+
                 notif.fadeIn(300,function(){
                 	setTimeout(function(){
                 		notif.fadeOut(300);
