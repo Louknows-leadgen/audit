@@ -216,6 +216,58 @@ $(document).ready(function(){
 
 	});
 
+	$(document).on('submit','.claim-call',function(e){
+		var row_cntr = $(this).parents('tr');
+		var url = $(this).attr('action');
+		var method = $(this).attr('method');
+		var notif = $('.cl-alert');
+		var form_data = {};
+
+		$(this).find('[name]').each(function(){
+			form_data[this.name] = this.value;
+		});
+
+		e.preventDefault();
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+	    $.ajax({
+	    	url: url,
+	    	method: method,
+	    	data: form_data,
+	    	success: function(response){
+	    		notif.children('strong').empty();
+				notif.children('span').empty();
+
+	    		if(!$.isEmptyObject(response.errors)){
+	    			notif.children('strong').append('Error! ');
+
+	    			for (var key in response.errors) {
+					        notif.children('span').append(response.errors[key]);
+					}
+					notif.removeClass('alert-success alert-danger')
+					     .addClass('alert-danger');
+	    		}else{
+	    			notif.children('strong').append('Success! ');
+                	notif.children('span').append(response.success);
+                	notif.removeClass('alert-success alert-danger')
+                		 .addClass('alert-success');
+	    		}
+	    		
+	    		row_cntr.children('td').fadeOut(700);
+	    		notif.fadeIn(300,function(){
+                	setTimeout(function(){
+                		notif.fadeOut(300);
+                	},2000);
+                });
+	    	}
+	    });
+	});
+
 
 	$(document).on('submit','.calllogs-search',function(e){
 		e.preventDefault();
@@ -277,12 +329,11 @@ $(document).ready(function(){
 
 				if(!$.isEmptyObject(response.errors)){
 					notif.children('strong').append('Error! ');
+					notif.removeClass('alert-success alert-danger')
+					     .addClass('alert-danger');
                     for (var key in response.errors) {
 					    if (Object.prototype.hasOwnProperty.call(response.errors, key)) {
 					        notif.children('span').append(response.errors[key]);
-
-					        notif.removeClass('alert-success alert-danger')
-					             .addClass('alert-danger');
 					    }
 					}
                 }else{

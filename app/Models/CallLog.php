@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use \DateTime;
 
 class CallLog extends Model
@@ -58,5 +59,25 @@ class CallLog extends Model
 
     public static function available_calllogs(){
         return self::whereNull('team_code')->get();
+    }
+
+    public static function team_available_logs($auditor_id){
+        $user = User::find($auditor_id);
+        $user_teams = $user->user_teams;
+        $teams = [];
+
+        foreach ($user_teams as $user_team) {
+            array_push($teams,$user_team->team_code);
+        }
+
+        return self::whereIn('team_code',$teams)
+                   ->where('is_claimed','=',0)
+                   ->get();
+    }
+
+    public static function is_available($call_id){
+        return self::where('ctr','=',$call_id)
+                   ->where('is_claimed','=',0)
+                   ->exists();
     }
 }

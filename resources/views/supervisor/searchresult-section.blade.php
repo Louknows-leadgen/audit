@@ -37,7 +37,7 @@
 				</div>
 
 				<table class="table table-bordered table-responsive w-100 d-block d-md-table">
-					<thead>
+					<thead class="thead-dark">
 						<tr>
 							<th></th>
 							<th>Recording Id</th>

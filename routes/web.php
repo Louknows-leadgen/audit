@@ -19,6 +19,7 @@ Route::get('/search-calls','SupervisorController@search_calls')->name('superviso
 Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');
 
 Route::get('/auditor','AuditorController@index')->name('auditor.index');
+Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
 
 Route::get('/account','UserController@index')->name('user.index');
 Route::put('/account/update','UserController@update_account')->name('user.update_account');
