@@ -203,6 +203,7 @@ $(document).ready(function(){
 		$('.app-checkbox input').prop('checked',false);
 	});
 
+	// set a number of checkbox to be checked base on the input
 	$(document).on('click','.select-custom',function(){
 		var select_input = $('.input-select-custom').val();
 		var rows = $('.calllogs-list').children();
@@ -216,6 +217,7 @@ $(document).ready(function(){
 
 	});
 
+	// auditor claim a single call log
 	$(document).on('submit','.claim-call',function(e){
 		var row_cntr = $(this).parents('tr');
 		var url = $(this).attr('action');
@@ -245,12 +247,12 @@ $(document).ready(function(){
 
 	    		if(!$.isEmptyObject(response.errors)){
 	    			notif.children('strong').append('Error! ');
+	    			notif.removeClass('alert-success alert-danger')
+					     .addClass('alert-danger');
 
 	    			for (var key in response.errors) {
 					        notif.children('span').append(response.errors[key]);
 					}
-					notif.removeClass('alert-success alert-danger')
-					     .addClass('alert-danger');
 	    		}else{
 	    			notif.children('strong').append('Success! ');
                 	notif.children('span').append(response.success);
@@ -258,7 +260,9 @@ $(document).ready(function(){
                 		 .addClass('alert-success');
 	    		}
 	    		
-	    		row_cntr.children('td').fadeOut(700);
+	    		row_cntr.children('td').fadeOut(700,function(){
+	    			row_cntr.remove();
+	    		});
 	    		notif.fadeIn(300,function(){
                 	setTimeout(function(){
                 		notif.fadeOut(300);
@@ -268,7 +272,78 @@ $(document).ready(function(){
 	    });
 	});
 
+	// auditor claim bulk call logs
+	$(document).on("submit",".bulk-claim",function(e){
+		e.preventDefault();
 
+		var url = $(this).attr('action');
+		var method = $(this).attr('method');
+		var notif = $('.cl-alert');
+		var container = $('.calllogs-list');
+		var selected = container.find('input:checked');
+
+		var calls = [];
+		selected.each(function(){
+			calls.push(this.value);
+		});
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: {
+				calllogs: calls
+			},
+			success: function(response){
+				notif.children('strong').empty();
+				notif.children('span').empty();
+
+				if(!$.isEmptyObject(response.errors)){
+	    			notif.children('strong').append('Error! ');
+	    			notif.removeClass('alert-success alert-danger')
+					     .addClass('alert-danger');
+
+	    			for (var key in response.errors) {
+					        notif.children('span').append(response.errors[key]);
+					}
+	    		}else{
+	    			notif.children('strong').append('Success! ');
+                	notif.children('span').append(response.success);
+                	notif.removeClass('alert-success alert-danger')
+                		 .addClass('alert-success');
+	    		}
+	    		
+	    		selected.parents('tr').children('td').fadeOut(700,function(){
+	    			selected.parents('tr').remove();
+	    		});
+	    		notif.fadeIn(300,function(){
+                	setTimeout(function(){
+                		notif.fadeOut(300);
+                	},2000);
+                });
+			}
+		});
+	});
+
+	// append empty result row if no logs left
+	var target_node = document.getElementById('calllogs-list');
+	var config = {childList: true};
+	const observer = new MutationObserver(function(mutation){
+		var rows = $(target_node).children().length;
+		if(rows == 0){
+			$(target_node).append("<tr class='text-center'><td colspan='6'>Empty results</td></tr>");
+		}
+	});
+
+	observer.observe(target_node,config);
+
+
+	// supervisor search for call logs
 	$(document).on('submit','.calllogs-search',function(e){
 		e.preventDefault();
 
@@ -295,6 +370,7 @@ $(document).ready(function(){
 		});
 	});
 
+	// supervisor assign the calllogs to team
 	$(document).on('submit','.calllog-form',function(e){
 		e.preventDefault();
 

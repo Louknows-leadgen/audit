@@ -50,4 +50,8 @@ class User extends Authenticatable
     public function user_teams(){
         return $this->hasMany('App\Models\UserTeam');
     }
+
+    public function call_logs(){
+        return $this->hasMany('App\Models\CallLog','claimed_by');
+    }
 }

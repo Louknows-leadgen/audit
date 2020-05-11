@@ -49,7 +49,15 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="sub-header mb-4">
-			
+			@auth
+				<ul class="d-flex align-items-center ml-5">
+					@can('access',[4])
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.index') }}">Available Logs</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.team_claimed') }}">Claimed Logs</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.index') }}">My Logs</a></li>
+					@endcan
+				</ul>
+			@endauth
 		</div>
 	</div>
 </div>

@@ -19,7 +19,15 @@
 									<span class="btn btn-secondary select-custom">Select</span>
 								</div>
 							</div>
-							<button class="btn btn-primary w-50 mb-2">Bulk Claim</button>
+							<!----------------------------------------------------------------------
+								- refer to the jquery code for the data being retrieved on this form
+								- used form instead of button event to avoid hardcoding the url 
+							----------------------------------------------------------------------->
+							<div class="w-100">
+								<form class="bulk-claim" action="{{ route('auditor.bulk_claim') }}" method="post">
+									<button class="btn btn-primary mb-2">Bulk Claim</button>
+								</form>	
+							</div>
 						</div>
 					</div>
 				</div>
@@ -35,7 +43,7 @@
 							<th>Action</th>
 						</tr>
 					</thead>
-					<tbody class="calllogs-list">
+					<tbody class="calllogs-list" id="calllogs-list">
 						@if(count($calllogs))
 							@foreach($calllogs as $calllog)
 							<tr>

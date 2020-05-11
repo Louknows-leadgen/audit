@@ -44,5 +44,10 @@ class AuthServiceProvider extends ServiceProvider
             }
             return false;
         });
+
+        // can access a page
+        Gate::define('access', function ($user, ...$access_type) {
+            return in_array($user->role_id,$access_type);
+        });
     }
 }

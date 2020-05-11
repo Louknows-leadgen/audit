@@ -24,6 +24,10 @@ class CallLog extends Model
     	return $this->belongsTo('App\Models\UserList','user','user');
     }
 
+    public function auditor(){
+        return $this->belongsTo('App\Models\User','claimed_by');
+    }
+
 
     /*
     |-------------------------------------
@@ -75,9 +79,29 @@ class CallLog extends Model
                    ->get();
     }
 
+    public static function team_claimed_logs($auditor_id){
+        $user = User::find($auditor_id);
+        $user_teams = $user->user_teams;
+        $teams = [];
+
+        foreach ($user_teams as $user_team) {
+            array_push($teams,$user_team->team_code);
+        }
+
+        return self::whereIn('team_code',$teams)
+                   ->where('is_claimed','=',1)
+                   ->get();
+    }
+
     public static function is_available($call_id){
         return self::where('ctr','=',$call_id)
                    ->where('is_claimed','=',0)
                    ->exists();
+    }
+
+    public static function bulk_claim($auditor_id, $calllogs){
+        return self::whereIn('ctr',$calllogs)
+                   ->where('is_claimed','=',0)
+                   ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
     }
 }

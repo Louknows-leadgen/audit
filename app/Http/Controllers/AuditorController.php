@@ -21,6 +21,12 @@ class AuditorController extends Controller
 		return view('auditor.index',compact('calllogs'));
     }
 
+    public function team_claimed_logs(){
+    	$calllogs = CallLog::team_claimed_logs(Auth::id());
+
+    	return view('auditor.team_claimed_logs',compact('calllogs'));
+    }
+
     public function claim_call(Request $request){
     	$validator = Validator::make($request->all(),[
     		'call_id' => ['required', new CallIsClaimed]
@@ -35,6 +41,23 @@ class AuditorController extends Controller
             $c->claimed_by = Auth::id();
             $c->save();
             return response()->json(['success'=>'Successfully claimed the call log']);
+        }
+    }
+
+    public function bulk_claim(Request $request){
+    	$validator = Validator::make($request->all(),[
+            'calllogs' => 'required'
+        ],[
+            'calllogs.required' => 'No selected call logs'
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
+        }else{
+        	$calllogs = $request->calllogs;
+        	$auditor = Auth::id();
+        	CallLog::bulk_claim($auditor,$calllogs);
+        	return response()->json(['success'=>'Claimed selected call logs']);
         }
     }
 }
