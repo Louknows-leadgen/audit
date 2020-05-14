@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\CallIsClaimed;
 use App\Models\CallLog;
+use App\Models\Script;
 
 class AuditorController extends Controller
 {
@@ -25,6 +26,13 @@ class AuditorController extends Controller
     	$calllogs = CallLog::team_claimed_logs(Auth::id());
 
     	return view('auditor.team_claimed_logs',compact('calllogs'));
+    }
+
+    public function my_call_logs(){
+    	$calllogs = CallLog::my_call_logs(Auth::id());
+    	$scripts = Script::all();
+
+    	return view('auditor.my_call_logs',compact('calllogs','scripts'));
     }
 
     public function claim_call(Request $request){

@@ -330,18 +330,31 @@ $(document).ready(function(){
 		});
 	});
 
-	// append empty result row if no logs left
-	var target_node = document.getElementById('calllogs-list');
-	var config = {childList: true};
-	const observer = new MutationObserver(function(mutation){
-		var rows = $(target_node).children().length;
-		if(rows == 0){
-			$(target_node).append("<tr class='text-center'><td colspan='6'>Empty results</td></tr>");
-		}
+	// auditor audit animation (scrolling back to top)
+	$('.nav-link').on('click',function(){
+		$('.tab-content').animate({ scrollTop: 0 },"slow");
 	});
 
-	observer.observe(target_node,config);
+	$(document).on("click",".left-chevron,.right-chevron",function(){
+		var tab = $(this).data('tab');
 
+		//$(".script-tab[data-tab="+ tab +"]").click();
+		$("a[href='#"+ tab +"']").click();
+	});
+
+	// append empty result row if no logs left
+	var target_node = document.getElementById('calllogs-list');
+	if($(target_node).length){
+		var config = {childList: true};
+		var observer = new MutationObserver(function(mutation){
+			var rows = $(target_node).children().length;
+			if(rows == 0){
+				$(target_node).append("<tr class='text-center'><td colspan='6'>Empty results</td></tr>");
+			}
+		});
+
+		observer.observe(target_node,config);
+	}
 
 	// supervisor search for call logs
 	$(document).on('submit','.calllogs-search',function(e){

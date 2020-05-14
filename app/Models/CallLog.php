@@ -93,11 +93,19 @@ class CallLog extends Model
                    ->get();
     }
 
+
+    public static function my_call_logs($auditor_id){
+        return self::where('claimed_by','=',$auditor_id)
+                   ->get();
+    }
+
+
     public static function is_available($call_id){
         return self::where('ctr','=',$call_id)
                    ->where('is_claimed','=',0)
                    ->exists();
     }
+
 
     public static function bulk_claim($auditor_id, $calllogs){
         return self::whereIn('ctr',$calllogs)

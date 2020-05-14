@@ -19,6 +19,7 @@ Route::get('/search-calls','SupervisorController@search_calls')->name('superviso
 Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');
 
 Route::get('/auditor','AuditorController@index')->name('auditor.index');
+Route::get('/auditor/my-logs','AuditorController@my_call_logs')->name('auditor.my_call_logs');
 Route::get('/auditor/team-claimed','AuditorController@team_claimed_logs')->name('auditor.team_claimed');
 Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');

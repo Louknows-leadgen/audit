@@ -52,9 +52,9 @@
 			@auth
 				<ul class="d-flex align-items-center ml-5">
 					@can('access',[4])
-						<li class="list-inline-item mr-4"><a href="{{ route('auditor.index') }}">Available Logs</a></li>
-						<li class="list-inline-item mr-4"><a href="{{ route('auditor.team_claimed') }}">Claimed Logs</a></li>
-						<li class="list-inline-item mr-4"><a href="{{ route('auditor.index') }}">My Logs</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.index') }}">Team Available Logs</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.team_claimed') }}">Team Claimed Logs</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.my_call_logs') }}">My Logs</a></li>
 					@endcan
 				</ul>
 			@endauth
