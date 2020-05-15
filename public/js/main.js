@@ -330,6 +330,18 @@ $(document).ready(function(){
 		});
 	});
 
+	// auditor click on start audit button
+	$(document).on('click','.start-audit',function(){
+		var target_modal = $(this).data('id');
+
+		$('.aud-modal[data-modal="'+ target_modal + '"]').fadeIn(300);
+	});
+
+	// auditor closes the modal
+	$(document).on('click','.aud-modal .close',function(){
+		$(this).parents('.aud-modal').fadeOut(300);
+	});
+
 	// auditor audit animation (scrolling back to top)
 	$('.nav-link').on('click',function(){
 		$('.tab-content').animate({ scrollTop: 0 },"slow");
@@ -338,7 +350,6 @@ $(document).ready(function(){
 	$(document).on("click",".left-chevron,.right-chevron",function(){
 		var tab = $(this).data('tab');
 
-		//$(".script-tab[data-tab="+ tab +"]").click();
 		$("a[href='#"+ tab +"']").click();
 	});
 

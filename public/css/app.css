@@ -11721,6 +11721,7 @@ div[data-tabcontent].actv {
 }
 
 .gray-bg {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -11744,5 +11745,13 @@ div[data-tabcontent].actv {
 .modal-content .tab-content {
   height: 300px;
   overflow-y: scroll;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 30px;
+  color: #ff0000;
 }
 

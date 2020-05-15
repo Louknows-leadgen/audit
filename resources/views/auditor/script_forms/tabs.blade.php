@@ -3,7 +3,7 @@
 		<li class="nav-item"> 
 			<a class="nav-link @if($script->code == 1) active @endif" 
 			   data-toggle="tab" 
-			   href="#{{ $script->name }}">
+			   href="#{{ $script->name }}-{{ $calllog->ctr }}">
 				{{ $script->name }} 
 			</a>
 		</li>
