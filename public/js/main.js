@@ -367,6 +367,43 @@ $(document).ready(function(){
 		observer.observe(target_node,config);
 	}
 
+	// submits the audit form
+	$(document).on('submit','.audit_form',function(e){
+		e.preventDefault();
+		var form = $(this);
+		var url = form.attr('action');
+		var method = form.attr('method');
+		var form_data = {};
+
+		form.find(':not(:radio)').each(function(){
+			form_data[this.name] = this.value;
+		});
+
+		// handle input of type radio
+		form.find(':radio:checked').each(function(){
+			form_data[this.name] = this.value;
+		});
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: form_data
+		});
+	});
+
+	// auditor clicks the submit button. Trigger to submit the audit form
+	$(document).on('click','.submit_audit',function(){
+		var parent_container = $(this).parents('.modal-content');
+		var form_to_submit = parent_container.find('.audit_form');
+		form_to_submit.submit();
+	});
+
 	// supervisor search for call logs
 	$(document).on('submit','.calllogs-search',function(e){
 		e.preventDefault();

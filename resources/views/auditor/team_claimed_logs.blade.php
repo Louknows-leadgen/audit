@@ -16,15 +16,19 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach($calllogs as $calllog)
-							<tr>
-								<td>{{ $calllog->recording_id }}</td>
-								<td>{{ $calllog->user }}</td>
-								<td>{{ $calllog->phone_number }}</td>
-								<td>{{ $calllog->auditor->name }}</td>
-								<td>Not Started</td>
-							</tr>
-						@endforeach
+						@if(count($calllogs))
+							@foreach($calllogs as $calllog)
+								<tr>
+									<td>{{ $calllog->recording_id }}</td>
+									<td>{{ $calllog->user }}</td>
+									<td>{{ $calllog->phone_number }}</td>
+									<td>{{ $calllog->auditor->name }}</td>
+									<td>Not Started</td>
+								</tr>
+							@endforeach
+						@else
+							<tr class="text-center"><td colspan="5">Empty results</td></tr>
+						@endif
 					</tbody>
 				</table>
 			</div>

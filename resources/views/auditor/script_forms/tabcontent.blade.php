@@ -1,5 +1,7 @@
 <div class="mt-3">
 	<h5>Script code: <strong>{{ $script->name }}</strong></h5>
+	<input type="hidden" name="{{ $script->name }}[recording_id]" value="{{ $calllog->recording_id }}">
+	<input type="hidden" name="{{ $script->name }}[script_code]" value="{{ $script->code }}">
 	<ol>
 		<li>
 			<div class="form-group">
@@ -18,16 +20,16 @@
 							   id="{{$script->name}}-{{$calllog->ctr}}-ack-yes" 
 							   value="Yes">
 						<label class="custom-control-label" 
-							   for="{{{$script->name}}-{{$calllog->ctr}}-ack-yes">Yes</label>
+							   for="{{$script->name}}-{{$calllog->ctr}}-ack-yes">Yes</label>
 					</div>
 					<div class="custom-control custom-radio">
 						<input type="radio" 
 							   class="custom-control-input" 
 							   name="{{$script->name}}[acknowledge]" 
-							   id="{{{$script->name}}-{{$calllog->ctr}}-ack-no" 
+							   id="{{$script->name}}-{{$calllog->ctr}}-ack-no" 
 							   value="No">
 						<label class="custom-control-label" 
-							   for="{{{$script->name}}-{{$calllog->ctr}}-ack-no">No</label>
+							   for="{{$script->name}}-{{$calllog->ctr}}-ack-no">No</label>
 					</div>
 				</div>
 			</div>
@@ -66,15 +68,6 @@
 			<div class="form-group">
 				<label>Comment</label>
 				<textarea class="form-control" name="{{$script->name}}[comment]"></textarea>
-			</div>
-		</li>
-		<li>
-			<div class="form-group">
-				<label>Call ends</label>
-				<small class="text-danger">
-					Note: Once clicked, this will submit the form, and you will not be able to fill up the rest of the responses.
-				</small>
-				<button class="btn btn-primary d-block">Call ends</button>
 			</div>
 		</li>
 	</ol>

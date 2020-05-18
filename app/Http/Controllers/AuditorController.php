@@ -19,7 +19,7 @@ class AuditorController extends Controller
     public function index(){
     	$calllogs = CallLog::team_available_logs(Auth::id());
 
-		return view('auditor.index',compact('calllogs'));
+		return view('auditor.available_logs',compact('calllogs'));
     }
 
     public function team_claimed_logs(){
@@ -67,5 +67,9 @@ class AuditorController extends Controller
         	CallLog::bulk_claim($auditor,$calllogs);
         	return response()->json(['success'=>'Claimed selected call logs']);
         }
+    }
+
+    public function submit_audit(Request $request){
+        dd($request->all());
     }
 }

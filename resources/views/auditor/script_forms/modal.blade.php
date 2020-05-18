@@ -19,6 +19,9 @@
 									<source src="https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_1MG.wav" type="audio/wav">
 								</audio>
 							</div>
+							<div class="col-md-3">
+								<button class="btn btn-primary submit_audit">Submit</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -27,14 +30,16 @@
 						<!-- Tabs -->
 						@include('auditor.script_forms.tabs')
 						<!-- Tab panes -->
-						<div class="tab-content">
-							@foreach($scripts as $index => $script)
-								<div class="tab-pane container @if($script->code == 1) active @endif" 
-									 id="{{ $script->name }}-{{ $calllog->ctr }}">
-									@include('auditor.script_forms.tabcontent')
-								</div>
-							@endforeach
-						</div>
+						<form class="audit_form" action="{{ route('auditor.submit_audit') }}" method="post">
+							<div class="tab-content">
+								@foreach($scripts as $index => $script)
+									<div class="tab-pane container @if($script->code == 1) active @endif" 
+										 id="{{ $script->name }}-{{ $calllog->ctr }}">
+										@include('auditor.script_forms.tabcontent')
+									</div>
+								@endforeach
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
