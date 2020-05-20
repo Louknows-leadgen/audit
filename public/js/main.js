@@ -374,6 +374,7 @@ $(document).ready(function(){
 		var url = form.attr('action');
 		var method = form.attr('method');
 		var form_data = {};
+		var content = $(this).parents('.container-fluid');
 
 		form.find(':not(:radio)').each(function(){
 			form_data[this.name] = this.value;
@@ -393,7 +394,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: url,
 			method: method,
-			data: form_data
+			data: form_data,
+			success: function(response){
+				content.empty().append(response);
+			}
 		});
 	});
 

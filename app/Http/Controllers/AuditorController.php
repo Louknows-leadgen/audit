@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\CallIsClaimed;
 use App\Models\CallLog;
 use App\Models\Script;
+use App\Models\RecordingScript;
+
 
 class AuditorController extends Controller
 {
@@ -70,6 +72,38 @@ class AuditorController extends Controller
     }
 
     public function submit_audit(Request $request){
-        dd($request->all());
+        // foreach($request->all() as $script_resp){
+           
+        //     if($this->is_not_empty($script_resp) && 
+        //        RecordingScript::is_uniq_response($script_resp['script_code'],$script_resp['recording_id'])){
+
+        //         $recording_script = new RecordingScript;
+        //         $recording_script->script_code = $script_resp['script_code'];
+        //         $recording_script->recording_id = $script_resp['recording_id'];
+        //         $recording_script->cust_statement = $script_resp['cust_statement'];
+        //         $recording_script->acknowledgement = isset($script_resp['acknowledge']) ? $script_resp['acknowledge'] : null;
+        //         $recording_script->agent_resp = $script_resp['agent_response'];
+        //         $recording_script->agent_resp_spd = $script_resp['agent_response_speed'];
+        //         $recording_script->cust_dtl = $script_resp['customer_details'];
+        //         $recording_script->agent_input = $script_resp['agent_input'];
+        //         $recording_script->comment = $script_resp['comment'];
+
+        //         $recording_script->save();
+
+        //     }
+        // }
+
+        // return response()->json(['success'=>'Success']);
+        return view('auditor.findings_forms.index');
+    }
+
+    public function is_not_empty($params){
+            return isset($params['cust_statement']) ||
+                   isset($params['acknowledge'])||
+                   isset($params['agent_response']) ||
+                   isset($params['agent_response_speed']) ||
+                   isset($params['customer_details']) ||
+                   isset($params['agent_input']) ||
+                   isset($params['comment']);
     }
 }

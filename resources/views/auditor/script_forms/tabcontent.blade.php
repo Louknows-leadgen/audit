@@ -18,7 +18,7 @@
 							   class="custom-control-input" 
 							   name="{{$script->name}}[acknowledge]" 
 							   id="{{$script->name}}-{{$calllog->ctr}}-ack-yes" 
-							   value="Yes">
+							   value="1">
 						<label class="custom-control-label" 
 							   for="{{$script->name}}-{{$calllog->ctr}}-ack-yes">Yes</label>
 					</div>
@@ -27,7 +27,7 @@
 							   class="custom-control-input" 
 							   name="{{$script->name}}[acknowledge]" 
 							   id="{{$script->name}}-{{$calllog->ctr}}-ack-no" 
-							   value="No">
+							   value="0">
 						<label class="custom-control-label" 
 							   for="{{$script->name}}-{{$calllog->ctr}}-ack-no">No</label>
 					</div>
