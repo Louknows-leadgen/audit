@@ -33,6 +33,12 @@
 						<form class="audit_form" action="{{ route('auditor.submit_audit') }}" method="post">
 							<div class="tab-content">
 								@foreach($scripts as $index => $script)
+									@php
+										$recording_id = $calllog->recording_id;
+										$script_code = $script->code;
+										$rs = get_recording_script($script_code, $recording_id);
+									@endphp
+
 									<div class="tab-pane container @if($script->code == 1) active @endif" 
 										 id="{{ $script->name }}-{{ $calllog->ctr }}">
 										@include('auditor.script_forms.tabcontent')

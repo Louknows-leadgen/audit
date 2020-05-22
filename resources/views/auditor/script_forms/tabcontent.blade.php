@@ -6,7 +6,7 @@
 		<li>
 			<div class="form-group">
 				<label>Customer's Statement (question/objection)</label>
-				<textarea class="form-control" name="{{$script->name}}[cust_statement]"></textarea>
+				<textarea class="form-control" name="{{$script->name}}[cust_statement]">{{ isset($rs->cust_statement) ? $rs->cust_statement : '' }}</textarea>
 			</div>
 		</li>
 		<li>
@@ -18,7 +18,8 @@
 							   class="custom-control-input" 
 							   name="{{$script->name}}[acknowledge]" 
 							   id="{{$script->name}}-{{$calllog->ctr}}-ack-yes" 
-							   value="1">
+							   value="1"
+							   {{ isset($rs->acknowledgement) && $rs->acknowledgement == 1 ? 'checked' : '' }}>
 						<label class="custom-control-label" 
 							   for="{{$script->name}}-{{$calllog->ctr}}-ack-yes">Yes</label>
 					</div>
@@ -27,7 +28,8 @@
 							   class="custom-control-input" 
 							   name="{{$script->name}}[acknowledge]" 
 							   id="{{$script->name}}-{{$calllog->ctr}}-ack-no" 
-							   value="0">
+							   value="0"
+							   {{ isset($rs->acknowledgement) && $rs->acknowledgement == 0 ? 'checked' : '' }}>
 						<label class="custom-control-label" 
 							   for="{{$script->name}}-{{$calllog->ctr}}-ack-no">No</label>
 					</div>
@@ -37,13 +39,14 @@
 		<li>
 			<div class="form-group">
 				<label>Agent's response</label>
-				<input type="text" class="form-control" name="{{$script->name}}[agent_response]">
+				<input type="text" class="form-control" name="{{$script->name}}[agent_response]" value="{{ isset($rs->agent_resp) ? $rs->agent_resp : '' }}">
 			</div>
 		</li>
 		<li>
 			<div class="form-group">
 				<label>Agent's response speed</label>
-				<input type="number" class="form-control" name="{{$script->name}}[agent_response_speed]">
+				<input type="number" class="form-control" name="{{$script->name}}[agent_response_speed]"
+				value="{{ isset($rs->agent_resp_spd) ? $rs->agent_resp_spd : '' }}">
 			</div>
 		</li>
 		<li>
@@ -55,19 +58,19 @@
 		<li>
 			<div class="form-group">
 				<label>Customer details</label>
-				<textarea class="form-control" name="{{$script->name}}[customer_details]" placeholder="Customer's details if agent is incorrect. Blank otherwise."></textarea>
+				<textarea class="form-control" name="{{$script->name}}[customer_details]" placeholder="Customer's details if agent is incorrect. Blank otherwise.">{{ isset($rs->cust_dtl) ? $rs->cust_dtl : '' }}</textarea>
 			</div>
 		</li>
 		<li>
 			<div class="form-group">
 				<label>Agent input</label>
-				<textarea class="form-control" name="{{$script->name}}[agent_input]" placeholder="Agent's input if agent is incorrect. Blank otherwise."></textarea>
+				<textarea class="form-control" name="{{$script->name}}[agent_input]" placeholder="Agent's input if agent is incorrect. Blank otherwise.">{{ isset($rs->agent_iput) ? $rs->agent_iput : '' }}</textarea>
 			</div>
 		</li>
 		<li>
 			<div class="form-group">
 				<label>Comment</label>
-				<textarea class="form-control" name="{{$script->name}}[comment]"></textarea>
+				<textarea class="form-control" name="{{$script->name}}[comment]">{{ isset($rs->comment) ? $rs->comment : '' }}</textarea>
 			</div>
 		</li>
 	</ol>

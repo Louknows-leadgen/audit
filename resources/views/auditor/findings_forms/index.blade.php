@@ -7,17 +7,17 @@
 					<div class="form-group">
 						<label>Agent Disposition</label>
 						<select class="custom-select">
-							<option>dispo 1</option>
-							<option>dispo 2</option>
-							<option>dispo 3</option>
+							@foreach($dispositions as $disposition)
+								<option value="{{ $disposition->code }}">{{ $disposition->short_desc }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
 						<label>Correct Disposition</label>
 						<select class="custom-select">
-							<option>dispo 1</option>
-							<option>dispo 2</option>
-							<option>dispo 3</option>
+							@foreach($dispositions as $disposition)
+								<option value="{{ $disposition->code }}">{{ $disposition->short_desc }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
@@ -37,9 +37,9 @@
 					<div class="form-group">
 						<label>General Observation</label>
 						<select class="custom-select">
-							<option>option1</option>
-							<option>option2</option>
-							<option>option3</option>
+							@foreach($observations as $observation)
+								<option value="{{ $observation->code }}">{{ $observation->name }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="form-group">

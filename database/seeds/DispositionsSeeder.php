@@ -49,7 +49,7 @@ class DispositionsSeeder extends Seeder
         	['code' => 33, 'name' => 'NANQUE', 'short_desc' => 'Inbound No Agent No Queue Drop'],
         	['code' => 34, 'name' => 'NEW', 'short_desc' => 'New Lead'],
         	['code' => 35, 'name' => 'NI', 'short_desc' => 'Not Interested'],
-        	['code' => 36, 'name' => 'noGED', 'short_desc' => 'no GEDHS Diploma'],
+        	['code' => 36, 'name' => 'noGED', 'short_desc' => 'No GEDHS Diploma'],
         	['code' => 37, 'name' => 'NP', 'short_desc' => 'No Pitch No Price'],
         	['code' => 38, 'name' => 'NQ', 'short_desc' => 'Not Qualified'],
         	['code' => 39, 'name' => 'NRN', 'short_desc' => 'Not Right Now'],
