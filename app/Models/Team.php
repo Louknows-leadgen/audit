@@ -12,6 +12,6 @@ class Team extends Model
     |-----------------------------*/
 
     public function user_teams(){
-        return $this->hasMany('App\Models\UserTeam');
+        return $this->hasMany('App\Models\UserTeam','team_code','code');
     }
 }

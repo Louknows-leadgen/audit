@@ -56,6 +56,10 @@
 						<li class="list-inline-item mr-4"><a href="{{ route('auditor.team_claimed') }}">Team Claimed Logs</a></li>
 						<li class="list-inline-item mr-4"><a href="{{ route('auditor.my_call_logs') }}">My Logs</a></li>
 					@endcan
+					@can('access',[3])
+						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.index') }}">Call Logs</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.manage_teams') }}">Manage Teams</a></li>
+					@endcan
 				</ul>
 			@endauth
 		</div>

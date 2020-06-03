@@ -30,6 +30,11 @@ class SupervisorController extends Controller
     	return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','from_dt','to_dt'));
     }
 
+    public function manage_teams(){
+        $teams = Team::all();
+        return view('supervisor.manage_teams',compact('teams'));
+    }
+
     public function search_calls(Request $request){
     	$from = $request->from;
     	$to = $request->to;

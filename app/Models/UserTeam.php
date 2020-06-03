@@ -16,6 +16,6 @@ class UserTeam extends Model
     }
 
     public function teams(){
-    	return $this->belongsTo('App\Models\Team');
+    	return $this->belongsTo('App\Models\Team','team_code','code');
     }
 }

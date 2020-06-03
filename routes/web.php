@@ -17,6 +17,7 @@ Route::get('/admin','AdminController@index')->name('admin.index');
 Route::get('/supervisor','SupervisorController@index')->name('supervisor.index');
 Route::get('/search-calls','SupervisorController@search_calls')->name('supervisor.search_calls');
 Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');
+Route::get('/supervisor/manage-teams','SupervisorController@manage_teams')->name('supervisor.manage_teams');
 
 Route::get('/auditor','AuditorController@index')->name('auditor.index');
 Route::get('/auditor/my-logs','AuditorController@my_call_logs')->name('auditor.my_call_logs');
