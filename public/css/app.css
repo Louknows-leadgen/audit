@@ -11465,6 +11465,10 @@ span.close {
   transform: translateX(-50%);
 }
 
+.form-width {
+  width: 300px;
+}
+
 .notif-process {
   position: absolute;
   top: 0;
@@ -11753,5 +11757,15 @@ div[data-tabcontent].actv {
   right: 10px;
   font-size: 30px;
   color: #ff0000;
+}
+
+.border-gray {
+  border: 1px solid #ced4da;
+}
+
+.right-back {
+  position: absolute;
+  top: 10px;
+  right: 20px;
 }
 

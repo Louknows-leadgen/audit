@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
+	// specify custom primary key of the table
+    // protected $primaryKey = 'code';
+
+    protected $fillable = [
+    	'name',
+    	'short_desc',
+    	'code'
+    ];
+
     /*
     |-----------------------------
     |		Association

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\RecordingScript;
 use \DateTime;
 
 class CallLog extends Model
@@ -111,5 +112,36 @@ class CallLog extends Model
         return self::whereIn('ctr',$calllogs)
                    ->where('is_claimed','=',0)
                    ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
+    }
+
+    public static function release_user_calls($user_id){
+        $calls = self::where('claimed_by','=',$user_id)
+                     ->where('status','!=',1)
+                     ->get();
+
+        foreach ($calls as $call) {
+            $call->is_claimed = 0;
+            $call->claimed_by = 0;
+            $call->save();
+
+            // remove answers from recording_scripts table
+            RecordingScript::remove_responses($call->recording_id);
+        }
+    }
+
+    public static function release_calls($team_id){
+        $calls = self::where('team_code','=',$team_id)
+                     ->where('status','!=',1)
+                     ->get();
+
+        foreach ($calls as $call) {
+            $call->is_claimed = 0;
+            $call->claimed_by = 0;
+            $call->team_code = null;
+            $call->save();
+
+            // remove answers from recording_scripts table
+            RecordingScript::remove_responses($call->recording_id);
+        }
     }
 }

@@ -499,6 +499,101 @@ $(document).ready(function(){
 
 	});
 
+	$(document).on('click','.edit-team-trig',function(){
+		var team_id = $(this).parents('tr').data('id');
+		var url = '/teams/' + team_id; // look for this url using php artisan route:list
+
+		window.location.href = url;
+	});
+
+	$(document).on('click','.add-user-team',function(){
+		var url = '/user_teams'; // url should sync on the web route
+		var user_id = $(this).parents('tr').data('id');
+		var team_id = $(this).parents('tr').data('team');
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+	    $.ajax({
+	    	url: url,
+	    	method: 'post',
+	    	data:{
+	    		user_id: user_id,
+	    		team_code: team_id
+	    	},
+	    	success: function(){
+	    		location.reload();
+				return false;
+	    	}
+	    });
+	});
+
+	$(document).on('click','.rem-user-team-trg',function(){
+		var id = $(this).parents('tr').data('id');
+		$('.rem-user-team').data('id',id);
+		$('.rem-user-team-notif').fadeIn(300);
+	});
+
+	$(document).on('click','.cancel',function(){
+		$(this).parents('.bg-notif').fadeOut(300);
+	});
+
+	$(document).on('click','.rem-user-team',function(){
+		var id = $(this).data('id');
+		var url = '/user_teams/' + id; // url should sync on the web route
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+	    $.ajax({
+	    	url: url,
+	    	method: 'delete',
+	    	success: function(){
+	    		location.reload();
+				return false;
+	    	}
+	    });
+	});
+
+
+	$(document).on('click','.del-team-trg',function(){
+		var id = $(this).parents('tr').data('id');
+		$('.del-team').data('id',id);
+		$('.del-team-notif').fadeIn(300);
+	});
+
+	
+	$(document).on('click','.del-team',function(){
+		var id = $(this).data('id');
+		var url = '/teams/' + id; // url should sync on the web route
+
+		$.ajaxSetup({
+	        headers: {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+
+	    $.ajax({
+	    	url: url,
+	    	method: 'delete',
+	    	success: function(){
+	    		location.reload();
+				return false;
+	    	}
+	    });
+	});
+
+
+	$(document).on('click','.add-team-trig',function(){
+		$('.add-team-notif').fadeIn(300);
+	});
+
 });
 
 	

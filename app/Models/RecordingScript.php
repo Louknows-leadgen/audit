@@ -33,4 +33,14 @@ class RecordingScript extends Model
                    ->where('script_code','=',$script_code)
                    ->first();
     }
+
+    public static function remove_responses($recording_id){
+        $responses = self::where('recording_id','=',$recording_id)
+                          ->get();
+
+        foreach ($responses as $response) {
+            $response->delete();
+        }
+    }
 }
+

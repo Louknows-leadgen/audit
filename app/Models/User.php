@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use DB;
 
 class User extends Authenticatable
 {
@@ -53,5 +54,21 @@ class User extends Authenticatable
 
     public function call_logs(){
         return $this->hasMany('App\Models\CallLog','claimed_by');
+    }
+
+
+    /*
+    |----------------------------
+    |    Helpers
+    |----------------------------*/
+
+    public static function no_team_users(){
+        $query = DB::table('users as u')
+                   ->leftjoin('user_teams as ut','ut.user_id','=','u.id')
+                   ->where('u.role_id','=',4)
+                   ->whereNull('ut.user_id')
+                   ->get(['u.id','u.name','u.email']);
+
+        return $query;
     }
 }
