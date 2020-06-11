@@ -23,7 +23,7 @@
 									<td>{{ $calllog->user }}</td>
 									<td>{{ $calllog->phone_number }}</td>
 									<td>{{ $calllog->auditor->name }}</td>
-									<td>Not Started</td>
+									<td>{{ $calllog->status_name }}</td>
 								</tr>
 							@endforeach
 						@else

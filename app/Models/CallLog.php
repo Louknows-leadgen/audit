@@ -29,6 +29,21 @@ class CallLog extends Model
         return $this->belongsTo('App\Models\User','claimed_by');
     }
 
+    public function finding(){
+        return $this->hasOne('App\Models\Finding','recording_id','recording_id');
+    }
+
+
+    /*
+    |-------------------------------------
+    |           Custom Attributes
+    |-------------------------------------*/
+
+    protected $appends = ['status_name'];
+
+    public function getStatusNameAttribute(){
+        return $this->status == 1 ? 'Completed' : 'Not Started';
+    }
 
     /*
     |-------------------------------------
@@ -96,7 +111,8 @@ class CallLog extends Model
 
 
     public static function my_call_logs($auditor_id){
-        return self::where('claimed_by','=',$auditor_id)
+        return self::where('claimed_by','=', $auditor_id)
+                   ->where('status','=', 0)
                    ->get();
     }
 

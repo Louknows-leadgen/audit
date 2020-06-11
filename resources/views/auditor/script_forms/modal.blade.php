@@ -31,6 +31,7 @@
 						@include('auditor.script_forms.tabs')
 						<!-- Tab panes -->
 						<form class="audit_form" action="{{ route('auditor.submit_audit') }}" method="post">
+							<input type="hidden" name="recording_id" value="{{ $calllog->recording_id }}">
 							<div class="tab-content">
 								@foreach($scripts as $index => $script)
 									@php

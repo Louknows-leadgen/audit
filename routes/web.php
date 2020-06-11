@@ -25,6 +25,8 @@ Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');
 
+Route::resource('findings','FindingController')->only(['store']);
+
 Route::get('/supervisor','SupervisorController@index')->name('supervisor.index');
 Route::get('/search-calls','SupervisorController@search_calls')->name('supervisor.search_calls');
 Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');

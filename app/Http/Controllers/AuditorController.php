@@ -76,6 +76,7 @@ class AuditorController extends Controller
     public function submit_audit(Request $request){
         $dispositions = Disposition::all()->sortBy('short_desc');
         $observations = GeneralObservation::all()->sortBy('name');
+        $recording_id = $request->recording_id;
 
         foreach($request->all() as $script_resp){
            
@@ -113,7 +114,7 @@ class AuditorController extends Controller
         }
 
         // return response()->json(['success'=>'Success']);
-        return view('auditor.findings_forms.index',compact('dispositions','observations'));
+        return view('auditor.findings_forms.index',compact('recording_id','dispositions','observations'));
     }
 
     public function is_not_empty($params){
