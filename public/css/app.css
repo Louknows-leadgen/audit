@@ -11769,3 +11769,10 @@ div[data-tabcontent].actv {
   right: 20px;
 }
 
+.audit-form input,
+.audit-form textarea {
+  border: none;
+  background-color: #f0f0f0;
+  outline: none;
+}
+

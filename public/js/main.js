@@ -594,6 +594,44 @@ $(document).ready(function(){
 		$('.add-team-notif').fadeIn(300);
 	});
 
+
+	$(document).on('change','select[name=agent_dispo]',function(){
+		var dispo = $(this).val();
+		if(dispo == 'No'){
+			$('#dispo-select').removeClass('d-none');
+		}else{
+			$('#dispo-select').removeClass('d-none').addClass('d-none');
+		}
+	});
+
+	$(document).on('change','select[name=agnt_sys_issue]',function(){
+		var issue = $(this).val();
+		if(issue == 'Agent'){
+			$('#agent-issue-select').removeClass('d-none');
+			$('#system-issue-select').removeClass('d-none').addClass('d-none');
+		}else if(issue == 'System'){
+			$('#system-issue-select').removeClass('d-none');
+			$('#agent-issue-select').removeClass('d-none').addClass('d-none');
+		}else{
+			$('#system-issue-select').removeClass('d-none').addClass('d-none');
+			$('#agent-issue-select').removeClass('d-none').addClass('d-none');
+		}
+	});
+
+	$(document).on('change','select[name=ztp_lol]',function(){
+		var zt_lol = $(this).val();
+		if(zt_lol == 'ZTP'){
+			$('#zt-select').removeClass('d-none');
+			$('#lol-select').removeClass('d-none').addClass('d-none');
+		}else if(zt_lol == 'LOL'){
+			$('#lol-select').removeClass('d-none');
+			$('#zt-select').removeClass('d-none').addClass('d-none');
+		}else{
+			$('#zt-select').removeClass('d-none').addClass('d-none');
+			$('#lol-select').removeClass('d-none').addClass('d-none');
+		}
+	});
+
 });
 
 	

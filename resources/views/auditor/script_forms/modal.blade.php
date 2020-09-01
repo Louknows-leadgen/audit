@@ -16,7 +16,7 @@
 							</div>
 							<div class="col-md-6 my-auto">
 								<audio class="w-100" controls>
-									<source src="https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_1MG.wav" type="audio/wav">
+									<source src="https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav" type="audio/wav">
 								</audio>
 							</div>
 							<div class="col-md-3">

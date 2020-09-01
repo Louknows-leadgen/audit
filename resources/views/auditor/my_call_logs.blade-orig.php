@@ -34,7 +34,7 @@
 									<td>{{ $calllog->recording_id }}</td>
 									<td>{{ $calllog->user }}</td>
 									<td>{{ $calllog->phone_number }}</td>
-									<td><a class="btn btn-primary start-audit" href="{{ route('auditor.recording',['recording' => $calllog->recording_id]) }}">Start Audit</a></td>
+									<td><button class="btn btn-primary start-audit" data-id="{{ $calllog->ctr }}">Start Audit</button></td>
 								</tr>
 							@endforeach
 						@else
@@ -45,4 +45,8 @@
 			</div>
 		</div>
 	</div>
+
+	@foreach($calllogs as $calllog)
+		@include('auditor.script_forms.modal')
+	@endforeach
 @endsection

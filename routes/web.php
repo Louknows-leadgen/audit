@@ -11,6 +11,9 @@
 |
 */
 
+
+Route::get('/call-logs/audited-by-agents','CallLogController@audited_by_agents')->name('call.audited_agents');
+
 Route::get('/','SuperAdminController@index')->name('root');
 Route::get('/admin','AdminController@index')->name('admin.index');
 
@@ -21,6 +24,7 @@ Route::put('/account/password/update','UserController@update_password')->name('u
 Route::get('/auditor','AuditorController@index')->name('auditor.index');
 Route::get('/auditor/my-logs','AuditorController@my_call_logs')->name('auditor.my_call_logs');
 Route::get('/auditor/team-claimed','AuditorController@team_claimed_logs')->name('auditor.team_claimed');
+Route::get('/auditor/my-logs/{recording}','AuditorController@recording')->name('auditor.recording');
 Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');

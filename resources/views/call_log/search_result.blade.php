@@ -5,7 +5,8 @@
 			<div class="app-checkbox d-inline-block">
 				<input type="checkbox" 
 					   name="calllogs[]"
-					   id="cl-{{ $call->ctr }}">
+					   id="cl-{{ $call->ctr }}"
+					   value="{{ $call->ctr }}">
 				<label class="checkmark" 
 					   for="cl-{{ $call->ctr }}">   	
 				</label>

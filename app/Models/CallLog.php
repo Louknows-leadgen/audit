@@ -160,4 +160,10 @@ class CallLog extends Model
             RecordingScript::remove_responses($call->recording_id);
         }
     }
+
+    public static function agents_audited(){
+        return self::where('status','=',1)
+                   ->groupBy('user')
+                   ->get('user');
+    }
 }

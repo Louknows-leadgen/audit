@@ -10,7 +10,8 @@ use App\Models\CallLog;
 use App\Models\Script;
 use App\Models\RecordingScript;
 use App\Models\Disposition;
-use App\Models\GeneralObservation;
+use App\Models\AgentSystemIssue;
+use App\Models\ZTPLOL;
 
 
 class AuditorController extends Controller
@@ -37,6 +38,10 @@ class AuditorController extends Controller
     	$scripts = Script::all();
 
     	return view('auditor.my_call_logs',compact('calllogs','scripts'));
+    }
+
+    public function recording($recording_id){
+        return view('auditor.recording',compact('recording_id'));
     }
 
     public function claim_call(Request $request){
@@ -74,47 +79,42 @@ class AuditorController extends Controller
     }
 
     public function submit_audit(Request $request){
-        $dispositions = Disposition::all()->sortBy('short_desc');
-        $observations = GeneralObservation::all()->sortBy('name');
+        $dispositions = Disposition::where('code','!=','25')->get()->sortBy('short_desc');
+        $agent_issues = AgentSystemIssue::where('type','=','Agent')->get()->sortBy('name');
+        $system_issues = AgentSystemIssue::where('type','=','System')->get()->sortBy('name');
+        $ztps = ZTPLOL::where('type','=','ZTP')->get()->sortBy('name');
+        $lols = ZTPLOL::where('type','=','LOL')->get()->sortBy('name');
         $recording_id = $request->recording_id;
 
         foreach($request->all() as $script_resp){
+
+            $recording_script = [];
            
             if($this->is_not_empty($script_resp)){ 
-                if(RecordingScript::is_uniq_response($script_resp['script_code'],$script_resp['recording_id'])){
-
+                if(RecordingScript::is_uniq_response($script_resp['script_code'],$recording_id)){
                     $recording_script = new RecordingScript;
-                    $recording_script->script_code = $script_resp['script_code'];
-                    $recording_script->recording_id = $script_resp['recording_id'];
-                    $recording_script->cust_statement = $script_resp['cust_statement'];
-                    $recording_script->acknowledgement = isset($script_resp['acknowledge']) ? $script_resp['acknowledge'] : null;
-                    $recording_script->agent_resp = $script_resp['agent_response'];
-                    $recording_script->agent_resp_spd = $script_resp['agent_response_speed'];
-                    $recording_script->cust_dtl = $script_resp['customer_details'];
-                    $recording_script->agent_input = $script_resp['agent_input'];
-                    $recording_script->comment = $script_resp['comment'];
-
-                    $recording_script->save();
                 }else{
-                    $recording_script = RecordingScript::find_by_composite_ids($script_resp['script_code'],$script_resp['recording_id']);
-                    $recording_script->script_code = $script_resp['script_code'];
-                    $recording_script->recording_id = $script_resp['recording_id'];
-                    $recording_script->cust_statement = $script_resp['cust_statement'];
-                    $recording_script->acknowledgement = isset($script_resp['acknowledge']) ? $script_resp['acknowledge'] : null;
-                    $recording_script->agent_resp = $script_resp['agent_response'];
-                    $recording_script->agent_resp_spd = $script_resp['agent_response_speed'];
-                    $recording_script->cust_dtl = $script_resp['customer_details'];
-                    $recording_script->agent_input = $script_resp['agent_input'];
-                    $recording_script->comment = $script_resp['comment'];
-
-                    $recording_script->save();
+                    $recording_script = RecordingScript::find_by_composite_ids($script_resp['script_code'],$recording_id);
                 }
+
+                $recording_script->script_code = $script_resp['script_code'];
+                $recording_script->recording_id = $recording_id;
+                $recording_script->cust_statement = $script_resp['cust_statement'];
+                $recording_script->acknowledgement = isset($script_resp['acknowledge']) ? $script_resp['acknowledge'] : null;
+                $recording_script->agent_resp = $script_resp['agent_response'];
+                $recording_script->agent_resp_spd = $script_resp['agent_response_speed'];
+                $recording_script->correct_response = $script_resp['correct_response'];
+                $recording_script->cust_dtl = $script_resp['customer_details'];
+                $recording_script->agent_input = $script_resp['agent_input'];
+                $recording_script->comment = $script_resp['comment'];
+
+                $recording_script->save();                
 
             }
         }
 
         // return response()->json(['success'=>'Success']);
-        return view('auditor.findings_forms.index',compact('recording_id','dispositions','observations'));
+        return view('auditor.findings_forms.index',compact('recording_id','dispositions','agent_issues','system_issues','ztps','lols'));
     }
 
     public function is_not_empty($params){

@@ -8,11 +8,6 @@ class Finding extends Model
 {
     protected $fillable = [
     	'recording_id',
-    	'agent_dispo',
-    	'correct_dispo',
-    	'agnt_sys_issue',
-    	'zt_lol',
-    	'gen_obsrv',
     	'qa_remarks'
     ];
 
