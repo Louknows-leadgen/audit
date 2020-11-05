@@ -78,6 +78,7 @@
 						@endif
 					</tbody>
 				</table>
+				{{ $calllogs->links() }}
 			</form>
 		</div>
 	</div>

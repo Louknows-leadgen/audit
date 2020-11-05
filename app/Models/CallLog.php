@@ -75,13 +75,13 @@ class CallLog extends Model
                  ->whereIn('campaign',$campaign)
                  ->whereIn('dispo',$dispo)
                  ->whereNull('team_code')
-                 ->get();
+                 ->paginate(50);
 
         return $calls;
     }
 
     public static function available_calllogs(){
-        return self::whereNull('team_code')->limit(20)->get();
+        return self::whereNull('team_code')->paginate(50);
     }
 
     public static function team_available_logs($auditor_id){
