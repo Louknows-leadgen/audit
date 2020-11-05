@@ -11776,3 +11776,46 @@ div[data-tabcontent].actv {
   outline: none;
 }
 
+.au-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+.equal-2-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.box-bg {
+  background-color: #fff;
+  box-shadow: 0px 4px 3px rgba(204, 204, 204, 0.25);
+}
+
+.btn-blue {
+  background-color: #3490dc;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-blue:hover {
+  background-color: #217bc4;
+}
+
+.btn-blue:not(:last-child) {
+  border-bottom: 1px solid #217bc4;
+}
+
+.btn-blue.active {
+  background-color: #fff;
+  color: #217bc4;
+  font-weight: bolder;
+}
+
+.tabcontent.inactive {
+  display: none;
+}
+
+.tabcontent.active {
+  display: block;
+}
+

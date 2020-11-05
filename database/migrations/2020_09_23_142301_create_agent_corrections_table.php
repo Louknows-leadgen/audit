@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFindingDispositionsTable extends Migration
+class CreateAgentCorrectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateFindingDispositionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('finding_dispositions', function (Blueprint $table) {
+        Schema::create('agent_corrections', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('finding_id');
-            $table->integer('disposition_id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateFindingDispositionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('finding_dispositions');
+        Schema::dropIfExists('agent_corrections');
     }
 }

@@ -15,7 +15,6 @@ class CreateScriptsTable extends Migration
     {
         Schema::create('scripts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('code');
             $table->string('name');
             $table->string('short_desc')->nullable();
             $table->timestamps();

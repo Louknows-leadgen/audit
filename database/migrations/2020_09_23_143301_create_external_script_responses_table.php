@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateZTPLOLSTable extends Migration
+class CreateExternalScriptResponsesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateZTPLOLSTable extends Migration
      */
     public function up()
     {
-        Schema::create('z_t_p_l_o_l_s', function (Blueprint $table) {
+        Schema::create('external_script_responses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('type');
-            $table->string('name');
+            $table->integer('script_response_id');
+            $table->integer('external_factor_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateZTPLOLSTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('z_t_p_l_o_l_s');
+        Schema::dropIfExists('external_script_responses');
     }
 }

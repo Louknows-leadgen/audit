@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateServersTable extends Migration
+class CreateExternalFactorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateServersTable extends Migration
      */
     public function up()
     {
-        Schema::create('servers', function (Blueprint $table) {
+        Schema::create('external_factors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('code');
             $table->string('name');
-            $table->string('short_desc');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class CreateServersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('servers');
+        Schema::dropIfExists('external_factors');
     }
 }

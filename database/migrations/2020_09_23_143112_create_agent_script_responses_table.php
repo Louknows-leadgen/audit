@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGeneralObservationsTable extends Migration
+class CreateAgentScriptResponsesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateGeneralObservationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('general_observations', function (Blueprint $table) {
+        Schema::create('agent_script_responses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->Integer('code');
-            $table->string('name');
+            $table->integer('script_response_id');
+            $table->integer('agent_correction_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateGeneralObservationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('general_observations');
+        Schema::dropIfExists('agent_script_responses');
     }
 }

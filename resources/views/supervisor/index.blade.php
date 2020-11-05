@@ -9,4 +9,15 @@
 			@include('supervisor.searchresult-section')
 		</div>
 	</div>
+
+	<div class="gray-bg">
+		<div class="d-flex flex-column align-items-center justify-content-center h-100">
+			<div class="text-light">Please wait</div>
+			<div>
+				<div class="spinner-grow text-info"></div>
+				<div class="spinner-grow text-info"></div>
+				<div class="spinner-grow text-info"></div>
+			</div>
+		</div>
+	</div>
 @endsection

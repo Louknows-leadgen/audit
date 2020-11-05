@@ -29,9 +29,6 @@ class CallLog extends Model
         return $this->belongsTo('App\Models\User','claimed_by');
     }
 
-    public function finding(){
-        return $this->hasOne('App\Models\Finding','recording_id','recording_id');
-    }
 
 
     /*
@@ -50,24 +47,30 @@ class CallLog extends Model
     |           Custom Functions
     |-------------------------------------*/
 
-    public static function search_call_logs($from,$to,$sid,$campaign,$dispo){
-        $from = date_create_from_format("m/d/Y g:i A",$from);
-        $from_dt = $from->format('Y-m-d');
-        $from_time = $from->format('G:i');
+    // public static function search_call_logs($from,$to,$sid,$campaign,$dispo){
+    //     $from = date_create_from_format("m/d/Y g:i A",$from);
+    //     $from_dt = $from->format('Y-m-d');
+    //     $from_time = $from->format('G:i');
 
-        $to = date_create_from_format("m/d/Y g:i A",$to);
-        $to_dt = $to->format('Y-m-d');
-        $to_time = $to->format('G:i');
+    //     $to = date_create_from_format("m/d/Y g:i A",$to);
+    //     $to_dt = $to->format('Y-m-d');
+    //     $to_time = $to->format('G:i');
+
+    //     $calls = DB::table('calllogs')
+    //              ->where('timestamp','>=',$from)
+    //              ->where('timestamp','<=',$to)
+    //              ->whereIn('server_ip',$sid)
+    //              ->whereIn('campaign',$campaign)
+    //              ->whereIn('dispo',$dispo)
+    //              ->whereNull('team_code')
+    //              ->get();
+
+    //     return $calls;
+    // }
+
+    public static function search_call_logs($sid,$campaign,$dispo){
 
         $calls = DB::table('calllogs')
-                 ->where(function($query) use ($from_dt,$from_time){
-                    $query->whereDate('timestamp','>=',$from_dt)
-                          ->whereTime('timestamp','>=',$from_time);
-                 })
-                 ->where(function($query) use ($to_dt,$to_time){
-                    $query->whereDate('timestamp','<=',$to_dt)
-                          ->whereTime('timestamp','<=',$to_time);
-                 })
                  ->whereIn('server_ip',$sid)
                  ->whereIn('campaign',$campaign)
                  ->whereIn('dispo',$dispo)
@@ -165,5 +168,9 @@ class CallLog extends Model
         return self::where('status','=',1)
                    ->groupBy('user')
                    ->get('user');
+    }
+
+    public static function findby_recording_id($recording_id){
+        return self::where('recording_id','=',$recording_id)->first();
     }
 }

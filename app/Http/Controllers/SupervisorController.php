@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\CallLog;
 use App\Models\Team;
@@ -18,9 +19,9 @@ class SupervisorController extends Controller
     public function index(){
     	$calllogs = CallLog::available_calllogs();
     	$teams = Team::all();
-    	$servers = Server::all();
-    	$campaigns = Campaign::all();
-    	$dispositions = Disposition::all();
+    	$servers = DB::table('calllogs')->distinct()->get('server_ip');
+    	$campaigns = DB::table('calllogs')->distinct()->get('campaign');
+    	$dispositions = DB::table('calllogs')->distinct()->get('dispo');
 
     	// default from and to date
     	$from_raw = new DateTime("yesterday", new DateTimeZone('Asia/Kuala_Lumpur'));
@@ -36,12 +37,13 @@ class SupervisorController extends Controller
     }
 
     public function search_calls(Request $request){
-    	$from = $request->from;
-    	$to = $request->to;
+    	// $from = $request->from;
+    	// $to = $request->to;
     	$sid = $request->sid;
     	$campaign = $request->campaign;
     	$dispo = $request->dispo;
-    	$calls = CallLog::search_call_logs($from,$to,$sid,$campaign,$dispo);
+    	// $calls = CallLog::search_call_logs($from,$to,$sid,$campaign,$dispo);
+        $calls = CallLog::search_call_logs($sid,$campaign,$dispo);
     	return view('call_log.search_result',compact('calls'));
     }
 

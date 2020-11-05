@@ -11,6 +11,14 @@
 |
 */
 
+Route::get('/template',function(){
+	return view('template');
+});
+
+Route::get('/template1',function(){
+	return view('template1');
+});
+
 
 Route::get('/call-logs/audited-by-agents','CallLogController@audited_by_agents')->name('call.audited_agents');
 

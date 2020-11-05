@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\CallIsClaimed;
 use App\Models\CallLog;
 use App\Models\Script;
-use App\Models\RecordingScript;
-use App\Models\Disposition;
-use App\Models\AgentSystemIssue;
-use App\Models\ZTPLOL;
+use App\Models\ScriptResponse;
+use App\Models\AgentScriptResponse;
+use App\Models\ExternalScriptResponse;
 
 
 class AuditorController extends Controller
@@ -40,9 +39,35 @@ class AuditorController extends Controller
     	return view('auditor.my_call_logs',compact('calllogs','scripts'));
     }
 
+    // public function recording($recording_id){
+    //     $calllog = CallLog::where('recording_id','=',$recording_id)->first();
+    //     $user_json = file_get_contents("http://local.digicononline.com/api/?controller=employee&method=get_user_details&user=$calllog->user");
+    //     $user = json_decode($user_json);
+    //     $employee_id = isset($user->employeeid) ? $user->employeeid : '';
+    //     $employee_json = file_get_contents("http://local.digicononline.com/api/?controller=employee&method=get_employee_details&employee_id=$employee_id");
+    //     $employee = json_decode($employee_json);
+    //     $user_id = $calllog->user;
+
+    //     return view('auditor.recording',compact('employee','user_id','recording_id'));
+    // }
+
     public function recording($recording_id){
-        return view('auditor.recording',compact('recording_id'));
-    }
+        $calllog = CallLog::where('recording_id','=',$recording_id)->first();
+        $server = $calllog->server_ip;
+        $user_id = $calllog->user;
+        
+        $user_curl = curl_init("http://dci-camain.digicononline.com/api/?controller=employee&method=get_user_details&user=$calllog->user");
+        curl_setopt($user_curl, CURLOPT_RETURNTRANSFER, true);
+        if(($user_json = curl_exec($user_curl)) === false){
+            $employee = (object)['full_name'=>'Error 505','teamsupervisor'=>'Error 505'];
+        }else{
+            $user = json_decode($user_json);
+            $employee_id = isset($user->employeeid) ? $user->employeeid : '';
+            $employee_json = file_get_contents("http://dci-camain.digicononline.com/api/?controller=employee&method=get_employee_details&employee_id=$employee_id");
+            $employee = json_decode($employee_json);
+        }
+        return view('auditor.recording',compact('employee','user_id','recording_id','server'));
+    }    
 
     public function claim_call(Request $request){
     	$validator = Validator::make($request->all(),[
@@ -79,51 +104,57 @@ class AuditorController extends Controller
     }
 
     public function submit_audit(Request $request){
-        $dispositions = Disposition::where('code','!=','25')->get()->sortBy('short_desc');
-        $agent_issues = AgentSystemIssue::where('type','=','Agent')->get()->sortBy('name');
-        $system_issues = AgentSystemIssue::where('type','=','System')->get()->sortBy('name');
-        $ztps = ZTPLOL::where('type','=','ZTP')->get()->sortBy('name');
-        $lols = ZTPLOL::where('type','=','LOL')->get()->sortBy('name');
         $recording_id = $request->recording_id;
 
-        foreach($request->all() as $script_resp){
+        foreach ($request->responses as $response) {
+            if($this->is_not_empty($response)){
+                $scrpt_resp = ScriptResponse::firstOrNew(['recording_id'=>$recording_id,'script_id'=>$response['id']]);
+                $scrpt_resp->cust_statement = isset($response['cust_statement']) ? $response['cust_statement'] : null;
+                $scrpt_resp->aud_comment = isset($response['aud_comment']) ? $response['aud_comment'] : null;
+                $scrpt_resp->inc_tagging = isset($response['inc_tagging']) ? $response['inc_tagging'] : null;
+                $scrpt_resp->inapp_resp = isset($response['inapp_resp']) ? $response['inapp_resp'] : null;
+                $scrpt_resp->inc_detail = isset($response['inc_detail']) ? $response['inc_detail'] : null;
 
-            $recording_script = [];
-           
-            if($this->is_not_empty($script_resp)){ 
-                if(RecordingScript::is_uniq_response($script_resp['script_code'],$recording_id)){
-                    $recording_script = new RecordingScript;
-                }else{
-                    $recording_script = RecordingScript::find_by_composite_ids($script_resp['script_code'],$recording_id);
+                if($scrpt_resp->save()){
+                    if(isset($response['agent_correction'])){
+                        // remove records that are no longer selected
+                        AgentScriptResponse::delete_if_not_exist($scrpt_resp->id,$response['agent_correction']);
+
+                        // insert only if the record does not exist
+                        foreach ($response['agent_correction'] as $agent_correction_id) {
+                            $agent_script_response = ['script_response_id' => $scrpt_resp->id,'agent_correction_id' => $agent_correction_id];
+                            AgentScriptResponse::firstOrCreate($agent_script_response);
+                        }
+                    }
+
+                    if(isset($response['external_factor'])){
+                        // remove records that are no longer selected
+                        ExternalScriptResponse::delete_if_not_exist($scrpt_resp->id,$response['external_factor']);
+
+                        // insert only if the record does not exist
+                        foreach ($response['external_factor'] as $external_factor_id) {
+                            $external_script_response = ['script_response_id' => $scrpt_resp->id,'external_factor_id' => $external_factor_id];
+                            ExternalScriptResponse::firstOrCreate($external_script_response);
+                        }
+                    }
                 }
-
-                $recording_script->script_code = $script_resp['script_code'];
-                $recording_script->recording_id = $recording_id;
-                $recording_script->cust_statement = $script_resp['cust_statement'];
-                $recording_script->acknowledgement = isset($script_resp['acknowledge']) ? $script_resp['acknowledge'] : null;
-                $recording_script->agent_resp = $script_resp['agent_response'];
-                $recording_script->agent_resp_spd = $script_resp['agent_response_speed'];
-                $recording_script->correct_response = $script_resp['correct_response'];
-                $recording_script->cust_dtl = $script_resp['customer_details'];
-                $recording_script->agent_input = $script_resp['agent_input'];
-                $recording_script->comment = $script_resp['comment'];
-
-                $recording_script->save();                
-
             }
         }
-
-        // return response()->json(['success'=>'Success']);
-        return view('auditor.findings_forms.index',compact('recording_id','dispositions','agent_issues','system_issues','ztps','lols'));
+        // update calllog status
+        $clog = CallLog::findby_recording_id($recording_id);
+        $clog->status = 1;
+        $clog->save();
+        return redirect()->route('auditor.my_call_logs')->with('success','Audit recorded');
     }
 
-    public function is_not_empty($params){
-            return isset($params['cust_statement']) ||
-                   isset($params['acknowledge'])||
-                   isset($params['agent_response']) ||
-                   isset($params['agent_response_speed']) ||
-                   isset($params['customer_details']) ||
-                   isset($params['agent_input']) ||
-                   isset($params['comment']);
+    private function is_not_empty($response){
+        $ret = false;
+
+        if(isset($response['cust_statement']) || isset($response['aud_comment']) || isset($response['inc_tagging']) || isset($response['inapp_resp']) || isset($response['inc_detail']) || isset($response['agent_correction']) || isset($response['external_factor'])){
+            $ret = true;
+        }
+
+        return $ret;
     }
+
 }

@@ -428,6 +428,12 @@ $(document).ready(function(){
 			url: url,
 			method: method,
 			data: form_data,
+			beforeSend: function(){
+				$('.gray-bg').css({'display':'block'});
+			},
+			complete: function(){
+				$('.gray-bg').css({'display':'none'});
+			},
 			success: function(response){
 				result_container.empty()
 								.append(response);
@@ -630,6 +636,37 @@ $(document).ready(function(){
 			$('#zt-select').removeClass('d-none').addClass('d-none');
 			$('#lol-select').removeClass('d-none').addClass('d-none');
 		}
+	});
+
+	$(document).on('click','.tab',function(){
+		var content = $(this).data('content');
+		var mp3 = document.getElementById("audio");
+
+		// change tab color
+		$(".btn-blue.active").removeClass('active');
+		$(this).removeClass('active').addClass('active');
+
+		// change tabcontent
+		$(".tabcontent.active").removeClass('active').addClass('inactive');
+		$('#'+content).removeClass('inactive').addClass('active');
+
+		// pause the audio
+		mp3.pause();
+	});
+
+	$(document).on('click','.lolztp',function(){
+		var user = $(this).data('user');
+		var name = $(this).data('name');
+		var url = 'https://docs.google.com/forms/d/e/1FAIpQLSd54spuX-aeDfHC1K5wUbkl3pQR47xQX8HHf0vWIbnY-3a4Yw/viewform?usp=pp_url&entry.1707684629=Internal+Audit&entry.1851153735='+user+'&entry.1437949203='+name;
+
+		window.open(url);
+	});
+
+	$(document).on('click','.in_response',function(){
+		var inp_container = $(this).siblings('div');
+
+		inp_container.toggle();
+		inp_container.children('input').val('');
 	});
 
 });

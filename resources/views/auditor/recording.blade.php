@@ -2,709 +2,1557 @@
 
 @section('content')
 
-<div class="container-fluid">
+<div class="container">
 	<div class="row">
-		<div class="col-md-12">
-			<form class="audit_form" action="{{ route('auditor.submit_audit') }}" method="post">
-				@csrf
-				<div class="table-responsive">
-					<table class="table table-bordered table-sm" style="min-width: 1466px;">
-						<thead class="thead-dark">
-							<tr>
-								<th class="text-center align-middle">
-									Recording ID: {{ $recording_id }}
-									<input type="hidden" name="recording_id" value="{{ $recording_id }}">
-								</th>
-								<th colspan="4">
-									<audio class="w-100" style="outline: none;" controls>
-										<source src="{{ get_recording_location($recording_id) }}" type="audio/wav">
-									</audio>
-								</th>
-							</tr>
-							<tr>
-								<th rowspan="3" class="text-center"></th>
-								<th class="text-center">Customer</th>
-								<th colspan="4" class="text-center">Agent</th>
-								<th rowspan="2" colspan="3" class="text-center">Information</th>
-								<th rowspan="3" class="text-center">Comment</th>
-							</tr>
-							<tr>
-								<th rowspan="2" class="text-center">Statement (question/objection)</th>
-								<th rowspan="2" class="text-center">Acknowledgement</th>
-								<th colspan="3" class="text-center">Accuracy</th>
-							</tr>
-							<tr>
-								<th>Agent response</th>
-								<th>Speed</th>
-								<th>Correct response</th>
-								<th>Customer Details</th>
-								<th>Agent Input</th>
-								<th>Call Ends</th>
-							</tr>
-						</thead>
-						<tbody class="audit-form">
-							<tr class="text-center">
-								<td>
-									z01
-									<input type="hidden" name="z01[script_code]" value="1">
-									@php
-										$z1 = get_recording_script(1,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z01[cust_statement]" class="w-100" value="{{ return_col_val($z1->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z01[acknowledge]" value="1" id="ack1-yes"
-											       {{ isset($z1->acknowledgement) && $z1->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack1-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z01[acknowledge]" value="0" id="ack1-no"
-											       {{ isset($z1->acknowledgement) && $z1->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack1-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z01[agent_response]" class="w-100" value="{{ return_col_val($z1->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z01[agent_response_speed]" class="w-100" value="{{ return_col_val($z1->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z01[correct_response]" class="w-100" value="{{ return_col_val($z1->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z01[customer_details]" class="w-100" value="{{ return_col_val($z1->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z01[agent_input]" class="w-100" value="{{ return_col_val($z1->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z01[comment]" class="w-100" value="{{ return_col_val($z1->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z02
-									<input type="hidden" name="z02[script_code]" value="2">
-									@php
-										$z2 = get_recording_script(2,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z02[cust_statement]" class="w-100" value="{{ return_col_val($z2->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z02[acknowledge]" value="1" id="ack2-yes"
-											       {{ isset($z2->acknowledgement) && $z2->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack2-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z02[acknowledge]" value="0" id="ack2-no"
-											       {{ isset($z2->acknowledgement) && $z2->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack2-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z02[agent_response]" class="w-100" value="{{ return_col_val($z2->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z02[agent_response_speed]" class="w-100" value="{{ return_col_val($z2->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z02[correct_response]" class="w-100" value="{{ return_col_val($z2->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z02[customer_details]" class="w-100" value="{{ return_col_val($z2->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z02[agent_input]" class="w-100" value="{{ return_col_val($z2->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z02[comment]" class="w-100" value="{{ return_col_val($z2->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z03
-									<input type="hidden" name="z03[script_code]" value="3">
-									@php
-										$z3 = get_recording_script(3,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z03[cust_statement]" class="w-100" value="{{ return_col_val($z3->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z03[acknowledge]" value="1" id="ack3-yes"
-											       {{ isset($z3->acknowledgement) && $z3->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack3-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z03[acknowledge]" value="0" id="ack3-no"
-											       {{ isset($z3->acknowledgement) && $z3->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack3-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z03[agent_response]" class="w-100" value="{{ return_col_val($z3->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z03[agent_response_speed]" class="w-100" value="{{ return_col_val($z3->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z03[correct_response]" class="w-100" value="{{ return_col_val($z3->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z03[customer_details]" class="w-100" value="{{ return_col_val($z3->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z03[agent_input]" class="w-100" value="{{ return_col_val($z3->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z03[comment]" class="w-100" value="{{ return_col_val($z3->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z04
-									<input type="hidden" name="z04[script_code]" value="4">
-									@php
-										$z4 = get_recording_script(4,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z04[cust_statement]" class="w-100" value="{{ return_col_val($z4->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z04[acknowledge]" value="1" id="ack4-yes"
-											       {{ isset($z4->acknowledgement) && $z4->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack4-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z04[acknowledge]" value="0" id="ack4-no"
-											       {{ isset($z4->acknowledgement) && $z4->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack4-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z04[agent_response]" class="w-100" value="{{ return_col_val($z4->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z04[agent_response_speed]" class="w-100" value="{{ return_col_val($z4->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z04[correct_response]" class="w-100" value="{{ return_col_val($z4->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z04[customer_details]" class="w-100" value="{{ return_col_val($z4->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z04[agent_input]" class="w-100" value="{{ return_col_val($z4->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z04[comment]" class="w-100" value="{{ return_col_val($z4->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z16
-									<input type="hidden" name="z16[script_code]" value="16">
-									@php
-										$z16 = get_recording_script(16,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z16[cust_statement]" class="w-100" value="{{ return_col_val($z16->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z16[acknowledge]" value="1" id="ack16-yes"
-											       {{ isset($z16->acknowledgement) && $z16->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack16-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z16[acknowledge]" value="0" id="ack16-no"
-											       {{ isset($z16->acknowledgement) && $z16->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack16-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z16[agent_response]" class="w-100" value="{{ return_col_val($z16->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z16[agent_response_speed]" class="w-100" value="{{ return_col_val($z16->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z16[correct_response]" class="w-100" value="{{ return_col_val($z16->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z16[customer_details]" class="w-100" value="{{ return_col_val($z16->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z16[agent_input]" class="w-100" value="{{ return_col_val($z16->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z16[comment]" class="w-100" value="{{ return_col_val($z16->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z05
-									<input type="hidden" name="z05[script_code]" value="5">
-									@php
-										$z5 = get_recording_script(5,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z05[cust_statement]" class="w-100" value="{{ return_col_val($z5->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z05[acknowledge]" value="1" id="ack5-yes"
-											       {{ isset($z5->acknowledgement) && $z5->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack5-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z05[acknowledge]" value="0" id="ack5-no"
-											       {{ isset($z5->acknowledgement) && $z5->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack5-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z05[agent_response]" class="w-100" value="{{ return_col_val($z5->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z05[agent_response_speed]" class="w-100" value="{{ return_col_val($z5->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z05[correct_response]" class="w-100" value="{{ return_col_val($z5->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z05[customer_details]" class="w-100" value="{{ return_col_val($z5->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z05[agent_input]" class="w-100" value="{{ return_col_val($z5->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z05[comment]" class="w-100" value="{{ return_col_val($z5->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z06
-									<input type="hidden" name="z06[script_code]" value="6">
-									@php
-										$z6 = get_recording_script(6,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z06[cust_statement]" class="w-100" value="{{ return_col_val($z6->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z06[acknowledge]" value="1" id="ack6-yes"
-											       {{ isset($z6->acknowledgement) && $z6->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack6-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z06[acknowledge]" value="0" id="ack6-no"
-											       {{ isset($z6->acknowledgement) && $z6->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack6-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z06[agent_response]" class="w-100" value="{{ return_col_val($z6->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z06[agent_response_speed]" class="w-100" value="{{ return_col_val($z6->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z06[correct_response]" class="w-100" value="{{ return_col_val($z6->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z06[customer_details]" class="w-100" value="{{ return_col_val($z6->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z06[agent_input]" class="w-100" value="{{ return_col_val($z6->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z06[comment]" class="w-100" value="{{ return_col_val($z6->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z07
-									<input type="hidden" name="z07[script_code]" value="7">
-									@php
-										$z7 = get_recording_script(7,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z07[cust_statement]" class="w-100" value="{{ return_col_val($z7->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z07[acknowledge]" value="1" id="ack7-yes"
-											       {{ isset($z7->acknowledgement) && $z7->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack7-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z07[acknowledge]" value="0" id="ack7-no"
-											       {{ isset($z7->acknowledgement) && $z7->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack7-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z07[agent_response]" class="w-100" value="{{ return_col_val($z7->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z07[agent_response_speed]" class="w-100" value="{{ return_col_val($z7->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z07[correct_response]" class="w-100" value="{{ return_col_val($z7->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z07[customer_details]" class="w-100" value="{{ return_col_val($z7->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z07[agent_input]" class="w-100" value="{{ return_col_val($z7->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z07[comment]" class="w-100" value="{{ return_col_val($z7->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z15
-									<input type="hidden" name="z15[script_code]" value="15">
-									@php
-										$z15 = get_recording_script(15,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z15[cust_statement]" class="w-100" value="{{ return_col_val($z15->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z15[acknowledge]" value="1" id="ack15-yes"
-											       {{ isset($z15->acknowledgement) && $z15->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack15-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z15[acknowledge]" value="0" id="ack15-no"
-											       {{ isset($z15->acknowledgement) && $z15->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack15-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z15[agent_response]" class="w-100" value="{{ return_col_val($z15->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z15[agent_response_speed]" class="w-100" value="{{ return_col_val($z15->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z15[correct_response]" class="w-100" value="{{ return_col_val($z15->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z15[customer_details]" class="w-100" value="{{ return_col_val($z15->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z15[agent_input]" class="w-100" value="{{ return_col_val($z15->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z15[comment]" class="w-100" value="{{ return_col_val($z15->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z08
-									<input type="hidden" name="z08[script_code]" value="8">
-									@php
-										$z8 = get_recording_script(8,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z08[cust_statement]" class="w-100" value="{{ return_col_val($z8->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z08[acknowledge]" value="1" id="ack8-yes"
-											       {{ isset($z8->acknowledgement) && $z8->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack8-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z08[acknowledge]" value="0" id="ack8-no"
-											       {{ isset($z8->acknowledgement) && $z8->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack8-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z08[agent_response]" class="w-100" value="{{ return_col_val($z8->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z08[agent_response_speed]" class="w-100" value="{{ return_col_val($z8->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z08[correct_response]" class="w-100" value="{{ return_col_val($z8->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z08[customer_details]" class="w-100" value="{{ return_col_val($z8->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z08[agent_input]" class="w-100" value="{{ return_col_val($z8->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z08[comment]" class="w-100" value="{{ return_col_val($z8->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z09
-									<input type="hidden" name="z09[script_code]" value="9">
-									@php
-										$z9 = get_recording_script(9,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z09[cust_statement]" class="w-100" value="{{ return_col_val($z9->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z09[acknowledge]" value="1" id="ack9-yes"
-											       {{ isset($z9->acknowledgement) && $z9->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack9-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z09[acknowledge]" value="0" id="ack9-no"
-											       {{ isset($z9->acknowledgement) && $z9->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack9-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z09[agent_response]" class="w-100" value="{{ return_col_val($z9->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z09[agent_response_speed]" class="w-100" value="{{ return_col_val($z9->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z09[correct_response]" class="w-100" value="{{ return_col_val($z9->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z09[customer_details]" class="w-100" value="{{ return_col_val($z9->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z09[agent_input]" class="w-100" value="{{ return_col_val($z9->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z09[comment]" class="w-100" value="{{ return_col_val($z9->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z10
-									<input type="hidden" name="z10[script_code]" value="10">
-									@php
-										$z10 = get_recording_script(10,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z10[cust_statement]" class="w-100" value="{{ return_col_val($z10->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z10[acknowledge]" value="1" id="ack10-yes"
-											       {{ isset($z10->acknowledgement) && $z10->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack10-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z10[acknowledge]" value="0" id="ack10-no"
-											       {{ isset($z10->acknowledgement) && $z10->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack10-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z10[agent_response]" class="w-100" value="{{ return_col_val($z10->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z10[agent_response_speed]" class="w-100" value="{{ return_col_val($z10->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z10[correct_response]" class="w-100" value="{{ return_col_val($z10->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z10[customer_details]" class="w-100" value="{{ return_col_val($z10->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z10[agent_input]" class="w-100" value="{{ return_col_val($z10->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z10[comment]" class="w-100" value="{{ return_col_val($z10->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z11
-									<input type="hidden" name="z11[script_code]" value="11">
-									@php
-										$z11 = get_recording_script(11,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z11[cust_statement]" class="w-100" value="{{ return_col_val($z11->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z11[acknowledge]" value="1" id="ack11-yes"
-											       {{ isset($z11->acknowledgement) && $z11->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack11-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z11[acknowledge]" value="0" id="ack11-no"
-											       {{ isset($z11->acknowledgement) && $z11->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack11-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z11[agent_response]" class="w-100" value="{{ return_col_val($z11->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z11[agent_response_speed]" class="w-100" value="{{ return_col_val($z11->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z11[correct_response]" class="w-100" value="{{ return_col_val($z11->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z11[customer_details]" class="w-100" value="{{ return_col_val($z11->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z11[agent_input]" class="w-100" value="{{ return_col_val($z11->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z11[comment]" class="w-100" value="{{ return_col_val($z11->comment) }}">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td>
-									z12
-									<input type="hidden" name="z12[script_code]" value="12">
-									@php
-										$z12 = get_recording_script(12,$recording_id);
-									@endphp
-								</td>
-								<td>
-									<input type="text" name="z12[cust_statement]" class="w-100" value="{{ return_col_val($z12->cust_statement) }}">
-								</td>
-								<td>
-									<div class="d-flex justify-content-around">
-										<div>
-											<input type="radio" name="z12[acknowledge]" value="1" id="ack12-yes"
-											       {{ isset($z12->acknowledgement) && $z12->acknowledgement == 1 ? 'checked' : '' }}>
-											<label for="ack12-yes">Yes</label>
-										</div>
-										<div>
-											<input type="radio" name="z12[acknowledge]" value="0" id="ack12-no"
-											       {{ isset($z12->acknowledgement) && $z12->acknowledgement == 0 ? 'checked' : '' }}>
-											<label for="ack12-no">No</label>
-										</div>
-									</div>
-								</td>
-								<td>
-									<input type="text" name="z12[agent_response]" class="w-100" value="{{ return_col_val($z12->agent_resp) }}">
-								</td>
-								<td>
-									<input type="number" name="z12[agent_response_speed]" class="w-100" value="{{ return_col_val($z12->agent_resp_spd) }}">
-								</td>
-								<td>
-									<input type="text" name="z12[correct_response]" class="w-100" value="{{ return_col_val($z12->correct_response) }}">
-								</td>
-								<td>
-									<input type="text" name="z12[customer_details]" class="w-100" value="{{ return_col_val($z12->cust_dtl) }}">
-								</td>
-								<td>
-									<input type="text" name="z12[agent_input]" class="w-100" value="{{ return_col_val($z12->agent_iput) }}">
-								</td>
-								<td>
-									<input type="checkbox" id="end_call" class="w-100" onClick="this.form.submit()">
-								</td>
-								<td>
-									<input type="text" name="z12[comment]" class="w-100" value="{{ return_col_val($z12->comment) }}">
-								</td>
-							</tr>
-						</tbody>
-					</table>
+		<div class="col-md-1"></div>
+		<div class="col-md-11 px-0 mb-3">
+			<div class="box-bg p-3">
+				<div class="d-flex flex-wrap justify-content-around">
+					<div><label class="font-weight-bolder">User ID:</label> {{ isset($user_id) ? $user_id : '' }} </div>
+					<div><label class="font-weight-bolder">Name:</label> {{ isset($employee->full_name) ? $employee->full_name : '(No record)' }} </div>
+					<div><label class="font-weight-bolder">Team Lead:</label> {{ isset($employee->teamsupervisor) ? $employee->teamsupervisor : '(No record)' }} </div>
 				</div>
-			</form>	
+				<div class="mt-3 text-center">
+					<audio class="w-75" id="audio" style="outline: none;" controls>
+						<source src="{{ get_recording_location($recording_id,$server) }}" type="audio/wav">
+					</audio>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container border">
+	<div class="row">
+		<div class="col-md-1 p-0">
+			<div class="tab py-2 text-center btn-blue" data-content="Z01">Z01</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z02">Z02</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z03">Z03</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z04">Z04</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z05">Z05</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z06">Z06</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z07">Z07</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z08">Z08</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z16">Z16</div>			
+			<div class="tab py-2 text-center btn-blue" data-content="Z09">Z09</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z10">Z10</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z11">Z11</div>
+			<div class="tab py-2 text-center btn-blue" data-content="Z12">Z12</div>
+		</div>
+		<div class="col-md-11 p-0">
+			<div class="box-bg">
+				<form action="{{ route('auditor.submit_audit') }}" method="post">
+					@csrf
+					<input type="hidden" name="recording_id" value="{{ $recording_id }}">
+					<!-- Z01 -->
+					@php $z1_response = get_responses($recording_id,1) @endphp
+					<div class="tabcontent inactive p-3" id="Z01">
+						<input type="hidden" name="responses[z1][id]" value="1">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z1][cust_statement]" class="form-control">{{ isset($z1_response) }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z1][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z1-alist1">No intro</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z1-alist2">Delayed intro</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z1-alist3">Did not proceed to z02</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z1-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z1-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle in_response" id="z1-alist6" value="6">
+												<label class="align-middle mb-0 ml-2" for="z1-alist6">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z1][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist7" value="7">
+												<label class="align-middle mb-0 ml-2" for="z1-alist7">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle in_response" id="z1-alist8" value="8" value="1">
+												<label class="align-middle mb-0 ml-2" for="z1-alist8">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z1][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist9" value="9">
+												<label class="align-middle mb-0 ml-2" for="z1-alist9">Call avoidance</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][agent_correction][]" class="align-middle" id="z1-alist10" value="10">
+												<label class="align-middle mb-0 ml-2" for="z1-alist10">Stayed on the line for too long</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][external_factor][]" class="align-middle" id="z1-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z1-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][external_factor][]" class="align-middle" id="z1-elist2" value="4">
+												<label class="align-middle mb-0 ml-2" for="z1-elist2">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z1][external_factor][]" class="align-middle" id="z1-elist3" value="5">
+												<label class="align-middle mb-0 ml-2" for="z1-elist3">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z02 -->
+					<div class="tabcontent inactive p-3" id="Z02">
+						<input type="hidden" name="responses[z2][id]" value="2">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z2][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z2][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle" id="z2-alist1" value="4">
+												<label class="align-middle mb-0 ml-2" for="z2-alist1">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle" id="z2-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z2-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle in_response" id="z2-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z2-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z2][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle" id="z2-alist4" value="5">
+												<label class="align-middle mb-0 ml-2" for="z2-alist4">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle in_response" id="z2-alist5" value="8">
+												<label class="align-middle mb-0 ml-2" for="z2-alist5">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z2][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle" id="z2-alist6" value="7">
+												<label class="align-middle mb-0 ml-2" for="z2-alist6">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle" id="z2-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z2-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][agent_correction][]" class="align-middle in_response" id="z2-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z2-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z2][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][external_factor][]" class="align-middle" id="z2-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z2-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][external_factor][]" class="align-middle" id="z2-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z2-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][external_factor][]" class="align-middle" id="z2-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z2-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][external_factor][]" class="align-middle" id="z2-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z2-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z2][external_factor][]" class="align-middle" id="z2-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z2-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z03 -->
+					<div class="tabcontent inactive p-3" id="Z03">
+						<input type="hidden" name="responses[z3][id]" value="3">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z3][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z3][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle" id="z3-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z3-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle" id="z3-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z3-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle in_response" id="z3-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z3-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z3][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle" id="z3-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z3-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle" id="z3-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z3-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle in_response" id="z3-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z3-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z3][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle" id="z3-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z3-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][agent_correction][]" class="align-middle in_response" id="z3-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z3-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z3][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][external_factor][]" class="align-middle" id="z3-elist1" value="2">
+												<label class="align-middle mb-0 ml-2" for="z3-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][external_factor][]" class="align-middle" id="z3-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z3-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][external_factor][]" class="align-middle" id="z3-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z3-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][external_factor][]" class="align-middle" id="z3-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z3-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z3][external_factor][]" class="align-middle" id="z3-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z3-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z04 -->
+					<div class="tabcontent inactive p-3" id="Z04">
+						<input type="hidden" name="responses[z4][id]" value="4">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z4][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z4][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle" id="z4-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z4-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle" id="z4-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z4-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle in_response" id="z4-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z4-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z4][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle" id="z4-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z4-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle" id="z4-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z4-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle in_response" id="z4-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z4-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z4][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle" id="z4-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z4-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][agent_correction][]" class="align-middle in_response" id="z4-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z4-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z4][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][external_factor][]" class="align-middle" id="z4-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z4-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][external_factor][]" class="align-middle" id="z4-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z4-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][external_factor][]" class="align-middle" id="z4-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z4-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][external_factor][]" class="align-middle" id="z4-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z4-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z4][external_factor][]" class="align-middle" id="z4-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z4-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z05 -->
+					<div class="tabcontent inactive p-3" id="Z05">
+						<input type="hidden" name="responses[z5][id]" value="5">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z5][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z5][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle" id="z5-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z5-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle" id="z5-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z5-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle" id="z5-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z5-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle in_response" id="z5-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z5-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z5][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle" id="z5-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z5-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle in_response" id="z5-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z5-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z5][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle" id="z5-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z5-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][agent_correction][]" class="align-middle in_response" id="z5-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z5-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z5][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][external_factor][]" class="align-middle" id="z5-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z5-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][external_factor][]" class="align-middle" id="z5-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z5-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][external_factor][]" class="align-middle" id="z5-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z5-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][external_factor][]" class="align-middle" id="z5-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z5-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z5][external_factor][]" class="align-middle" id="z5-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z5-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z06 -->
+					<div class="tabcontent inactive p-3" id="Z06">
+						<input type="hidden" name="responses[z6][id]" value="6">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z6][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z6][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle" id="z6-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z6-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle" id="z6-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z6-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle" id="z6-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z6-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle in_response" id="z6-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z6-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z6][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle" id="z6-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z6-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle in_response" id="z6-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z6-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z6][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle" id="z6-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z6-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][agent_correction][]" class="align-middle in_response" id="z6-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z6-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z6][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][external_factor][]" class="align-middle" id="z6-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z6-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][external_factor][]" class="align-middle" id="z6-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z6-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][external_factor][]" class="align-middle" id="z6-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z6-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][external_factor][]" class="align-middle" id="z6-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z6-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z6][external_factor][]" class="align-middle" id="z6-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z6-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z07 -->
+					<div class="tabcontent inactive p-3" id="Z07">
+						<input type="hidden" name="responses[z7][id]" value="7">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z7][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z7][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle" id="z7-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z7-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle" id="z7-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z7-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle" id="z7-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z7-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle in_response" id="z7-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z7-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z7][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle" id="z7-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z7-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle in_response" id="z7-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z7-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z7][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle" id="z7-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z7-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][agent_correction][]" class="align-middle in_response" id="z7-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z7-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z7][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][external_factor][]" class="align-middle" id="z7-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z7-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][external_factor][]" class="align-middle" id="z7-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z7-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][external_factor][]" class="align-middle" id="z7-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z7-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][external_factor][]" class="align-middle" id="z7-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z7-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z7][external_factor][]" class="align-middle" id="z7-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z7-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z08 -->
+					<div class="tabcontent inactive p-3" id="Z08">
+						<input type="hidden" name="responses[z8][id]" value="8">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z8][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z8][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle" id="z8-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z8-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle" id="z8-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z8-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle" id="z8-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z8-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle in_response" id="z8-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z8-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z8][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle" id="z8-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z8-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle in_response" id="z8-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z8-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z8][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle" id="z8-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z8-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][agent_correction][]" class="align-middle in_response" id="z8-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z8-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z8][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][external_factor][]" class="align-middle" id="z8-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z8-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][external_factor][]" class="align-middle" id="z8-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z8-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][external_factor][]" class="align-middle" id="z8-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z8-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][external_factor][]" class="align-middle" id="z8-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z8-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z8][external_factor][]" class="align-middle" id="z8-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z8-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z16 -->
+					<div class="tabcontent inactive p-3" id="Z16">
+						<input type="hidden" name="responses[z16][id]" value="9">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z16][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z16][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle" id="z16-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z16-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle" id="z16-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z16-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle" id="z16-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z16-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle in_response" id="z16-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z16-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z16][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle" id="z16-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z16-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle in_response" id="z16-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z16-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z16][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle" id="z16-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z16-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][agent_correction][]" class="align-middle in_response" id="z16-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z16-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z16][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][external_factor][]" class="align-middle" id="z16-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z16-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][external_factor][]" class="align-middle" id="z16-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z16-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][external_factor][]" class="align-middle" id="z16-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z16-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][external_factor][]" class="align-middle" id="z16-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z16-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z16][external_factor][]" class="align-middle" id="z16-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z16-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z09 -->
+					<div class="tabcontent inactive p-3" id="Z09">
+						<input type="hidden" name="responses[z9][id]" value="10">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z9][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z9][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle" id="z9-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z9-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle" id="z9-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z9-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle" id="z9-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z9-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle in_response" id="z9-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z9-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z9][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle" id="z9-alist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z9-alist5">No rebuttal</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle in_response" id="z9-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z9-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z9][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle" id="z9-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z9-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][agent_correction][]" class="align-middle in_response" id="z9-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z9-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z9][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][external_factor][]" class="align-middle" id="z9-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z9-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][external_factor][]" class="align-middle" id="z9-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z9-elist2">Vici Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][external_factor][]" class="align-middle" id="z9-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z9-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][external_factor][]" class="align-middle" id="z9-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z9-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z9][external_factor][]" class="align-middle" id="z9-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z9-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z10 -->
+					<div class="tabcontent inactive p-3" id="Z10">
+						<input type="hidden" name="responses[z10][id]" value="11">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z10][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z10][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle" id="z10-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z10-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle" id="z10-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z10-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle" id="z10-alist2">
+												<label class="align-middle mb-0 ml-2" for="z10-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle in_response" id="z10-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z10-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z10][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle in_response" id="z10-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z10-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z10][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle" id="z10-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z10-alist7">Stayed on the line for too long</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][agent_correction][]" class="align-middle in_response" id="z10-alist8" value="11">
+												<label class="align-middle mb-0 ml-2" for="z10-alist8">Did not obtained/Incorrect detail</label>
+												<div class="form-group hide">
+													<input type="text" name="responses[z10][inc_detail]" class="form-control">
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][external_factor][]" class="align-middle" id="z10-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z10-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][external_factor][]" class="align-middle" id="z10-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z10-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][external_factor][]" class="align-middle" id="z10-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z10-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z10][external_factor][]" class="align-middle" id="z10-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z10-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z11 -->
+					<div class="tabcontent inactive p-3" id="Z11">
+						<input type="hidden" name="responses[z11][id]" value="12">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z11][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z11][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][agent_correction][]" class="align-middle" id="z11-alist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z11-alist4">No acknowledgement</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][agent_correction][]" class="align-middle" id="z11-alist1" value="7">
+												<label class="align-middle mb-0 ml-2" for="z11-alist1">Interrupting prospect</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][agent_correction][]" class="align-middle" id="z11-alist2" value="12">
+												<label class="align-middle mb-0 ml-2" for="z11-alist2">Delayed response</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][agent_correction][]" class="align-middle in_response" id="z11-alist3" value="6">
+												<label class="align-middle mb-0 ml-2" for="z11-alist3">Incorrect tagging</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct dispo:</strong></label>
+													<input type="text" name="responses[z11][inc_tagging]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][agent_correction][]" class="align-middle in_response" id="z11-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z11-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z11][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][agent_correction][]" class="align-middle" id="z11-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z11-alist7">Stayed on the line for too long</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][external_factor][]" class="align-middle" id="z11-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z11-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][external_factor][]" class="align-middle" id="z11-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z11-elist2">Vici Issue</label>
+											</li>										
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][external_factor][]" class="align-middle" id="z11-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z11-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][external_factor][]" class="align-middle" id="z11-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z11-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z11][external_factor][]" class="align-middle" id="z11-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z11-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Z12 -->
+					<div class="tabcontent inactive p-3" id="Z12">
+						<input type="hidden" name="responses[z12][id]" value="13">
+						<div class="row mb-2">
+							<div class="col-md-12">
+								<span class="btn btn-primary lolztp" 
+								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
+									LOL/ZTP
+								</span>
+								<button class="btn btn-danger">Call Ends</button>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Customer</div>
+									<div class="card-body">
+										<label>Statement (Question/Objection)</label>
+										<textarea name="responses[z12][cust_statement]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Comment</div>
+									<div class="card-body">
+										<label>Auditor's Comment</label>
+										<textarea name="responses[z12][aud_comment]" class="form-control"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">Agent</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][agent_correction][]" class="align-middle in_response" id="z12-alist6" value="8">
+												<label class="align-middle mb-0 ml-2" for="z12-alist6">Inappropriate response</label>
+												<div class="form-group hide">
+													<label><strong>Enter correct response:</strong></label>
+													<input type="text" name="responses[z12][inapp_resp]" class="form-control">
+												</div>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][agent_correction][]" class="align-middle" id="z12-alist7" value="10">
+												<label class="align-middle mb-0 ml-2" for="z12-alist7">Stayed on the line for too long</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header bg-secondary text-white">External Factors</div>
+									<div class="card-body">
+										<ul class="list-group">
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][external_factor][]" class="align-middle" id="z12-elist1" value="1">
+												<label class="align-middle mb-0 ml-2" for="z12-elist1">Line Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][external_factor][]" class="align-middle" id="z12-elist2" value="2">
+												<label class="align-middle mb-0 ml-2" for="z12-elist2">Vici Issue</label>
+											</li>										
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][external_factor][]" class="align-middle" id="z12-elist3" value="3">
+												<label class="align-middle mb-0 ml-2" for="z12-elist3">Webform Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][external_factor][]" class="align-middle" id="z12-elist4" value="4">
+												<label class="align-middle mb-0 ml-2" for="z12-elist4">Script Issue</label>
+											</li>
+											<li class="list-group-item py-1">
+												<input type="checkbox" name="responses[z12][external_factor][]" class="align-middle" id="z12-elist5" value="5">
+												<label class="align-middle mb-0 ml-2" for="z12-elist5">Time Synch Error</label>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>	
+			</div>
 		</div>
 	</div>
 </div>
