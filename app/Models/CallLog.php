@@ -81,7 +81,7 @@ class CallLog extends Model
     }
 
     public static function available_calllogs(){
-        return self::whereNull('team_code')->get();
+        return self::whereNull('team_code')->limit(20)->get();
     }
 
     public static function team_available_logs($auditor_id){
