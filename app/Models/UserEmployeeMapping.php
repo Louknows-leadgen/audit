@@ -19,4 +19,8 @@ class UserEmployeeMapping extends Model
     public function team_assignment(){
     	return $this->hasOne('App\Models\TeamAssignment','employeeid');
     }
+
+    public function employee(){
+        return $this->belongsTo('App\Models\Employee','employeeid');
+    }
 }

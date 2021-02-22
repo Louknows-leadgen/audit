@@ -9,16 +9,8 @@
 			<div class="box-bg p-3">
 				<div class="d-flex flex-wrap justify-content-around">
 					<div><label class="font-weight-bolder">User ID:</label> {{ isset($user_id) ? $user_id : '' }} </div>
-					<div>
-						<label class="font-weight-bolder">Name:</label> 
-						{{ 
-							isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' 
-						}} 
-					</div>
-					<div>
-						<label class="font-weight-bolder">Team Lead:</label> 
-						{{ isset($emp->team_assignment->team_supervisor->TeamSupervisor) ? $emp->team_assignment->team_supervisor->TeamSupervisor : '(No record)' }} 
-					</div>
+					<div><label class="font-weight-bolder">Name:</label> {{ isset($employee->full_name) ? $employee->full_name : '(No record)' }} </div>
+					<div><label class="font-weight-bolder">Team Lead:</label> {{ isset($employee->teamsupervisor) ? $employee->teamsupervisor : '(No record)' }} </div>
 				</div>
 				<div class="mt-3 text-center">
 					<audio class="w-75" id="audio" style="outline: none;" controls>
@@ -60,7 +52,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -177,7 +169,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -297,7 +289,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -417,7 +409,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -537,7 +529,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -657,7 +649,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -777,7 +769,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -897,7 +889,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -1017,7 +1009,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -1137,7 +1129,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -1257,7 +1249,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -1369,7 +1361,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
@@ -1478,7 +1470,7 @@
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
 								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-name="{{ isset($employee->full_name) ? $employee->full_name : '(No record)' }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>

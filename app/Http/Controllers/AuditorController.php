@@ -11,6 +11,7 @@ use App\Models\Script;
 use App\Models\ScriptResponse;
 use App\Models\AgentScriptResponse;
 use App\Models\ExternalScriptResponse;
+use App\Models\UserEmployeeMapping;
 
 
 class AuditorController extends Controller
@@ -51,23 +52,34 @@ class AuditorController extends Controller
     //     return view('auditor.recording',compact('employee','user_id','recording_id'));
     // }
 
+    // public function recording($recording_id){
+    //     $calllog = CallLog::where('recording_id','=',$recording_id)->first();
+    //     $server = $calllog->server_ip;
+    //     $user_id = $calllog->user;
+        
+    //     $user_curl = curl_init("http://dci-camain.digicononline.com/api/?controller=employee&method=get_user_details&user=$calllog->user");
+    //     curl_setopt($user_curl, CURLOPT_RETURNTRANSFER, true);
+    //     if(($user_json = curl_exec($user_curl)) === false){
+    //         $employee = (object)['full_name'=>'Error 505','teamsupervisor'=>'Error 505'];
+    //     }else{
+    //         $user = json_decode($user_json);
+    //         $employee_id = isset($user->employeeid) ? $user->employeeid : '';
+    //         $employee_json = file_get_contents("http://dci-camain.digicononline.com/api/?controller=employee&method=get_employee_details&employee_id=$employee_id");
+    //         $employee = json_decode($employee_json);
+    //     }
+    //     return view('auditor.recording',compact('employee','user_id','recording_id','server'));
+    // }    
+
     public function recording($recording_id){
         $calllog = CallLog::where('recording_id','=',$recording_id)->first();
         $server = $calllog->server_ip;
         $user_id = $calllog->user;
-        
-        $user_curl = curl_init("http://dci-camain.digicononline.com/api/?controller=employee&method=get_user_details&user=$calllog->user");
-        curl_setopt($user_curl, CURLOPT_RETURNTRANSFER, true);
-        if(($user_json = curl_exec($user_curl)) === false){
-            $employee = (object)['full_name'=>'Error 505','teamsupervisor'=>'Error 505'];
-        }else{
-            $user = json_decode($user_json);
-            $employee_id = isset($user->employeeid) ? $user->employeeid : '';
-            $employee_json = file_get_contents("http://dci-camain.digicononline.com/api/?controller=employee&method=get_employee_details&employee_id=$employee_id");
-            $employee = json_decode($employee_json);
-        }
-        return view('auditor.recording',compact('employee','user_id','recording_id','server'));
+        $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
+       
+        return view('auditor.recording',compact('emp','user_id','recording_id','server'));
     }    
+
+
 
     public function claim_call(Request $request){
     	$validator = Validator::make($request->all(),[
