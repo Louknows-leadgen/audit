@@ -22,7 +22,9 @@
 				</div>
 				<div class="mt-3 text-center">
 					<audio class="w-75" id="audio" style="outline: none;" controls>
-						<source src="{{ get_recording_location($recording_id,$server) }}" type="audio/wav">
+						@foreach ($recording_files as $recording)
+							<source src="{{ $recording['url'] }}" type="audio/{{ $recording['type'] }}">
+						@endforeach
 					</audio>
 				</div>
 			</div>

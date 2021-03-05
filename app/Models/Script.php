@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Script extends Model
 {
-    //
+    
     /*
     |----------------------------------
     |        Association
@@ -14,6 +14,10 @@ class Script extends Model
 
     public function recording_scripts(){
     	return $this->hasMany('App\Models\RecordingScript','script_code','code');
+    }
+
+    public function script_responses(){
+    	return $this->hasMany('App\Models\ScriptResponse');
     }
 
 }

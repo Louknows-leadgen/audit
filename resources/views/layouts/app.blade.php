@@ -23,10 +23,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <div>
+    <div id="app" class="container-fluid">
         @include('layouts.header')
-        </div>
 
         <main class="py-4">
             @yield('content')

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\CallIsClaimed;
 use App\Models\CallLog;
+use App\Models\CallLogArchive;
 use App\Models\Script;
 use App\Models\ScriptResponse;
 use App\Models\AgentScriptResponse;
@@ -39,46 +40,41 @@ class AuditorController extends Controller
 
     	return view('auditor.my_call_logs',compact('calllogs','scripts'));
     }
-
-    // public function recording($recording_id){
-    //     $calllog = CallLog::where('recording_id','=',$recording_id)->first();
-    //     $user_json = file_get_contents("http://local.digicononline.com/api/?controller=employee&method=get_user_details&user=$calllog->user");
-    //     $user = json_decode($user_json);
-    //     $employee_id = isset($user->employeeid) ? $user->employeeid : '';
-    //     $employee_json = file_get_contents("http://local.digicononline.com/api/?controller=employee&method=get_employee_details&employee_id=$employee_id");
-    //     $employee = json_decode($employee_json);
-    //     $user_id = $calllog->user;
-
-    //     return view('auditor.recording',compact('employee','user_id','recording_id'));
-    // }
-
-    // public function recording($recording_id){
-    //     $calllog = CallLog::where('recording_id','=',$recording_id)->first();
-    //     $server = $calllog->server_ip;
-    //     $user_id = $calllog->user;
-        
-    //     $user_curl = curl_init("http://dci-camain.digicononline.com/api/?controller=employee&method=get_user_details&user=$calllog->user");
-    //     curl_setopt($user_curl, CURLOPT_RETURNTRANSFER, true);
-    //     if(($user_json = curl_exec($user_curl)) === false){
-    //         $employee = (object)['full_name'=>'Error 505','teamsupervisor'=>'Error 505'];
-    //     }else{
-    //         $user = json_decode($user_json);
-    //         $employee_id = isset($user->employeeid) ? $user->employeeid : '';
-    //         $employee_json = file_get_contents("http://dci-camain.digicononline.com/api/?controller=employee&method=get_employee_details&employee_id=$employee_id");
-    //         $employee = json_decode($employee_json);
-    //     }
-    //     return view('auditor.recording',compact('employee','user_id','recording_id','server'));
-    // }    
+   
 
     public function recording($recording_id){
         $calllog = CallLog::where('recording_id','=',$recording_id)->first();
-        $server = $calllog->server_ip;
+        if(empty($calllog)){
+            $calllog = CallLogArchive::where('recording_id','=',$recording_id)->first();
+        }
+        // $server = $calllog->server_ip;
         $user_id = $calllog->user;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-       
-        return view('auditor.recording',compact('emp','user_id','recording_id','server'));
-    }    
+        $recording_files = $this->generate_recording_url($calllog);
 
+        return view('auditor.recording',compact('emp','user_id','recording_id','recording_files'));
+    }
+
+    public function result($recording_id){
+        $calllog = CallLog::where('recording_id','=',$recording_id)->first();
+        if(empty($calllog)){
+            $calllog = CallLogArchive::where('recording_id','=',$recording_id)->first();
+        }
+    }
+
+
+    private function generate_recording_url($calllog){
+        $urls = [];
+        $filename = $calllog->recording_filename;
+        $server = $calllog->server_origin;
+        $date = date('Y-m-d',strtotime($calllog->timestamp));
+
+        array_push($urls, ['type' => 'wav', 'url' => "http://$server/RECORDINGS/$filename-all.wav"]);
+        array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/RECORDINGS/MP3/$filename-all.mp3"]);
+        array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/archive/$date/$filename-all.mp3"]);
+
+        return $urls;
+    }
 
 
     public function claim_call(Request $request){
@@ -91,6 +87,9 @@ class AuditorController extends Controller
         }else{
             $call_id = $request->call_id;
             $c = CallLog::find($call_id);
+            if(empty($c)){
+                $c = CallLogArchive::find($call_id);
+            }
             $c->is_claimed = 1;
             $c->claimed_by = Auth::id();
             $c->save();

@@ -37,10 +37,15 @@ Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');
 
+Route::get('/reports','ReportController@index')->name('report.index');
+Route::get('/reports/calllog-responses','ReportController@calllog_responses')->name('report.calllog_responses');
+Route::post('/download/calllog-responses','DownloadController@downloadCallLogResponses')->name('dl.calllog_responses');
+
 Route::resource('findings','FindingController')->only(['store']);
 
 Route::get('/supervisor','SupervisorController@index')->name('supervisor.index');
-Route::get('/search-calls','SupervisorController@search_calls')->name('supervisor.search_calls');
+// Route::get('/search-calls','SupervisorController@search_calls')->name('supervisor.search_calls');
+// Route::get('/search','SupervisorController@search')->name('supervisor.search');
 Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');
 Route::get('/supervisor/manage-teams','SupervisorController@manage_teams')->name('supervisor.manage_teams');
 
@@ -49,4 +54,3 @@ Route::resource('teams','TeamController')->only(['show','update','store','destro
 Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
 
 Auth::routes();
-

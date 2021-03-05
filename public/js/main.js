@@ -409,37 +409,37 @@ $(document).ready(function(){
 	});
 
 	// supervisor search for call logs
-	$(document).on('submit','.calllogs-search',function(e){
-		e.preventDefault();
+	// $(document).on('submit','.calllogs-search',function(e){
+	// 	e.preventDefault();
 
-		var form = $(this);
-		var method = form.attr('method');
-		var url = form.attr('action');
-		var form_data = {};
-		var result_container = $('.calllogs-list');
+	// 	var form = $(this);
+	// 	var method = form.attr('method');
+	// 	var url = form.attr('action');
+	// 	var form_data = {};
+	// 	var result_container = $('.calllogs-list');
 
-		form.find('[name]').each(function(){
-			// form_data[this.name] = this.value;
-			form_data[this.name] = $(this).val();
+	// 	form.find('[name]').each(function(){
+	// 		// form_data[this.name] = this.value;
+	// 		form_data[this.name] = $(this).val();
 			
-		});
+	// 	});
 
-		$.ajax({
-			url: url,
-			method: method,
-			data: form_data,
-			beforeSend: function(){
-				$('.gray-bg').css({'display':'block'});
-			},
-			complete: function(){
-				$('.gray-bg').css({'display':'none'});
-			},
-			success: function(response){
-				result_container.empty()
-								.append(response);
-			}
-		});
-	});
+	// 	$.ajax({
+	// 		url: url,
+	// 		method: method,
+	// 		data: form_data,
+	// 		beforeSend: function(){
+	// 			$('.gray-bg').css({'display':'block'});
+	// 		},
+	// 		complete: function(){
+	// 			$('.gray-bg').css({'display':'none'});
+	// 		},
+	// 		success: function(response){
+	// 			result_container.empty()
+	// 							.append(response);
+	// 		}
+	// 	});
+	// });
 
 	// supervisor assign the calllogs to team
 	$(document).on('submit','.calllog-form',function(e){

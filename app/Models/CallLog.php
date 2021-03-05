@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\CallLogArchive;
 use App\Models\RecordingScript;
 use \DateTime;
 
@@ -28,6 +29,11 @@ class CallLog extends Model
     public function auditor(){
         return $this->belongsTo('App\Models\User','claimed_by');
     }
+
+    public function script_responses(){
+        return $this->hasMany('App\Models\ScriptResponse','recording_id','recording_id');
+    }
+
 
 
 
@@ -80,6 +86,34 @@ class CallLog extends Model
         return $calls;
     }
 
+
+    public static function search_call_logs_test($sid,$campaign,$dispo,$from,$to){
+
+        $calls = DB::table('calllogs')
+                 ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                 ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                 ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                 ->whereIn('server_ip',$sid)
+                 ->whereIn('campaign',$campaign)
+                 ->whereIn('dispo',$dispo)
+                 ->whereNull('team_code');
+
+        $all_calls = DB::table('calllogs_archive')
+                 ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                 ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                 ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                 ->whereIn('server_ip',$sid)
+                 ->whereIn('campaign',$campaign)
+                 ->whereIn('dispo',$dispo)
+                 ->whereNull('team_code')
+                 ->union($calls)
+                 ->paginate(50);
+
+
+        return $all_calls;
+    }
+
+
     public static function available_calllogs(){
         return self::whereNull('team_code')->paginate(50);
     }
@@ -93,8 +127,14 @@ class CallLog extends Model
             array_push($teams,$user_team->team_code);
         }
 
+        $call_archived = CallLogArchive::whereIn('team_code',$teams)
+                         ->where('is_claimed','=',0)
+                         ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
+
         return self::whereIn('team_code',$teams)
                    ->where('is_claimed','=',0)
+                   ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                   ->union($call_archived)
                    ->get();
     }
 
@@ -107,22 +147,40 @@ class CallLog extends Model
             array_push($teams,$user_team->team_code);
         }
 
+        $call_archived = CallLogArchive::whereIn('team_code',$teams)
+                         ->where('is_claimed','=',1)
+                         ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
+
         return self::whereIn('team_code',$teams)
                    ->where('is_claimed','=',1)
+                   ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                   ->union($call_archived)
                    ->get();
     }
 
 
     public static function my_call_logs($auditor_id){
+        $call_archived = CallLogArchive::where('claimed_by','=', $auditor_id)
+                                       ->where('status','=', 0)
+                                       ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
+
         return self::where('claimed_by','=', $auditor_id)
                    ->where('status','=', 0)
+                   ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                   ->union($call_archived)
                    ->get();
     }
 
 
     public static function is_available($call_id){
+        $call_archived = CallLogArchive::where('ctr','=',$call_id)
+                                       ->where('is_claimed','=',0)
+                                       ->select('ctr');
+
         return self::where('ctr','=',$call_id)
                    ->where('is_claimed','=',0)
+                   ->select('ctr')
+                   ->union($call_archived)
                    ->exists();
     }
 
@@ -171,6 +229,17 @@ class CallLog extends Model
     }
 
     public static function findby_recording_id($recording_id){
-        return self::where('recording_id','=',$recording_id)->first();
+        // return self::where('recording_id','=',$recording_id)->first();
+        $calllog = self::where('recording_id','=',$recording_id)
+                       ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                       ->first();
+        
+        if(empty($calllog)){
+            $calllog = CallLogArchive::where('recording_id','=',$recording_id)
+                                     ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                                     ->first();
+        }
+
+        return $calllog;
     }
 }

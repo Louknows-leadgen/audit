@@ -13,6 +13,19 @@ class AgentScriptResponse extends Model
     	'agent_correction_id'
     ];
 
+    /************************************************
+    |               Association
+    *************************************************/
+    public function script_response(){
+        return $this->belongsTo('App\Models\ScriptResponse');
+    }
+
+    public function agent_correction(){
+        return $this->belongsTo('App\Models\AgentCorrection');
+    }
+
+    /**************************************************/
+
     public static function delete_if_not_exist($script_response_id,$collection){
     	DB::table('agent_script_responses')
     	  ->where('script_response_id','=',$script_response_id)

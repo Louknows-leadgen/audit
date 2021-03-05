@@ -6,7 +6,7 @@
 			@include('supervisor.search-section')
 		</div>
 		<div class="col-md-8">
-			@include('supervisor.tablecontent-section')
+			@include('supervisor.search_result-section')
 		</div>
 	</div>
 
