@@ -9,6 +9,7 @@
 					<thead class="thead-dark">
 						<tr>
 							<th>Record ID</th>
+							<th>Recording Date</th>
 							<th>Agent ID</th>
 							<th>Phone</th>
 							<th>Auditor</th>
@@ -20,6 +21,7 @@
 							@foreach($calllogs as $calllog)
 								<tr>
 									<td>{{ $calllog->recording_id }}</td>
+									<td>{{ date('m/d/Y',strtotime($calllog->timestamp)) }}</td>
 									<td>{{ $calllog->user }}</td>
 									<td>{{ $calllog->phone_number }}</td>
 									<td>{{ $calllog->auditor->name }}</td>
