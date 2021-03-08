@@ -23,6 +23,11 @@ class SupervisorController extends Controller
     	$campaigns = DB::table('calllogs')->distinct()->get('campaign');
     	$dispositions = DB::table('calllogs')->distinct()->get('dispo');
 
+
+        $servers = empty($servers) ? $this->get_servers() : $servers;
+        $campaigns = empty($campaigns) ? $this->get_campaigns() : $campaigns;
+        $dispositions = empty($dispositions) ? $this->get_dispositions() : $dispositions;
+
     	// default from and to date
     	// $from_raw = new DateTime("yesterday", new DateTimeZone('Asia/Kuala_Lumpur'));
     	// $from_dt = $from_raw->format('m/d/Y g:i A');
@@ -96,6 +101,57 @@ class SupervisorController extends Controller
             return response()->json(['success'=>'Assigned call logs']);
         }
         
+    }
+
+    private function get_servers(){
+        $servers = [
+            (object) ['server_ip' => '38.102.225.152'],
+            (object) ['server_ip' => '38.107.183.5'],
+            (object) ['server_ip' => '38.102.225.153']
+        ];
+
+        return $servers;
+    }
+
+    private function get_campaigns(){
+        $campaigns = [
+            (object) ['campaign' => '3000'],
+            (object) ['campaign' => '6000']
+        ];
+
+        return $campaigns;
+    }
+
+
+    private function get_dispositions(){
+        $dispositions = [
+            (object) ['dispo' => 'HUP'],
+            (object) ['dispo' => 'A'],
+            (object) ['dispo' => 'Lang'],
+            (object) ['dispo' => 'NI'],
+            (object) ['dispo' => 'RD'],
+            (object) ['dispo' => 'NQ'],
+            (object) ['dispo' => 'DUMP'],
+            (object) ['dispo' => 'DNC'],
+            (object) ['dispo' => 'WRNGN'],
+            (object) ['dispo' => 'InsHUP'],
+            (object) ['dispo' => 'RING'],
+            (object) ['dispo' => 'Prank'],
+            (object) ['dispo' => 'ROBOT'],
+            (object) ['dispo' => 'TrSuc'],
+            (object) ['dispo' => 'TRHUP'],
+            (object) ['dispo' => 'VM'],
+            (object) ['dispo' => 'B'],
+            (object) ['dispo' => 'NA'],
+            (object) ['dispo' => 'DTO'],
+            (object) ['dispo' => 'DEAD'],
+            (object) ['dispo' => 'DC'],
+            (object) ['dispo' => 'AA'],
+            (object) ['dispo' => 'CBHOLD'],
+            (object) ['dispo' => '']
+        ];
+
+        return $dispositions;
     }
 
 }
