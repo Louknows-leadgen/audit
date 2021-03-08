@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CallLogArchive extends Model
 {
     // specify table to be used for this model (Legacy table)
-    protected $table = 'calllogs_archive';
+    protected $table = 'calllogs_archive_search';
     // specify primary key of the table for the legacy table
     protected $primaryKey = 'ctr';
 

@@ -56,7 +56,7 @@ class SupervisorController extends Controller
             $sid = $request->sid;
             $campaign = $request->campaign;
             $dispo = $request->dispo;
-            $calllogs = CallLog::search_call_logs_test($sid,$campaign,$dispo,$from,$to);
+            $calllogs = CallLog::search_call_logs($sid,$campaign,$dispo,$from,$to);
             $calllogs->withPath(route('supervisor.index'));
         }
 

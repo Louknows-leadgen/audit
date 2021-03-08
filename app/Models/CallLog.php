@@ -74,7 +74,7 @@ class CallLog extends Model
     //     return $calls;
     // }
 
-    public static function search_call_logs($sid,$campaign,$dispo){
+    public static function search_call_logs_test($sid,$campaign,$dispo){
 
         $calls = DB::table('calllogs')
                  ->whereIn('server_ip',$sid)
@@ -87,7 +87,7 @@ class CallLog extends Model
     }
 
 
-    public static function search_call_logs_test($sid,$campaign,$dispo,$from,$to){
+    public static function search_call_logs($sid,$campaign,$dispo,$from,$to){
 
         $calls = DB::table('calllogs')
                  ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
@@ -98,7 +98,7 @@ class CallLog extends Model
                  ->whereIn('dispo',$dispo)
                  ->whereNull('team_code');
 
-        $all_calls = DB::table('calllogs_archive')
+        $all_calls = DB::table('calllogs_archive_search')
                  ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
                  ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
                  ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
@@ -115,7 +115,13 @@ class CallLog extends Model
 
 
     public static function available_calllogs(){
-        return self::whereNull('team_code')->paginate(50);
+        $calllog_archived = CallLogArchive::whereNull('team_code')
+                                          ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
+        
+        return self::whereNull('team_code')
+                   ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                   ->union($calllog_archived)
+                   ->paginate(50);
     }
 
     public static function team_available_logs($auditor_id){
@@ -186,12 +192,33 @@ class CallLog extends Model
 
 
     public static function bulk_claim($auditor_id, $calllogs){
-        return self::whereIn('ctr',$calllogs)
-                   ->where('is_claimed','=',0)
-                   ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
+        $ca_numrows = CallLogArchive::whereIn('ctr',$calllogs)
+                                    ->where('is_claimed','=',0)
+                                    ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
+
+        $c_numrows = self::whereIn('ctr',$calllogs)
+                         ->where('is_claimed','=',0)
+                         ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
+
+        return $ca_numrows || $c_numrows ? 1 : 0; // return 1 if there are records updated. else 0
     }
 
     public static function release_user_calls($user_id){
+        $calls_archived = CallLogArchive::where('claimed_by','=',$user_id)
+                                        ->where('status','!=',1)
+                                        ->get();
+
+
+        foreach ($calls_archived as $ca) {
+            $ca->is_claimed = 0;
+            $ca->claimed_by = 0;
+            $ca->save();
+
+            // remove answers from recording_scripts table
+            RecordingScript::remove_responses($ca->recording_id);
+        }
+
+
         $calls = self::where('claimed_by','=',$user_id)
                      ->where('status','!=',1)
                      ->get();
@@ -207,6 +234,21 @@ class CallLog extends Model
     }
 
     public static function release_calls($team_id){
+        $calls_archived = CallLogArchive::where('team_code','=',$team_id)
+                                        ->where('status','!=',1)
+                                        ->get();
+
+        foreach ($calls_archived as $ca) {
+            $ca->is_claimed = 0;
+            $ca->claimed_by = 0;
+            $ca->team_code = null;
+            $ca->save();
+
+            // remove answers from recording_scripts table
+            RecordingScript::remove_responses($ca->recording_id);
+        }
+                                        
+
         $calls = self::where('team_code','=',$team_id)
                      ->where('status','!=',1)
                      ->get();

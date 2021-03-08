@@ -61,7 +61,7 @@ class ScriptResponse extends Model
                                 ->select('c.ctr')
                                 ->distinct();
 
-        $calllogs = DB::table('calllogs_archive as ca')
+        $calllogs = DB::table('calllogs_archive_search as ca')
                                 ->join('script_responses as sr','ca.recording_id','=','sr.recording_id')
                                 ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
                                 ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
