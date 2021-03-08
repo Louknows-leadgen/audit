@@ -115,12 +115,8 @@ class CallLog extends Model
 
 
     public static function available_calllogs(){
-        $calllog_archived = CallLogArchive::whereNull('team_code')
-                                          ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
-        
         return self::whereNull('team_code')
                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-                   ->union($calllog_archived)
                    ->paginate(50);
     }
 
