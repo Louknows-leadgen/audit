@@ -24,9 +24,10 @@ class SupervisorController extends Controller
     	$dispositions = DB::table('calllogs')->distinct()->get('dispo');
 
 
-        $servers = empty($servers) ? $this->get_servers() : $servers;
-        $campaigns = empty($campaigns) ? $this->get_campaigns() : $campaigns;
-        $dispositions = empty($dispositions) ? $this->get_dispositions() : $dispositions;
+        $servers = $servers->isEmpty() ? $this->get_servers() : $servers;
+        $campaigns = $campaigns->isEmpty() ? $this->get_campaigns() : $campaigns;
+        $dispositions = $dispositions->isEmpty() ? $this->get_dispositions() : $dispositions;
+
 
     	// default from and to date
     	// $from_raw = new DateTime("yesterday", new DateTimeZone('Asia/Kuala_Lumpur'));
