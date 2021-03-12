@@ -21,6 +21,8 @@
 
 
 Route::get('/call-logs/audited-by-agents','CallLogController@audited_by_agents')->name('call.audited_agents');
+// Route::get('/call-logs/search-form','CallLogController@search_form')->name('call.search_form');
+Route::get('/call-logs/search','CallLogController@search')->name('call.search');
 
 Route::get('/','SuperAdminController@index')->name('root');
 Route::get('/admin','AdminController@index')->name('admin.index');

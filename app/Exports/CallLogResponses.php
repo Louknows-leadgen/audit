@@ -35,7 +35,7 @@ class CallLogResponses implements FromArray, WithHeadings, WithStyles, ShouldAut
     {
         $sheet->getStyle(1)->getFont()->setBold(true);
         $sheet->getStyle(1)->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
-        $sheet->getStyle('A1:P1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('3366cc');
+        $sheet->getStyle('A1:R1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('3366cc');
     }
 }
 

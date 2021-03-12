@@ -22,10 +22,6 @@ class CallLog extends Model
     |			Associations
     |-------------------------------------*/
 
-    public function user_list(){
-    	return $this->belongsTo('App\Models\UserList','user','user');
-    }
-
     public function auditor(){
         return $this->belongsTo('App\Models\User','claimed_by');
     }

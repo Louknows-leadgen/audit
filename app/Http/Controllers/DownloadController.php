@@ -13,6 +13,8 @@ class DownloadController extends Controller
     //
     function downloadCallLogResponses(Request $request){
     	$headings = [
+            'Auditor',
+            'Audit Type',
     		'Recording ID',
     		'User',
     		'User Group',

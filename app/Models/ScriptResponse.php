@@ -80,6 +80,8 @@ class ScriptResponse extends Model
             foreach ($calllog->script_responses as $sr) {
                 $response = new Response;
 
+                $response->auditor = $calllog->auditor->email;
+                $response->audit_type = $calllog->audit_type;
                 $response->recording_id = $calllog->recording_id;
                 $response->user = $calllog->user;
                 $response->user_group = $calllog->user_group;
