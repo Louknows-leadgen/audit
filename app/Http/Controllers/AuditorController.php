@@ -49,10 +49,11 @@ class AuditorController extends Controller
         }
         // $server = $calllog->server_ip;
         $user_id = $calllog->user;
+        $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
         $recording_files = $this->generate_recording_url($calllog);
 
-        return view('auditor.recording',compact('emp','user_id','recording_id','recording_files'));
+        return view('auditor.recording',compact('emp','user_id','recording_id','recording_files','audit_type'));
     }
 
     public function result($recording_id){

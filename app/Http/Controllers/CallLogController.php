@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\CallLog;
 use App\Models\CallLogArchive;
 
@@ -19,18 +20,19 @@ class CallLogController extends Controller
     // 	return view('call_log.search_page');
     // }
 
+
     public function search(Request $request){
-    	$phone_number = $request->phone_number;
-    	
+        $phone_number = $request->phone_number;
+        
         $calllog = [];
         if(!empty($phone_number)){
             $calllog = CallLog::where('phone_number',$phone_number)->first();
-        	if(empty($calllog)){
-        		$calllog = CallLogArchive::where('phone_number',$phone_number)->first();
-        	}
+            if(empty($calllog)){
+                $calllog = CallLogArchive::where('phone_number',$phone_number)->first();
+            }
         }
 
-    	return view('call_log.search_page',compact('calllog','phone_number'));
+        return view('call_log.search_page',compact('calllog','phone_number'));
     }
 
     public function tag_call(Request $request){
@@ -42,9 +44,14 @@ class CallLogController extends Controller
             $call = CallLogArchive::find($ctr);
         }
 
-        if(!empty($call){
+        if(!empty($call)){
+            $call->is_claimed = 1;
+            $call->claimed_by = Auth::id();
             $call->audit_type = $audit_type;
-            $call->save;
+            $call->save();
+            return redirect()->route('auditor.recording',['recording'=>$call->recording_id]);
+        }else{
+            return redirect()->route('call.search',['phone_number'=>$call->phone_number])->with('fail','Recording not found');
         }
     }
 }

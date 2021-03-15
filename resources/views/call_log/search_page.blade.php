@@ -34,14 +34,16 @@
 									<td>{{ $calllog->user }}</td>
 									<td>{{ $calllog->dispo }}</td>
 									<td>
-										<form action="{{ route('') }}">
+										<form action="{{ route('call.tag') }}" method="post">
+											@csrf
 											<input type="hidden" name="ctr" class="form-control" value="{{ $calllog->ctr }}">
 											<input type="hidden" name="audit_type" class="form-control" value="flag">
 											<input type="submit" value="Flag" class="btn btn-warning">
 										</form>
 									</td>
 									<td>
-										<form>
+										<form action="{{ route('call.tag') }}" method="post">
+											@csrf
 											<input type="hidden" name="ctr" class="form-control" value="{{ $calllog->ctr }}">
 											<input type="hidden" name="audit_type" class="form-control" value="request">
 											<input type="submit" value="Request" class="btn btn-info">

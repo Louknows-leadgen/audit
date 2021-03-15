@@ -19,6 +19,10 @@
 						<label class="font-weight-bolder">Team Lead:</label> 
 						{{ isset($emp->team_assignment->team_supervisor->TeamSupervisor) ? $emp->team_assignment->team_supervisor->TeamSupervisor : '(No record)' }} 
 					</div>
+					<div>
+						<label class="font-weight-bolder">Audit Type:</label>
+						{{ $audit_type }}
+					</div>
 				</div>
 				<div class="mt-3 text-center">
 					<audio class="w-75" id="audio" style="outline: none;" controls>
