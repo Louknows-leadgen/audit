@@ -19,10 +19,12 @@
 									<span class="btn btn-secondary select-custom">Select</span>
 								</div>
 							</div>
-							<!----------------------------------------------------------------------
-								- refer to the jquery code for the data being retrieved on this form
-								- used form instead of button event to avoid hardcoding the url 
-							----------------------------------------------------------------------->
+							
+								<!-- 
+									- refer to the jquery code for the data being retrieved on this form
+									- used form instead of button event to avoid hardcoding the url  
+								-->
+							
 							<div class="w-100">
 								<form class="bulk-claim" action="{{ route('auditor.bulk_claim') }}" method="post">
 									<button class="btn btn-primary mb-2">Bulk Claim</button>

@@ -21,7 +21,7 @@
 					</div>
 					<div>
 						<label class="font-weight-bolder">Audit Type:</label>
-						{{ $audit_type }}
+						{{ ucwords($audit_type) }}
 					</div>
 				</div>
 				<div class="mt-3 text-center">
