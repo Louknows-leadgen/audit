@@ -39,6 +39,7 @@ Route::get('/auditor/my-logs/{recording}','AuditorController@recording')->name('
 Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');
+Route::get('/auditor/my-audits','AuditorController@audits_form_page')->name('auditor.my-audits');
 
 Route::get('/reports','ReportController@index')->name('report.index');
 Route::get('/reports/calllog-responses','ReportController@calllog_responses')->name('report.calllog_responses');

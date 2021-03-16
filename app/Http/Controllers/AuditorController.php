@@ -63,6 +63,11 @@ class AuditorController extends Controller
         }
     }
 
+    public function audits_form_page(){
+        $userid = Auth::id();
+        return view('auditor.audits_form_page',compact('userid'));
+    }
+
 
     private function generate_recording_url($calllog){
         $urls = [];
