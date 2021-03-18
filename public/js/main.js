@@ -669,6 +669,41 @@ $(document).ready(function(){
 		inp_container.children('input').val('');
 	});
 
+	$(document).on('submit','#audit-count-form', function(e){
+		e.preventDefault();
+
+		var form_data = $(this).serialize();
+		var url = $(this).attr('action');
+		var method = 'get';
+
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: form_data,
+			beforeSend: function(){
+				var modal = `
+					<div class='gray-bg d-flex' id='form-loading'>
+						<div style="margin: auto;">
+							<div class='spinner-grow text-info'></div>
+							<div class='spinner-grow text-info'></div>
+							<div class='spinner-grow text-info'></div>
+						</div>
+					</div>
+				`;
+
+				$('body').append(modal);
+			},
+			success: function(response){
+				setTimeout(function(){
+					$('#form-loading').remove();
+					var result = $('#audit-count-cntr');
+					result.html(response);
+				}, 500);	
+			}
+		});
+	});
+
 });
 
 	

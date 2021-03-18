@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Rules\CallIsClaimed;
 use App\Models\CallLog;
 use App\Models\CallLogArchive;
@@ -66,6 +67,36 @@ class AuditorController extends Controller
     public function audits_form_page(){
         $userid = Auth::id();
         return view('auditor.audits_form_page',compact('userid'));
+    }
+
+    public function audits_form_page_count(Request $request){
+        $dispo = $request->dispo;
+        $user = $request->userid;
+
+        $date_start = $request->date;
+        $date_end = date('Y-m-d',strtotime($date_start . ' +1 day'));
+
+        $calls = CallLog::where('claimed_by',$user)
+                        ->where('status',1)
+                        ->whereIn('dispo',$dispo)
+                        ->whereDate('timestamp','>=',$date_start)
+                        ->whereDate('timestamp','<=',$date_end)
+                        ->select('dispo', DB::raw('count(*) as total'))
+                        ->groupBy('dispo')
+                        ->get();
+
+        if(empty($calls)){
+             $calls = CallLogArchive::where('claimed_by',$user)
+                        ->where('status',1)
+                        ->whereIn('dispo',$dispo)
+                        ->whereDate('timestamp','>=',$date_start)
+                        ->whereDate('timestamp','<=',$date_end)
+                        ->select('dispo', DB::raw('count(*) as total'))
+                        ->groupBy('dispo')
+                        ->get();
+        }
+
+        return view('auditor.audit_form_page_result',compact('calls')); 
     }
 
 
