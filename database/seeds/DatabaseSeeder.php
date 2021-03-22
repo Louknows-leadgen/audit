@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
         // 	ScriptsSeeder::class,
         //  UsersSeeder::class,
         //  AgentCorrectionsTableSeeder::class,
-        //  ExternalFactorsTableSeeder::class
+        //  ExternalFactorsTableSeeder::class,
+        //  DispositionsTableSeeder::class
         // ]);
     }
 }

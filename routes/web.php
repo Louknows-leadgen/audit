@@ -53,6 +53,7 @@ Route::get('/supervisor','SupervisorController@index')->name('supervisor.index')
 // Route::get('/search','SupervisorController@search')->name('supervisor.search');
 Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervisor.assign_calls');
 Route::get('/supervisor/manage-teams','SupervisorController@manage_teams')->name('supervisor.manage_teams');
+Route::get('/supervisor/call-assignment-preference','SupervisorController@assign_preference')->name('supervisor.assign_preference');
 
 Route::resource('teams','TeamController')->only(['show','update','store','destroy']);
 

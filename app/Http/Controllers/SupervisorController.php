@@ -104,6 +104,14 @@ class SupervisorController extends Controller
         
     }
 
+
+    public function assign_preference(){
+        $rules_list = AssignPreference::all();
+
+        return view('supervisor.assign_preference',compact('rules_list'));
+    }
+
+
     private function get_servers(){
         $servers = [
             (object) ['server_ip' => '38.102.225.152'],
