@@ -11,6 +11,7 @@ use App\Models\Team;
 use App\Models\Server;
 use App\Models\Campaign;
 use App\Models\Disposition;
+use App\Models\AssignPreference;
 use DateTime;
 use DateTimeZone;
 
@@ -109,6 +110,14 @@ class SupervisorController extends Controller
         $rules_list = AssignPreference::all();
 
         return view('supervisor.assign_preference',compact('rules_list'));
+    }
+
+    public function assign_preference_edit($id){
+        $rule = AssignPreference::find($id);
+        $teams = Team::all();
+        $dispositions = Disposition::all(); 
+
+        return view('supervisor.assign_preference_edit',compact('rule','teams'));
     }
 
 

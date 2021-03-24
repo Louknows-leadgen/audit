@@ -15,7 +15,22 @@
 						</tr>
 					</thead>
 					<tbody>
-						
+						@if(count($rules_list))
+							@foreach($rules_list as $rule)
+								<tr>
+									<td>{{ $rule->name }}</td>
+									<td>{{ $rule->created_by_user->email }}</td>
+									<td>
+										<a class="btn btn-primary" href="{{ route('supervisor.assign_preference_edit',['id'=>$rule->id]) }}">Edit</button>
+									</td>
+									<td></td>
+								</tr>
+							@endforeach
+						@else
+								<tr>
+									<td colspan="4">No list found</td>
+								</tr>
+						@endif
 					</tbody>
 				</table>
 			</div>

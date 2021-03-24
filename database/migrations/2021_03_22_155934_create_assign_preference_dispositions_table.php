@@ -15,8 +15,10 @@ class CreateAssignPreferenceDispositionsTable extends Migration
     {
         Schema::create('assign_preference_dispositions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('assign_preference_id');
-            $table->unsignedBigInteger('disposition_id');
+            $table->integer('assign_preference_id');
+            $table->integer('disposition_id');
+            $table->integer('count');
+
             $table->timestamps();
 
             // $table->foreign('assign_preference_id')

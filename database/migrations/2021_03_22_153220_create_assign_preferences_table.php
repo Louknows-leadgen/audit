@@ -16,9 +16,9 @@ class CreateAssignPreferencesTable extends Migration
         Schema::create('assign_preferences', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->unsignedBigInteger('team_id');
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+            $table->integer('team_id');
+            $table->integer('created_by');
+            $table->integer('updated_by');
             $table->timestamps();
 
             // $table->foreign('team_id')
