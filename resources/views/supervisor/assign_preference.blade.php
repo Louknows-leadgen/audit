@@ -5,6 +5,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="box">
+			<a href="{{ route('supervisor.assign_preference_new') }}">New</a>
 			<div class="table-responsive">
 				<table class="table table-bordered">
 					<thead class="thead-light">

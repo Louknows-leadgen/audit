@@ -55,6 +55,9 @@ Route::post('/assign-calls','SupervisorController@assign_calls')->name('supervis
 Route::get('/supervisor/manage-teams','SupervisorController@manage_teams')->name('supervisor.manage_teams');
 Route::get('/supervisor/call-assignment-preference','SupervisorController@assign_preference')->name('supervisor.assign_preference');
 Route::get('/supervisor/call-assignment-preference/{id}/edit','SupervisorController@assign_preference_edit')->name('supervisor.assign_preference_edit');
+Route::get('/supervisor/call-assignment-preference/new','SupervisorController@assign_preference_new')->name('supervisor.assign_preference_new');
+Route::post('/supervisor/call-assignment-preference/create','SupervisorController@assign_preference_create')->name('supervisor.assign_preference_create');
+Route::post('/supervisor/call-assignment-preference/{id}/update','SupervisorController@assign_preference_update')->name('supervisor.assign_preference_update');
 
 Route::resource('teams','TeamController')->only(['show','update','store','destroy']);
 

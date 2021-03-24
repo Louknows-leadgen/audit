@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\CallLog;
 use App\Models\CallLogArchive;
@@ -12,6 +13,7 @@ use App\Models\Server;
 use App\Models\Campaign;
 use App\Models\Disposition;
 use App\Models\AssignPreference;
+use App\Models\AssignPreferenceDisposition;
 use DateTime;
 use DateTimeZone;
 
@@ -115,9 +117,68 @@ class SupervisorController extends Controller
     public function assign_preference_edit($id){
         $rule = AssignPreference::find($id);
         $teams = Team::all();
+        $dispositions = Disposition::all();
+        
+        // $assign_pref_dispo = AssignPreferenceDisposition::where('assign_preference_id',$id);
+        $assign_pref_dispo = $rule->assign_preference_dispositions;
+        $dispo_list = [];
+        foreach ($assign_pref_dispo as $disp) {
+            $dispo_list[$disp->disposition_id] = $disp->count;
+        }
+
+        return view('supervisor.assign_preference_edit',compact('rule','dispositions','teams','dispo_list'));
+    }
+
+    public function assign_preference_update($id, Request $request){
+        $assign_preference = AssignPreference::find($id);
+        $assign_preference->name = $request->name;
+        $assign_preference->team_id = $request->team_id;
+        $assign_preference->updated_by = Auth::id();
+        
+        if($assign_preference->save()){
+            $id = $assign_preference->id;
+            $dispositions = $request->dispo;
+            foreach ($dispositions as $dispo_id => $count) {
+                $count = empty($count) && $count != 0 ? -1 : $count;
+                $assign_pref_dispo = AssignPreferenceDisposition::updateOrCreate(
+                    ['assign_preference_id' => $id,  'disposition_id' => $dispo_id],['count' => $count]
+                );
+
+                // echo "dispo: $dispo_id   , count: $count <br><br>";
+            }
+        }
+
+        return redirect()->route('supervisor.assign_preference');
+    }
+
+    public function assign_preference_new(){
+        $teams = Team::all();
         $dispositions = Disposition::all(); 
 
-        return view('supervisor.assign_preference_edit',compact('rule','teams'));
+        return view('supervisor.assign_preference_new',compact('dispositions','teams'));
+    }
+
+    public function assign_preference_create(Request $request){
+        // dd($request->all());
+        $assign_preference = new AssignPreference;
+        $assign_preference->name = $request->name;
+        $assign_preference->team_id = $request->team_id;
+        $assign_preference->created_by = Auth::id();
+        $assign_preference->updated_by = Auth::id();
+
+        if($assign_preference->save()){
+            $id = $assign_preference->id;
+            $dispositions = $request->dispo;
+            foreach ($dispositions as $dispo_id => $count) {
+                $assign_pref_dispo = new AssignPreferenceDisposition;
+                $assign_pref_dispo->assign_preference_id = $id;
+                $assign_pref_dispo->disposition_id = $dispo_id;
+                $assign_pref_dispo->count = empty($count) ? -1 : $count;
+                $assign_pref_dispo->save();
+            }
+        }
+
+        return redirect()->route('supervisor.assign_preference');
     }
 
 

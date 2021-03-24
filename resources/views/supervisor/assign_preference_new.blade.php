@@ -2,18 +2,17 @@
 
 @section('content')
 
-
 <div class="row">
 	<div class="col-md-12">
 		<div class="box">
-			<form action="{{ route('supervisor.assign_preference_update',['id'=>$rule->id]) }}" method="post">
+			<form action="{{ route('supervisor.assign_preference_create') }}" method="post">
 				@csrf
 				<h4>Call Assignment Preference</h4>
 				<hr>
 				<h5>Rule Name</h5>
 				<div class="row">
 					<div class="col-md-4 col-sm-12 mb-3">
-						<input type="text" name="name" class="form-control" value="{{ $rule->name }}" required>
+						<input type="text" name="name" class="form-control" required>
 					</div>
 				</div>
 				<h5>Teams</h5>
@@ -21,7 +20,7 @@
 					<div class="col-md-4 col-sm-12 mb-3">
 						<select class="form-control" name="team_id">
 							@foreach($teams as $team)
-								<option value="{{ $team->id }}" {{ $team->id == $rule->team_id ? 'selected' : '' }}>
+								<option value="{{ $team->id }}">
 									{{ $team->name }}
 								</option>
 							@endforeach
@@ -35,13 +34,13 @@
 					@foreach($dispositions as $dispo)
 						<div class="form-group" style="width: 10ch">
 							<label>{{ empty(trim($dispo->short_name)) ? '(BLANK)' : $dispo->short_name }}</label>
-							<input type="number" name="dispo[{{ $dispo->id }}]" class="form-control" style="width: 10ch" value="{{ $dispo_list[$dispo->id] == -1 ? '' : $dispo_list[$dispo->id] }}">
+							<input type="number" name="dispo[{{ $dispo->id }}]" class="form-control" style="width: 10ch">
 						</div>
 					@endforeach
 				</div>
 				<hr>
 				<div class="d-flex justify-content-end">
-					<input class="btn btn-primary" type="submit" value="Update">
+					<input class="btn btn-primary" type="submit" value="Create">
 				</div>
 			</form>
 		</div>
