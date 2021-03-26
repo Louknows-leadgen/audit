@@ -15,4 +15,9 @@ class CallLogArchive extends Model
     public function script_responses(){
         return $this->hasMany('App\Models\ScriptResponse','recording_id','recording_id');
     }
+
+    public function auditor(){
+        return $this->belongsTo('App\Models\User','claimed_by');
+    }
+
 }

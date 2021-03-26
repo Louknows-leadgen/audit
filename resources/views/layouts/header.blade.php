@@ -61,6 +61,7 @@
 					@can('access',[3])
 						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.index') }}">Call Logs</a></li>
 						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.manage_teams') }}">Manage Teams</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.assign_preference') }}">Auto Assign</a></li>
 					@endcan
 				</ul>
 			@endauth

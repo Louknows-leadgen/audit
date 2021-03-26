@@ -16,6 +16,7 @@ class DownloadController extends Controller
             'Auditor',
             'Audit Type',
     		'Recording ID',
+            'Recording Link',
     		'User',
     		'User Group',
     		'Phone Number',

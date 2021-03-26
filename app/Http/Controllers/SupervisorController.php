@@ -20,6 +20,11 @@ use DateTimeZone;
 class SupervisorController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request){
     	$teams = Team::all();
     	$servers = DB::table('calllogs')->distinct()->get('server_ip');
@@ -70,7 +75,6 @@ class SupervisorController extends Controller
         }
 
         return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','sid','campaign','dispo','from','to'));
-
     }
 
     public function manage_teams(){
@@ -139,7 +143,7 @@ class SupervisorController extends Controller
             $id = $assign_preference->id;
             $dispositions = $request->dispo;
             foreach ($dispositions as $dispo_id => $count) {
-                $count = empty($count) && $count != 0 ? -1 : $count;
+                $count = isset($count) ? $count : -1;
                 $assign_pref_dispo = AssignPreferenceDisposition::updateOrCreate(
                     ['assign_preference_id' => $id,  'disposition_id' => $dispo_id],['count' => $count]
                 );

@@ -77,12 +77,15 @@ class ScriptResponse extends Model
                 $calllog = CallLogArchive::find($c->ctr);
             }
 
+            $recording_link = self::get_recording_link($calllog);
+
             foreach ($calllog->script_responses as $sr) {
                 $response = new Response;
 
                 $response->auditor = $calllog->auditor->email;
                 $response->audit_type = $calllog->audit_type;
                 $response->recording_id = $calllog->recording_id;
+                $response->recording_link = $recording_link;
                 $response->user = $calllog->user;
                 $response->user_group = $calllog->user_group;
                 $response->phone_number = $calllog->phone_number;
@@ -116,5 +119,34 @@ class ScriptResponse extends Model
         }
 
         return $calllog_responses;
+    }
+
+    private static function get_recording_link($calllog){
+        $url = '';
+        $filename = $calllog->recording_filename;
+        $server = $calllog->server_origin;
+        $date = date('Y-m-d',strtotime($calllog->timestamp));
+
+        if(self::check_url("http://$server/RECORDINGS/$filename-all.wav") == '200'){
+            $url = "http://$server/RECORDINGS/$filename-all.wav";
+        }elseif (self::check_url("http://$server/RECORDINGS/MP3/$filename-all.mp3") == '200'){
+            $url = "http://$server/RECORDINGS/MP3/$filename-all.mp3";
+        }else{
+            $url = "http://$server/archive/$date/$filename-all.mp3";
+        }
+
+        return $url;
+    }
+
+    private static function check_url($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch , CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        $headers = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $headers['http_code'];
     }
 }

@@ -76,25 +76,52 @@ class AuditorController extends Controller
         $date_start = $request->date;
         $date_end = date('Y-m-d',strtotime($date_start . ' +1 day'));
 
-        $calls = CallLog::where('claimed_by',$user)
-                        ->where('status',1)
-                        ->whereIn('dispo',$dispo)
-                        ->whereDate('timestamp','>=',$date_start)
-                        ->whereDate('timestamp','<=',$date_end)
-                        ->select('dispo', DB::raw('count(*) as total'))
-                        ->groupBy('dispo')
-                        ->get();
+        // $calls = CallLog::where('claimed_by',$user)
+        //                 ->where('status',1)
+        //                 ->whereIn('dispo',$dispo)
+        //                 ->whereDate('timestamp','>=',$date_start)
+        //                 ->whereDate('timestamp','<=',$date_end)
+        //                 ->select('dispo', DB::raw('count(*) as total'))
+        //                 ->groupBy('dispo')
+        //                 ->get();
 
-        if(empty($calls)){
-             $calls = CallLogArchive::where('claimed_by',$user)
-                        ->where('status',1)
-                        ->whereIn('dispo',$dispo)
-                        ->whereDate('timestamp','>=',$date_start)
-                        ->whereDate('timestamp','<=',$date_end)
-                        ->select('dispo', DB::raw('count(*) as total'))
-                        ->groupBy('dispo')
-                        ->get();
-        }
+        // if(empty($calls)){
+        //      $calls = CallLogArchive::where('claimed_by',$user)
+        //                 ->where('status',1)
+        //                 ->whereIn('dispo',$dispo)
+        //                 ->whereDate('timestamp','>=',$date_start)
+        //                 ->whereDate('timestamp','<=',$date_end)
+        //                 ->select('dispo', DB::raw('count(*) as total'))
+        //                 ->groupBy('dispo')
+        //                 ->get();
+        // }
+
+        $dispo = "'" . implode("','",$dispo) . "'";
+        $sql = "
+            SELECT d.dispo, count(1) as total
+            FROM(
+                SELECT dispo
+                FROM calllogs
+                WHERE dispo IN($dispo)
+                AND timestamp >= '$date_start'
+                AND timestamp <= '$date_end'
+                AND status = 1
+                AND claimed_by = $user
+
+                UNION All
+
+                SELECT dispo
+                FROM calllogs_archive_search
+                WHERE dispo IN($dispo)
+                AND timestamp >= '$date_start'
+                AND timestamp <= '$date_end'
+                AND status = 1
+                AND claimed_by = $user
+            )d
+            GROUP BY d.dispo
+        ";
+
+        $calls = DB::select($sql);
 
         return view('auditor.audit_form_page_result',compact('calls')); 
     }
