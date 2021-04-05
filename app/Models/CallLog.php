@@ -170,6 +170,19 @@ class CallLog extends Model
     }
 
 
+    public static function my_call_logs_completed($auditor_id){
+        $call_archived = CallLogArchive::where('claimed_by','=', $auditor_id)
+                                       ->where('status','=', 1)
+                                       ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
+
+        return self::where('claimed_by','=', $auditor_id)
+                   ->where('status','=', 1)
+                   ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                   ->union($call_archived)
+                   ->get();
+    }
+
+
     public static function is_available($call_id){
         $call_archived = CallLogArchive::where('ctr','=',$call_id)
                                        ->where('is_claimed','=',0)

@@ -37,9 +37,15 @@ class AuditorController extends Controller
 
     public function my_call_logs(){
     	$calllogs = CallLog::my_call_logs(Auth::id());
-    	$scripts = Script::all();
+    	// $scripts = Script::all();
 
-    	return view('auditor.my_call_logs',compact('calllogs','scripts'));
+    	return view('auditor.my_call_logs',compact('calllogs'));
+    }
+
+    public function my_call_logs_completed(){
+        $calllogs = CallLog::my_call_logs_completed(Auth::id());
+
+        return view('auditor.my_call_logs_completed',compact('calllogs'));
     }
    
 
@@ -52,9 +58,23 @@ class AuditorController extends Controller
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording_files = $this->generate_recording_url($calllog);
+        $recording_file = $this->generate_recording_url($calllog);
 
-        return view('auditor.recording',compact('emp','user_id','recording_id','recording_files','audit_type'));
+        return view('auditor.recording',compact('emp','user_id','recording_id','recording_file','audit_type'));
+    }
+
+    public function recording_completed($recording_id){
+        $calllog = CallLog::where('recording_id','=',$recording_id)->first();
+        if(empty($calllog)){
+            $calllog = CallLogArchive::where('recording_id','=',$recording_id)->first();
+        }
+        // $server = $calllog->server_ip;
+        $user_id = $calllog->user;
+        $audit_type = $calllog->audit_type;
+        $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
+        $recording_file = $this->generate_recording_url($calllog);
+
+        return view('auditor.recording_completed',compact('calllog','emp','user_id','recording_file','audit_type'));
     }
 
     public function result($recording_id){
@@ -137,7 +157,28 @@ class AuditorController extends Controller
         array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/RECORDINGS/MP3/$filename-all.mp3"]);
         array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/archive/$date/$filename-all.mp3"]);
 
-        return $urls;
+        $url = [];
+        foreach ($urls as $endpoint) {
+            $response = $this->check_url($endpoint['url']);
+            if($response == '200'){
+                $url = $endpoint;
+                break;
+            }
+        }
+
+        return $url;
+    }
+
+    private function check_url($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch , CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        $headers = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $headers['http_code'];
     }
 
 

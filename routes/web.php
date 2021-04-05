@@ -34,6 +34,8 @@ Route::put('/account/password/update','UserController@update_password')->name('u
 
 Route::get('/auditor','AuditorController@index')->name('auditor.index');
 Route::get('/auditor/my-logs','AuditorController@my_call_logs')->name('auditor.my_call_logs');
+Route::get('/auditor/my-logs/completed','AuditorController@my_call_logs_completed')->name('auditor.my_call_logs_completed');
+Route::get('/auditor/my-logs/completed/{recording}','AuditorController@recording_completed')->name('auditor.recording_completed');
 Route::get('/auditor/team-claimed','AuditorController@team_claimed_logs')->name('auditor.team_claimed');
 Route::get('/auditor/my-logs/{recording}','AuditorController@recording')->name('auditor.recording');
 Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
