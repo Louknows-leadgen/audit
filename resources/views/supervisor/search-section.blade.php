@@ -6,11 +6,11 @@
 			<form class="calllogs-search" action="{{ route('supervisor.index') }}" method="GET">
 				<div class="form-group">
 					<label>From</label>
-					<input type="date" class="form-control" name="from" value="{{ !empty($from) ? $from : '' }}">
+					<input type="date" class="form-control" name="from" value="{{ !empty($from) ? $from : '' }}" required>
 				</div>
 				<div class="form-group">
 					<label>To</label>
-					<input type="date" class="form-control" name="to" value="{{ !empty($to) ? $to : '' }}">
+					<input type="date" class="form-control" name="to" value="{{ !empty($to) ? $to : '' }}" required>
 				</div>
 				<div class="form-group">
 					<label>Server Id</label>

@@ -50,7 +50,8 @@ class SupervisorController extends Controller
         $from = '';
         $to = '';
 
-        if(empty($request->all()) || !empty($request->page)){
+        // if(empty($request->all()) || !empty($request->page)){
+        if(empty($request->from)){
             $calllogs = CallLog::available_calllogs();
 
             foreach ($servers as $server) {
