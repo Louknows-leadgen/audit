@@ -42,7 +42,7 @@
 					<hr>
 					<div class="d-flex justify-content-end">
 						<div class="d-flex" style="gap: 1rem;">
-							<a href="{{ route('supervisor.assign_preference') }}" class="btn btn-secondary">Cancel</a>
+							<span class="btn btn-secondary" onclick="window.history.back();">Cancel</span>
 							<input class="btn btn-primary" type="submit" value="Update">
 						</div>
 					</div>

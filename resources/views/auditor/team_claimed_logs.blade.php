@@ -20,7 +20,7 @@
 						@if(count($calllogs))
 							@foreach($calllogs as $calllog)
 								<tr>
-									<td>{{ $calllog->recording_id }}</td>
+									<td><a href="{{ route('auditor.recording_completed',['recording' => $calllog->recording_id]) }}">{{ $calllog->recording_id }}</a></td>
 									<td>{{ date('m/d/Y',strtotime($calllog->timestamp)) }}</td>
 									<td>{{ $calllog->user }}</td>
 									<td>{{ $calllog->phone_number }}</td>

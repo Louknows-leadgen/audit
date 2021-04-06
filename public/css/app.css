@@ -11933,3 +11933,8 @@ div[data-tabcontent].actv {
   font-size: 2em;
 }
 
+.back {
+  cursor: pointer;
+  color: #2577b1;
+}
+

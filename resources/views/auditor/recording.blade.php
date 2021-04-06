@@ -6,6 +6,11 @@
 	<div class="row">
 		<div class="col-md-1"></div>
 		<div class="col-md-11 px-0 mb-3">
+
+			<div class="mb-3">
+				<span class="back" onclick="window.history.back();">Back</span>
+			</div>
+
 			<div class="box-bg p-3">
 				<div class="d-flex flex-wrap justify-content-around">
 					<div><label class="font-weight-bolder">User ID:</label> {{ isset($user_id) ? $user_id : '' }} </div>

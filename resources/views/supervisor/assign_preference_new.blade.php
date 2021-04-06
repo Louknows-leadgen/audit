@@ -39,7 +39,8 @@
 					@endforeach
 				</div>
 				<hr>
-				<div class="d-flex justify-content-end">
+				<div class="d-flex justify-content-end" style="gap: 1em;">
+					<span class="btn btn-secondary" onclick="window.history.back();">Cancel</span>
 					<input class="btn btn-primary" type="submit" value="Create">
 				</div>
 			</form>

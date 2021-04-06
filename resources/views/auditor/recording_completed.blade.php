@@ -4,6 +4,10 @@
 	<div class="row">
 		<div class="col-md-10 mx-auto">
 
+			<div class="mb-3">
+				<span class="back" onclick="window.history.back();">Back</span>
+			</div>
+
 			<div class="box-bg p-3">
 				<div class="d-flex flex-wrap justify-content-around">
 					<div><label class="font-weight-bolder">User ID:</label> {{ isset($user_id) ? $user_id : '' }} </div>
@@ -31,9 +35,10 @@
 
 			<div class="box-bg p-3">
 				<div class="table-responsive">
-					<table>
-						<thead>
+					<table class="table table-bordered">
+						<thead class="thead-light">
 							<tr>
+								<th>Script #</th>
 								<th>Customer Statement</th>
 								<th>Auditor's Comment</th>
 								<th>Incorrect Tagging</th>
@@ -44,27 +49,29 @@
 							</tr>
 						</thead>
 						<tbody>
+						@foreach($calllog->script_responses as $sr)
 							<tr>
-								<td>{{ $calllog->cust_statement }}</td>
-								<td>{{ $calllog->aud_comment }}</td>
-								<td>{{ $calllog->inc_tagging }}</td>
-								<td>{{ $calllog->inapp_resp }}</td>
-								<td>{{ $calllog->inc_detail }}</td>
+								<td>{{ $sr->script->name }}</td>
+								<td>{{ $sr->cust_statement }}</td>
+								<td>{{ $sr->aud_comment }}</td>
+								<td>{{ $sr->inc_tagging }}</td>
+								<td>{{ $sr->inapp_resp }}</td>
+								<td>{{ $sr->inc_detail }}</td>
 								<td>
-									@foreach($calllog->agent_script_responses as $call_asr)
-										{{ nl2br('- ' . $call_asr->agent_correction->name . '\n') }}
+									@foreach($sr->agent_script_responses as $call_asr)
+										<div>- {{ $call_asr->agent_correction->name }}</div>
 									@endforeach
 								</td>
 								<td>
-									@foreach($calllog->external_script_response as $call_esr)
-										{{ nl2br('- ' . $call_esr->external_factor->name . '\n') }}
+									@foreach($sr->external_script_response as $call_esr)
+										<div>- {{ $call_esr->external_factor->name }}</div>
 									@endforeach
 								</td>
 							</tr>
+						@endforeach
 						</tbody>
 					</table>
 				</div>
-				{{ print_r($calllog) }}
 			</div>
 
 		</div>
