@@ -77,6 +77,7 @@ class CallLog extends Model
                  ->whereIn('campaign',$campaign)
                  ->whereIn('dispo',$dispo)
                  ->whereNull('team_code')
+                 ->where('recording_id','!=','')
                  ->paginate(50);
 
         return $calls;
@@ -92,7 +93,8 @@ class CallLog extends Model
                  ->whereIn('server_ip',$sid)
                  ->whereIn('campaign',$campaign)
                  ->whereIn('dispo',$dispo)
-                 ->whereNull('team_code');
+                 ->whereNull('team_code')
+                 ->where('recording_id','!=','');
 
         $all_calls = DB::table('calllogs_archive_search')
                  ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
@@ -102,6 +104,7 @@ class CallLog extends Model
                  ->whereIn('campaign',$campaign)
                  ->whereIn('dispo',$dispo)
                  ->whereNull('team_code')
+                 ->where('recording_id','!=','')
                  ->union($calls)
                  ->paginate(50);
 
@@ -112,6 +115,7 @@ class CallLog extends Model
 
     public static function available_calllogs(){
         return self::whereNull('team_code')
+                   ->where('recording_id','!=','')
                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
                    ->paginate(50);
     }
