@@ -60,7 +60,7 @@ class AuditorController extends Controller
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
         $recording_file = $this->generate_recording_url($calllog);
 
-        return view('auditor.recording',compact('emp','user_id','recording_id','recording_file','audit_type'));
+        return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type'));
     }
 
     public function recording_completed($recording_id){

@@ -25,6 +25,10 @@
 						<label class="font-weight-bolder">Audit Type:</label>
 						{{ ucwords($audit_type) }}
 					</div>
+					<div>
+						<label class="font-weight-bolder">Dispo:</label>
+						{{ ucwords($calllog->dispo) }}
+					</div>
 				</div>
 				<div class="mt-3 text-center">
 					<audio class="w-75" id="audio" style="outline: none;" controls>
