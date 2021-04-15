@@ -131,16 +131,13 @@ class CallLog extends Model
 
         $call_archived = CallLogArchive::whereIn('team_code',$teams)
                          ->where('is_claimed','=',0)
-                         ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-                         ->limit(10)                         
-                         ->get();
+                         ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
 
-        return $call_archived;
-        // return self::whereIn('team_code',$teams)
-        //            ->where('is_claimed','=',0)
-        //            ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-        //            // ->union($call_archived)
-        //            ->get();
+        return self::whereIn('team_code',$teams)
+                   ->where('is_claimed','=',0)
+                   ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                   ->union($call_archived)
+                   ->paginate(10);
     }
 
     public static function team_claimed_logs($auditor_id){
