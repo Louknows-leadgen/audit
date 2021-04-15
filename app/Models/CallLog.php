@@ -132,6 +132,7 @@ class CallLog extends Model
         $call_archived = CallLogArchive::whereIn('team_code',$teams)
                          ->where('is_claimed','=',0)
                          ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                         ->limit(10)                         
                          ->get();
 
         return $call_archived;
