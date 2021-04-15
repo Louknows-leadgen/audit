@@ -33,6 +33,7 @@
 						@endif
 					</tbody>
 				</table>
+				{{ $calllogs->links() }}
 			</div>
 		</div>
 	</div>

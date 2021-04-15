@@ -157,7 +157,7 @@ class CallLog extends Model
                    ->where('is_claimed','=',1)
                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
                    ->union($call_archived)
-                   ->get();
+                   ->paginate(10);
     }
 
 
@@ -170,7 +170,7 @@ class CallLog extends Model
                    ->where('status','=', 0)
                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
                    ->union($call_archived)
-                   ->get();
+                   ->paginate(10);
     }
 
 
@@ -183,7 +183,7 @@ class CallLog extends Model
                    ->where('status','=', 1)
                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
                    ->union($call_archived)
-                   ->get();
+                   ->paginate(10);
     }
 
 
