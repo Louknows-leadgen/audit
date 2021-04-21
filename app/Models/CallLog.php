@@ -70,43 +70,70 @@ class CallLog extends Model
     //     return $calls;
     // }
 
-    public static function search_call_logs_test($sid,$campaign,$dispo){
+    public static function search_call_logs_test(){
+        $user = 1;
 
-        $calls = DB::table('calllogs')
-                 ->whereIn('server_ip',$sid)
-                 ->whereIn('campaign',$campaign)
-                 ->whereIn('dispo',$dispo)
-                 ->whereNull('team_code')
-                 ->where('recording_id','!=','')
-                 ->paginate(50);
+        $calls = self::where('user_group','TEAMVIVIAN')
+                 ->when($user == 1, function($q){
+                        return $q->where('user',4096);
+                   })
+                 ->get();
 
         return $calls;
     }
 
 
-    public static function search_call_logs($sid,$campaign,$dispo,$from,$to){
+    public static function search_call_logs($sid,$campaign,$dispo,$from,$to,$user){
 
-        $calls = DB::table('calllogs')
-                 ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-                 ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
-                 ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
-                 ->whereIn('server_ip',$sid)
-                 ->whereIn('campaign',$campaign)
-                 ->whereIn('dispo',$dispo)
-                 ->whereNull('team_code')
-                 ->where('recording_id','!=','');
+        if($user == '-1'){
+            $calls = DB::table('calllogs')
+                     ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                     ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                     ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                     ->whereIn('server_ip',$sid)
+                     ->whereIn('campaign',$campaign)
+                     ->whereIn('dispo',$dispo)
+                     ->whereNull('team_code')
+                     ->where('recording_id','!=','');
 
-        $all_calls = DB::table('calllogs_archive_search')
-                 ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-                 ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
-                 ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
-                 ->whereIn('server_ip',$sid)
-                 ->whereIn('campaign',$campaign)
-                 ->whereIn('dispo',$dispo)
-                 ->whereNull('team_code')
-                 ->where('recording_id','!=','')
-                 ->union($calls)
-                 ->paginate(50);
+
+            $all_calls = DB::table('calllogs_archive_search')
+                     ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                     ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                     ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                     ->whereIn('server_ip',$sid)
+                     ->whereIn('campaign',$campaign)
+                     ->whereIn('dispo',$dispo)
+                     ->whereNull('team_code')
+                     ->where('recording_id','!=','')
+                     ->union($calls)
+                     ->paginate(50);
+        }else{
+            $calls = DB::table('calllogs')
+                     ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                     ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                     ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                     ->whereIn('server_ip',$sid)
+                     ->whereIn('campaign',$campaign)
+                     ->whereIn('dispo',$dispo)
+                     ->whereNull('team_code')
+                     ->where('user',$user) // added condition if user is not -1
+                     ->where('recording_id','!=','');
+
+
+            $all_calls = DB::table('calllogs_archive_search')
+                     ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
+                     ->whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                     ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                     ->whereIn('server_ip',$sid)
+                     ->whereIn('campaign',$campaign)
+                     ->whereIn('dispo',$dispo)
+                     ->whereNull('team_code')
+                     ->where('user',$user) // added condition if user is not -1
+                     ->where('recording_id','!=','')
+                     ->union($calls)
+                     ->paginate(50);
+        }
 
 
         return $all_calls;

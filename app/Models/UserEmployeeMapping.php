@@ -23,4 +23,10 @@ class UserEmployeeMapping extends Model
     public function employee(){
         return $this->belongsTo('App\Models\Employee','employeeid');
     }
+
+    /**********************************
+    |          Custom methods
+    |**********************************/
+
+
 }

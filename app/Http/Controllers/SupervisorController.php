@@ -14,6 +14,7 @@ use App\Models\Campaign;
 use App\Models\Disposition;
 use App\Models\AssignPreference;
 use App\Models\AssignPreferenceDisposition;
+use App\Models\UserEmployeeMapping;
 use DateTime;
 use DateTimeZone;
 
@@ -25,12 +26,13 @@ class SupervisorController extends Controller
         $this->middleware('auth');
     }
 
+
     public function index(Request $request){
     	$teams = Team::all();
     	$servers = DB::table('calllogs')->distinct()->get('server_ip');
     	$campaigns = DB::table('calllogs')->distinct()->get('campaign');
     	$dispositions = DB::table('calllogs')->distinct()->get('dispo');
-
+        $users = UserEmployeeMapping::orderBy('user_id')->get();
 
         $servers = $servers->isEmpty() ? $this->get_servers() : $servers;
         $campaigns = $campaigns->isEmpty() ? $this->get_campaigns() : $campaigns;
@@ -71,11 +73,12 @@ class SupervisorController extends Controller
             $sid = $request->sid;
             $campaign = $request->campaign;
             $dispo = $request->dispo;
-            $calllogs = CallLog::search_call_logs($sid,$campaign,$dispo,$from,$to);
+            $user = $request->user;
+            $calllogs = CallLog::search_call_logs($sid,$campaign,$dispo,$from,$to,$user);
             $calllogs->withPath(route('supervisor.index'));
         }
 
-        return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','sid','campaign','dispo','from','to'));
+        return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','users','sid','campaign','dispo','from','to'));
     }
 
     public function manage_teams(){

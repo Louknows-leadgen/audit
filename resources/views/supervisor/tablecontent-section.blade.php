@@ -41,6 +41,7 @@
 						<thead class="thead-dark">
 							<tr>
 								<th></th>
+								<th>User Id</th>
 								<th>Recording Id</th>
 								<th>Server Id</th>
 								<th>Campaign</th>
@@ -64,6 +65,7 @@
 												</label>
 											</div>
 										</td>
+										<td>{{ $calllog->user }}</td>
 										<td>{{ $calllog->recording_id }}</td>
 										<td>{{ $calllog->server_ip }}</td>
 										<td>{{ $calllog->campaign }}</td>

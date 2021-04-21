@@ -43,6 +43,17 @@
 					</select>
 				</div>
 				<div class="form-group">
+					<label>User</label>
+					<select class="custom-select" name="user">
+						<option value="-1">All</option>
+						@foreach($users as $user)
+						<option value="{{ $user->user_id }}">
+							{{ $user->user_id  }}
+						</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="form-group">
 					<button class="btn btn-primary">Search</button>
 				</div>
 			</form>
