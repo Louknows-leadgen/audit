@@ -60,6 +60,7 @@ class AuditorController extends Controller
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
         $recording_file = $this->generate_recording_url($calllog);
 
+        
         return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type'));
     }
 
@@ -155,7 +156,7 @@ class AuditorController extends Controller
 
         array_push($urls, ['type' => 'wav', 'url' => "http://$server/RECORDINGS/$filename-all.wav"]);
         array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/RECORDINGS/MP3/$filename-all.mp3"]);
-        array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/archive/$date/$filename-all.mp3"]);
+        array_push($urls, ['type' => 'mpeg', 'url' => "http://38.102.225.164/archive/$date/$filename-all.mp3"]);
 
         $url = [];
         foreach ($urls as $endpoint) {
