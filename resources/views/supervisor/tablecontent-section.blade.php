@@ -84,7 +84,7 @@
 					@if (empty($from))
 						{{ $calllogs->links() }}
 					@else
-						{{ $calllogs->appends(['from'=>$from,'to'=>$to,'sid'=>$sid,'campaign'=>$campaign,'dispo'=>$dispo]) }}
+						{{ $calllogs->appends(['from'=>$from,'to'=>$to,'sid'=>$sid,'campaign'=>$campaign,'dispo'=>$dispo,'user'=>$user]) }}
 					@endif
 				</div>
 			</form>

@@ -51,6 +51,7 @@ class SupervisorController extends Controller
         $dispo = [];
         $from = '';
         $to = '';
+        $user = -1;
 
         // if(empty($request->all()) || !empty($request->page)){
         if(empty($request->from)){
@@ -78,7 +79,7 @@ class SupervisorController extends Controller
             $calllogs->withPath(route('supervisor.index'));
         }
 
-        return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','users','sid','campaign','dispo','from','to'));
+        return view('supervisor.index',compact('calllogs','teams','servers','campaigns','dispositions','users','sid','campaign','dispo','from','to','user'));
     }
 
     public function manage_teams(){
