@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Rules\CallIsClaimed;
 use App\Models\CallLog;
 use App\Models\CallLogArchive;
+use App\Models\CallLogsAssigned;
 use App\Models\Script;
 use App\Models\ScriptResponse;
 use App\Models\AgentScriptResponse;
@@ -24,71 +25,101 @@ class AuditorController extends Controller
 
     //
     public function index(){
-    	$calllogs = CallLog::team_available_logs(Auth::id());
+    	$calllogs = CallLogsAssigned::team_available_logs(Auth::id());
 
 		return view('auditor.available_logs',compact('calllogs'));
     }
 
     public function team_claimed_logs(){
-    	$calllogs = CallLog::team_claimed_logs(Auth::id());
+    	$calllogs = CallLogsAssigned::team_claimed_logs(Auth::id());
 
     	return view('auditor.team_claimed_logs',compact('calllogs'));
     }
 
     public function my_call_logs(){
-    	$calllogs = CallLog::my_call_logs(Auth::id());
+    	$calllogs = CallLogsAssigned::my_call_logs(Auth::id());
     	// $scripts = Script::all();
 
     	return view('auditor.my_call_logs',compact('calllogs'));
     }
 
     public function my_call_logs_completed(){
-        $calllogs = CallLog::my_call_logs_completed(Auth::id());
+        $calllogs = CallLogsAssigned::my_call_logs_completed(Auth::id());
 
         return view('auditor.my_call_logs_completed',compact('calllogs'));
     }
    
 
     public function recording($recording_id){
-        $calllog = CallLog::where('recording_id','=',$recording_id)->first();
-        if(empty($calllog)){
-            $calllog = CallLogArchive::where('recording_id','=',$recording_id)->first();
-        }
+        $calllog = CallLogsAssigned::where('recording_id','=',$recording_id)->first();
+
         // $server = $calllog->server_ip;
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording_file = $this->generate_recording_url($calllog);
-
+        $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
         
         return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type'));
     }
 
     public function recording_completed($recording_id){
-        $calllog = CallLog::where('recording_id','=',$recording_id)->first();
-        if(empty($calllog)){
-            $calllog = CallLogArchive::where('recording_id','=',$recording_id)->first();
-        }
+        $calllog = CallLogsAssigned::where('recording_id','=',$recording_id)->first();
+
         // $server = $calllog->server_ip;
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording_file = $this->generate_recording_url($calllog);
+        $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
 
         return view('auditor.recording_completed',compact('calllog','emp','user_id','recording_file','audit_type'));
     }
 
     public function result($recording_id){
-        $calllog = CallLog::where('recording_id','=',$recording_id)->first();
-        if(empty($calllog)){
-            $calllog = CallLogArchive::where('recording_id','=',$recording_id)->first();
-        }
+        $calllog = CallLogsAssigned::where('recording_id','=',$recording_id)->first();
     }
 
     public function audits_form_page(){
         $userid = Auth::id();
         return view('auditor.audits_form_page',compact('userid'));
     }
+
+    // public function audits_form_page_count(Request $request){
+    //     $dispo = $request->dispo;
+    //     $user = $request->userid;
+
+    //     $date_start = $request->date;
+    //     $date_end = date('Y-m-d',strtotime($date_start . ' +1 day'));
+
+
+    //     $dispo = "'" . implode("','",$dispo) . "'";
+    //     $sql = "
+    //         SELECT d.dispo, count(1) as total
+    //         FROM(
+    //             SELECT dispo
+    //             FROM calllogs
+    //             WHERE dispo IN($dispo)
+    //             AND timestamp >= '$date_start'
+    //             AND timestamp <= '$date_end'
+    //             AND status = 1
+    //             AND claimed_by = $user
+
+    //             UNION All
+
+    //             SELECT dispo
+    //             FROM calllogs_archive_search
+    //             WHERE dispo IN($dispo)
+    //             AND timestamp >= '$date_start'
+    //             AND timestamp <= '$date_end'
+    //             AND status = 1
+    //             AND claimed_by = $user
+    //         )d
+    //         GROUP BY d.dispo
+    //     ";
+
+    //     $calls = DB::select($sql);
+
+    //     return view('auditor.audit_form_page_result',compact('calls')); 
+    // }
 
     public function audits_form_page_count(Request $request){
         $dispo = $request->dispo;
@@ -97,52 +128,14 @@ class AuditorController extends Controller
         $date_start = $request->date;
         $date_end = date('Y-m-d',strtotime($date_start . ' +1 day'));
 
-        // $calls = CallLog::where('claimed_by',$user)
-        //                 ->where('status',1)
-        //                 ->whereIn('dispo',$dispo)
-        //                 ->whereDate('timestamp','>=',$date_start)
-        //                 ->whereDate('timestamp','<=',$date_end)
-        //                 ->select('dispo', DB::raw('count(*) as total'))
-        //                 ->groupBy('dispo')
-        //                 ->get();
-
-        // if(empty($calls)){
-        //      $calls = CallLogArchive::where('claimed_by',$user)
-        //                 ->where('status',1)
-        //                 ->whereIn('dispo',$dispo)
-        //                 ->whereDate('timestamp','>=',$date_start)
-        //                 ->whereDate('timestamp','<=',$date_end)
-        //                 ->select('dispo', DB::raw('count(*) as total'))
-        //                 ->groupBy('dispo')
-        //                 ->get();
-        // }
-
-        $dispo = "'" . implode("','",$dispo) . "'";
-        $sql = "
-            SELECT d.dispo, count(1) as total
-            FROM(
-                SELECT dispo
-                FROM calllogs
-                WHERE dispo IN($dispo)
-                AND timestamp >= '$date_start'
-                AND timestamp <= '$date_end'
-                AND status = 1
-                AND claimed_by = $user
-
-                UNION All
-
-                SELECT dispo
-                FROM calllogs_archive_search
-                WHERE dispo IN($dispo)
-                AND timestamp >= '$date_start'
-                AND timestamp <= '$date_end'
-                AND status = 1
-                AND claimed_by = $user
-            )d
-            GROUP BY d.dispo
-        ";
-
-        $calls = DB::select($sql);
+        $calls = CallLogsAssigned::select(DB::raw('dispo, count(1) as total'))
+                                 ->whereIn($dispo)
+                                 ->where('timestamp','>=',$date_start)
+                                 ->where('timestamp','<=',$date_end)
+                                 ->where('status',1)
+                                 ->where('claimed_by',$user)
+                                 ->groupBy('dispo')
+                                 ->get();
 
         return view('auditor.audit_form_page_result',compact('calls')); 
     }
@@ -192,10 +185,7 @@ class AuditorController extends Controller
             return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
         }else{
             $call_id = $request->call_id;
-            $c = CallLog::find($call_id);
-            if(empty($c)){
-                $c = CallLogArchive::find($call_id);
-            }
+            $c = CallLogsAssigned::find($call_id);
             $c->is_claimed = 1;
             $c->claimed_by = Auth::id();
             $c->save();
@@ -215,7 +205,7 @@ class AuditorController extends Controller
         }else{
         	$calllogs = $request->calllogs;
         	$auditor = Auth::id();
-        	CallLog::bulk_claim($auditor,$calllogs);
+        	CallLogsAssigned::bulk_claim($auditor,$calllogs);
         	return response()->json(['success'=>'Claimed selected call logs']);
         }
     }
@@ -258,7 +248,7 @@ class AuditorController extends Controller
             }
         }
         // update calllog status
-        $clog = CallLog::findby_recording_id($recording_id);
+        $clog = CallLogsAssigned::findby_recording_id($recording_id);
         $clog->status = 1;
         $clog->save();
         return redirect()->route('auditor.my_call_logs')->with('success','Audit recorded');

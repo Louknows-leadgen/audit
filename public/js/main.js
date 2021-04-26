@@ -470,6 +470,12 @@ $(document).ready(function(){
 				calllogs: calls,
 				assigned_team: assigned_team
 			},
+			beforeSend: function(){
+				$('.gray-bg').css({'display':'block'});
+			},
+			complete: function(){
+				$('.gray-bg').css({'display':'none'});
+			},
 			success: function(response){
 				notif.children('strong').empty();
 				notif.children('span').empty();

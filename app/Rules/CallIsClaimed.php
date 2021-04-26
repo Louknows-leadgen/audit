@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use App\Models\CallLog;
+use App\Models\CallLogsAssigned;
 
 class CallIsClaimed implements Rule
 {
@@ -27,7 +27,7 @@ class CallIsClaimed implements Rule
     public function passes($attribute, $value)
     {
         //
-        return CallLog::is_available($value);
+        return CallLogsAssigned::is_available($value);
     }
 
     /**

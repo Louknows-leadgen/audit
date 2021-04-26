@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\CallLog;
 use App\Models\CallLogArchive;
+use App\Models\CallLogsAssigned;
 use App\Models\Team;
 use App\Models\Server;
 use App\Models\Campaign;
@@ -89,6 +90,33 @@ class SupervisorController extends Controller
 
    
 
+    // public function assign_calls(Request $request){
+    //     $validator = Validator::make($request->all(),[
+    //         'calllogs' => 'required'
+    //     ],[
+    //         'calllogs.required' => 'No selected call logs'
+    //     ]);
+
+    //     if($validator->fails()){
+    //         return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
+    //     }else{
+    //         $calllogs = $request->calllogs;
+    //         foreach ($calllogs as $calllog) {
+    //             $c = CallLog::find($calllog);
+    //             if(empty($c)){
+    //                 $c = CallLogArchive::find($calllog);
+    //             }
+    //             // make sure calllog is not yet assigned before assigning it
+    //             if(!isset($c->team_code)){
+    //                 $c->team_code = $request->assigned_team;
+    //                 $c->save();
+    //             }
+    //         }
+    //         return response()->json(['success'=>'Assigned call logs']);
+    //     }
+        
+    // }
+
     public function assign_calls(Request $request){
         $validator = Validator::make($request->all(),[
             'calllogs' => 'required'
@@ -108,7 +136,31 @@ class SupervisorController extends Controller
                 // make sure calllog is not yet assigned before assigning it
                 if(!isset($c->team_code)){
                     $c->team_code = $request->assigned_team;
-                    $c->save();
+                    if($c->save()){
+                        $assigned_call = new CallLogsAssigned;
+                        $assigned_call->ctr                = $c->ctr;
+                        $assigned_call->timestamp          = $c->timestamp;
+                        $assigned_call->user               = $c->user;
+                        $assigned_call->user_group         = $c->user_group;
+                        $assigned_call->audit_type         = $c->audit_type;
+                        $assigned_call->phone_number       = $c->phone_number;
+                        $assigned_call->recording_id       = $c->recording_id;
+                        $assigned_call->recording_filename = $c->recording_filename;
+                        $assigned_call->recording_url      = "http://". $c->server_origin. "/RECORDINGS/" . $c->recording_filename . "-all.wav";
+                        $assigned_call->server_ip          = $c->server_ip;
+                        $assigned_call->server_origin      = $c->server_origin;
+                        $assigned_call->campaign           = $c->campaign;
+                        $assigned_call->dispo              = $c->dispo;
+                        $assigned_call->talk_time          = $c->talk_time;
+                        $assigned_call->team_code          = $c->team_code;
+                        $assigned_call->is_claimed         = $c->is_claimed;
+                        $assigned_call->created_at         = $c->created_at;
+                        $assigned_call->updated_at         = $c->updated_at;
+                        $assigned_call->claimed_by         = $c->claimed_by;
+                        $assigned_call->status             = $c->status;
+
+                        $assigned_call->save();
+                    }
                 }
             }
             return response()->json(['success'=>'Assigned call logs']);
