@@ -57,6 +57,7 @@ class CallLogsAssigned extends Model
 
         return self::whereIn('team_code',$teams)
                    ->where('is_claimed','=',0)
+                   ->where('recording_id','!=','')
                    ->paginate(10);
     }
 

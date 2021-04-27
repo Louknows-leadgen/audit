@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\CallLog;
+use App\Models\CallLogsAssigned;
 use App\Models\CallLogArchive;
 use App\Models\Response;
 
@@ -123,22 +124,27 @@ class ScriptResponse extends Model
     // }
 
     public static function call_responses($from, $to){
-        $calllogs_base = CallLog::whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
-                                ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
-                                ->where('status',1)
-                                ->select('ctr', 'recording_id', 'recording_filename', 'server_origin', 'timestamp', 'audit_type', 'user', 'user_group', 'phone_number', 'campaign', 'dispo', 'talk_time','claimed_by');
+        // $calllogs_base = CallLog::whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+        //                         ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+        //                         ->where('status',1)
+        //                         ->select('ctr', 'recording_id', 'recording_filename', 'server_origin', 'timestamp', 'audit_type', 'user', 'user_group', 'phone_number', 'campaign', 'dispo', 'talk_time','claimed_by');
 
-        $calllogs = CallLogArchive::whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
-                                ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
-                                ->where('status',1)
-                                ->select('ctr', 'recording_id', 'recording_filename', 'server_origin', 'timestamp', 'audit_type', 'user', 'user_group', 'phone_number', 'campaign', 'dispo', 'talk_time','claimed_by')
-                                ->union($calllogs_base)
-                                ->get();
+        // $calllogs = CallLogArchive::whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+        //                         ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+        //                         ->where('status',1)
+        //                         ->select('ctr', 'recording_id', 'recording_filename', 'server_origin', 'timestamp', 'audit_type', 'user', 'user_group', 'phone_number', 'campaign', 'dispo', 'talk_time','claimed_by')
+        //                         ->union($calllogs_base)
+        //                         ->get();
+
+        $calllogs = CallLogsAssigned::whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
+                                    ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+                                    ->where('status',1)
+                                    ->get();                        
 
 
         $calllog_responses = [];
         foreach ($calllogs as $calllog) {           
-            $recording_link = self::get_recording_link($calllog);
+            // $recording_link = self::get_recording_link($calllog);
 
             if(count($calllog->script_responses) > 0){
                 foreach ($calllog->script_responses as $sr) {
@@ -147,7 +153,7 @@ class ScriptResponse extends Model
                     $response->auditor = $calllog->auditor->email;
                     $response->audit_type = $calllog->audit_type;
                     $response->recording_id = $calllog->recording_id;
-                    $response->recording_link = $recording_link;
+                    $response->recording_link = $calllog->recording_url;
                     $response->user = $calllog->user;
                     $response->user_group = $calllog->user_group;
                     $response->phone_number = $calllog->phone_number;
@@ -183,7 +189,7 @@ class ScriptResponse extends Model
                 $response->auditor = $calllog->auditor->email;
                 $response->audit_type = $calllog->audit_type;
                 $response->recording_id = $calllog->recording_id;
-                $response->recording_link = $recording_link;
+                $response->recording_link = $calllog->recording_url;
                 $response->user = $calllog->user;
                 $response->user_group = $calllog->user_group;
                 $response->phone_number = $calllog->phone_number;

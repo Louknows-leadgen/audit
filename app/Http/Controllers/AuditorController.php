@@ -129,9 +129,9 @@ class AuditorController extends Controller
         $date_end = date('Y-m-d',strtotime($date_start . ' +1 day'));
 
         $calls = CallLogsAssigned::select(DB::raw('dispo, count(1) as total'))
-                                 ->whereIn($dispo)
+                                 ->whereIn('dispo',$dispo)
                                  ->where('timestamp','>=',$date_start)
-                                 ->where('timestamp','<=',$date_end)
+                                 ->where('timestamp','<',$date_end)
                                  ->where('status',1)
                                  ->where('claimed_by',$user)
                                  ->groupBy('dispo')

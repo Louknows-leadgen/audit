@@ -146,7 +146,7 @@ class SupervisorController extends Controller
                         $assigned_call->phone_number       = $c->phone_number;
                         $assigned_call->recording_id       = $c->recording_id;
                         $assigned_call->recording_filename = $c->recording_filename;
-                        $assigned_call->recording_url      = "http://". $c->server_origin. "/RECORDINGS/" . $c->recording_filename . "-all.wav";
+                        $assigned_call->recording_url      = $this->generate_recording_url($c)['url'];
                         $assigned_call->server_ip          = $c->server_ip;
                         $assigned_call->server_origin      = $c->server_origin;
                         $assigned_call->campaign           = $c->campaign;
@@ -292,6 +292,41 @@ class SupervisorController extends Controller
         ];
 
         return $dispositions;
+    }
+
+
+    private function generate_recording_url($calllog){
+        $urls = [];
+        $filename = $calllog->recording_filename;
+        $server = $calllog->server_origin;
+        $date = date('Y-m-d',strtotime($calllog->timestamp));
+
+        array_push($urls, ['type' => 'wav', 'url' => "http://$server/RECORDINGS/$filename-all.wav"]);
+        array_push($urls, ['type' => 'mpeg', 'url' => "http://$server/RECORDINGS/MP3/$filename-all.mp3"]);
+        array_push($urls, ['type' => 'mpeg', 'url' => "http://38.102.225.164/archive/$date/$filename-all.mp3"]);
+
+        $url = [];
+        foreach ($urls as $endpoint) {
+            $response = $this->check_url($endpoint['url']);
+            if($response == '200'){
+                $url = $endpoint;
+                break;
+            }
+        }
+
+        return $url;
+    }
+
+    private function check_url($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch , CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        $headers = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $headers['http_code'];
     }
 
 }
