@@ -158,6 +158,7 @@ class SupervisorController extends Controller
                         $assigned_call->updated_at         = $c->updated_at;
                         $assigned_call->claimed_by         = $c->claimed_by;
                         $assigned_call->status             = $c->status;
+                        $assigned_call->url_stage          = $this->get_url_stage($assigned_call->recording_url);
 
                         $assigned_call->save();
                     }
@@ -327,6 +328,19 @@ class SupervisorController extends Controller
         curl_close($ch);
 
         return $headers['http_code'];
+    }
+
+
+    private function get_url_stage($recording_url){
+        if(stripos($recording_url, 'archive')){
+            $url_stage = 3;
+        }elseif(stripos($recording_url, '.mp3')){
+            $url_stage = 2;
+        }else{
+            $url_stage = 1;
+        }
+
+        return $url_stage;
     }
 
 }

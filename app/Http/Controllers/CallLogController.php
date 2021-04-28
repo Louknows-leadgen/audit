@@ -12,11 +12,11 @@ use App\Models\CallLogArchive;
 class CallLogController extends Controller
 {
     //
-    public function audited_by_agents(){
-    	$agents = CallLog::agents_audited();
+    // public function audited_by_agents(){
+    // 	$agents = CallLog::agents_audited();
 
-    	return view('call_log.audited_by_agents',compact('agents'));
-    }
+    // 	return view('call_log.audited_by_agents',compact('agents'));
+    // }
 
     // public function search_form(){
     // 	return view('call_log.search_page');
