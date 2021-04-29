@@ -19,7 +19,7 @@
 // 	return view('template1');
 // });
 
-
+Route::get('/manual/run','TestController@update_url')->name('test.run');
 //Route::get('/call-logs/audited-by-agents','CallLogController@audited_by_agents')->name('call.audited_agents');
 // Route::get('/call-logs/search-form','CallLogController@search_form')->name('call.search_form');
 Route::get('/call-logs/search','CallLogController@search')->name('call.search');
