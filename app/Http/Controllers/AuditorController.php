@@ -57,7 +57,18 @@ class AuditorController extends Controller
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
+        // $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
+        $recording = $this->generate_recording_url($calllog);
+        if(!empty($recording)){
+            $recording_file = $recording;
+            if($calllog->recording_url != $recording['url']){
+                $calllog->recording_url = $recording['url'];
+                $calllog->url_stage = $this->get_url_stage($recording);
+                $calllog->save();
+            }
+        }else{
+            $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
+        }
         
         return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type'));
     }
@@ -69,7 +80,7 @@ class AuditorController extends Controller
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
+        $recording_file = ['type' => $this->get_filetype($calllog->recording_url), 'url' => $calllog->recording_url];
 
         return view('auditor.recording_completed',compact('calllog','emp','user_id','recording_file','audit_type'));
     }
@@ -173,6 +184,32 @@ class AuditorController extends Controller
         curl_close($ch);
 
         return $headers['http_code'];
+    }
+
+
+    private function get_url_stage($recording){
+        switch ($recording['type']) {
+            case 'wav':
+                $url_stage = 1;
+                break;
+            case 'mpeg':
+                if(stripos($recording['url'], 'archive')){
+                    $url_stage = 3;
+                }else{
+                    $url_stage = 2;
+                }
+        }
+
+        return $url_stage;
+    }
+
+
+    private function get_filetype($url){
+        if(stripos($url, '.mp3')){
+            return 'mpeg';
+        }
+
+        return 'wav';
     }
 
 
