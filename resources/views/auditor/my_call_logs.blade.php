@@ -2,7 +2,7 @@
 
 @section('content')
 	<div class="row">
-		<div class="col-md-10 mx-auto">
+		<div class="col-md-10 mx-auto center-body">
 
 			@if(session('success'))
 				<div class="alert alert-success alert-dismissible fade show">
@@ -44,7 +44,16 @@
 									<td>{{ $calllog->recording_id }}</td>
 									<td>{{ $calllog->user }}</td>
 									<td>{{ $calllog->phone_number }}</td>
-									<td><a class="btn btn-primary start-audit" href="{{ route('auditor.recording',['recording' => $calllog->recording_id]) }}">Start Audit</a></td>
+									<td>
+										<div class="d-flex justify-content-center" style="gap: 20px">
+											<a class="btn btn-primary start-audit" href="{{ route('auditor.recording',['recording' => $calllog->recording_id]) }}">Start Audit</a>
+
+											<form action="{{ route('auditor.destroy_mylog',['ctr'=>$calllog->ctr]) }}" method="post" class="remove-mylog">
+												@csrf
+												<input type="submit" value="Remove" class="btn btn-danger">
+											</form>
+										</div>
+									</td>
 								</tr>
 							@endforeach
 						@else

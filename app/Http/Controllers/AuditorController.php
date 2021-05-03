@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,32 @@ class AuditorController extends Controller
     	// $scripts = Script::all();
 
     	return view('auditor.my_call_logs',compact('calllogs'));
+    }
+
+    public function destroy_mylog($ctr){
+        // Update the status of the source (calllogs_archive_search / callogs table)
+        $calllog = CallLogArchive::find($ctr);
+        if(empty($calllog)){
+            $calllog = CallLog::find($ctr);
+        }
+
+        $calllog->is_claimed = 0;
+        $calllog->claimed_by = 0;
+        $calllog->status = 0;
+        $calllog->team_code = NULL;
+
+        // if successfully updated on the source, delete the record
+        if($calllog->save()){
+            $c = CallLogsAssigned::find($ctr);
+            if($c->delete()){
+                return response()->json(array('msg' => 'Record has been removed from the list'),200);
+            }else{
+                abort(500,'Failed to remove the record completely. Record sent back to avaialble calls');
+            }
+        }else{
+            abort(500,'Failed to update the status of the record');
+        }
+        
     }
 
     public function my_call_logs_completed(){

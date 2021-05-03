@@ -38,6 +38,7 @@ Route::get('/auditor/my-logs/completed','AuditorController@my_call_logs_complete
 Route::get('/auditor/my-logs/completed/{recording}','AuditorController@recording_completed')->name('auditor.recording_completed');
 Route::get('/auditor/team-claimed','AuditorController@team_claimed_logs')->name('auditor.team_claimed');
 Route::get('/auditor/my-logs/{recording}','AuditorController@recording')->name('auditor.recording');
+Route::post('/auditor/my-logs/{ctr}/destroy','AuditorController@destroy_mylog')->name('auditor.destroy_mylog');
 Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');

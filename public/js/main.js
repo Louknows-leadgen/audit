@@ -710,6 +710,66 @@ $(document).ready(function(){
 		});
 	});
 
+
+	$(document).on('submit','.remove-mylog', function(e){
+		e.preventDefault();
+
+		var url = $(this).attr('action');
+		var method = $(this).attr('method');
+		var token = $(this).find('[name=_token]').val();
+		var container = $(this).parents('tr');
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: { _token: token },
+			beforeSend: function(){
+				var modal = `
+					<div class='gray-bg d-flex' id='form-loading'>
+						<div style="margin: auto;">
+							<div class='spinner-grow text-info'></div>
+							<div class='spinner-grow text-info'></div>
+							<div class='spinner-grow text-info'></div>
+						</div>
+					</div>
+				`;
+
+				$('body').append(modal);
+			},
+			success: function(response){
+
+				setTimeout(function(){
+					$('#form-loading').remove();
+					container.remove();
+					var msg = response.msg;
+					var alert = `
+									<div class="alert alert-success alert-dismissible fade show">
+										<button type="button" class="close" data-dismiss="alert">&times;</button>
+										<strong>Success!</strong> ${msg}.
+									</div>
+								`;
+					$('.center-body').prepend(alert);
+				}, 500);	
+			},
+			error: function(response){
+				setTimeout(function(){
+					$('#form-loading').remove();
+					container.remove();
+					var msg = response.responseJSON.message;
+					var alert = `
+									<div class="alert alert-danger alert-dismissible fade show">
+										<button type="button" class="close" data-dismiss="alert">&times;</button>
+										<strong>Error!</strong> ${msg}.
+									</div>
+								`;
+
+					$('.center-body').prepend(alert);
+				}, 500);
+
+			}
+		});
+	});
+
 });
 
 	
