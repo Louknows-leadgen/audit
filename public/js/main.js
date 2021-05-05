@@ -770,6 +770,64 @@ $(document).ready(function(){
 		});
 	});
 
+
+	$('#audio').on('playing',function(){
+		var audit_start = $('input[name=audit_start]');
+
+		if(audit_start.val() === ""){
+			var d = get_phtime();
+
+			var dd = String(d.getDate()).padStart(2,'0');
+			var mm = String(d.getMonth() + 1).padStart(2,'0');
+			var yyyy = d.getFullYear();
+			var hr = String(d.getHours()).padStart(2,'0');
+			var min = String(d.getMinutes()).padStart(2,'0');
+			var sec = String(d.getSeconds()).padStart(2,'0');
+
+			var full_dtime = `${yyyy}-${mm}-${dd} ${hr}:${min}:${sec}`;
+
+			audit_start.attr('value',full_dtime);
+		}
+
+	});
+
+
+	function get_phtime(){
+		var d = new Date();
+		var utc_offset = d.getTimezoneOffset();
+		d.setMinutes(d.getMinutes() + utc_offset);
+
+		// PH diff from UTC
+		var ph_offset = 8 * 60; // 8 hours * 60 minutes
+		d.setMinutes(d.getMinutes() + ph_offset);
+
+		return d;
+	}
+
+
+	$(document).on('submit','#hourly-form',function(e){
+		e.preventDefault();
+
+		var auditor = $(this).find('input[name=auditor]').val();
+		var audit_dt = $(this).find('input[name=audit_dt]').val();
+		var token = $(this).find('input[name=_token]').val();
+		var action = $(this).attr('action');
+		var method = $(this).attr('method');
+
+		$.ajax({
+			url: action,
+			method: method,
+			data: {
+				auditor: auditor,
+				audit_dt: audit_dt,
+				_token: token
+			},
+			success: function(response){
+				$('#hourly-content').html(response);
+			}
+		});
+	});
+
 });
 
 	

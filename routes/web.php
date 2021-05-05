@@ -47,6 +47,8 @@ Route::get('/auditor/count-audits','AuditorController@audits_form_page_count')->
 
 Route::get('/reports','ReportController@index')->name('report.index');
 Route::get('/reports/calllog-responses','ReportController@calllog_responses')->name('report.calllog_responses');
+Route::get('/reports/auditors-hourly','ReportController@auditors_hourly')->name('report.auditors_hourly');
+Route::post('/reports/auditors_hourly_content','ReportController@auditors_hourly_content')->name('report.auditors_hourly_content');
 Route::post('/download/calllog-responses','DownloadController@downloadCallLogResponses')->name('dl.calllog_responses');
 
 Route::resource('findings','FindingController')->only(['store']);

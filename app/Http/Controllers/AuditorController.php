@@ -277,6 +277,9 @@ class AuditorController extends Controller
     public function submit_audit(Request $request){
         $recording_id = $request->recording_id;
 
+        date_default_timezone_set('Asia/Kuala_Lumpur');
+        $audit_end = date('Y-m-d H:i:s');
+
         foreach ($request->responses as $response) {
             if($this->is_not_empty($response)){
                 $scrpt_resp = ScriptResponse::firstOrNew(['recording_id'=>$recording_id,'script_id'=>$response['id']]);
@@ -314,6 +317,8 @@ class AuditorController extends Controller
         // update calllog status
         $clog = CallLogsAssigned::findby_recording_id($recording_id);
         $clog->status = 1;
+        $clog->audit_start = $request->audit_start;
+        $clog->audit_end = $audit_end;
         $clog->save();
         return redirect()->route('auditor.my_call_logs')->with('success','Audit recorded');
     }

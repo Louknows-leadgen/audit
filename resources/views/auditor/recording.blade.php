@@ -65,6 +65,7 @@
 				<form action="{{ route('auditor.submit_audit') }}" method="post">
 					@csrf
 					<input type="hidden" name="recording_id" value="{{ $recording_id }}">
+					<input type="hidden" name="audit_start" value="">
 					<!-- Z01 -->
 					@php $z1_response = get_responses($recording_id,1) @endphp
 					<div class="tabcontent inactive p-3" id="Z01">

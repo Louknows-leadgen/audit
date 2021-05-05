@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class CallLogsAssigned extends Model
@@ -111,5 +112,20 @@ class CallLogsAssigned extends Model
         return self::whereIn('team_code',$teams)
                    ->where('is_claimed','=',1)
                    ->paginate(10);
+    }
+
+    public static function hourly_count($auditor, $audit_dt){
+        $to_dt = date('Y-m-d', strtotime("+1 day", strtotime($audit_dt)));
+
+        return self::where('claimed_by',$auditor)
+                   ->where('is_claimed',1)
+                   ->where('status',1)
+                   ->where('audit_end','>=',$audit_dt)
+                   ->where('audit_end','<',$to_dt)
+                   ->select(DB::raw("DATE_FORMAT(audit_end,'%H') as hr, count(1) as ctr"))
+                   ->groupBy('hr')
+                   ->orderBy('hr','asc')
+                   ->get();
+
     }
 }
