@@ -44,9 +44,9 @@ class ReportController extends Controller
     private function append_hour_suffix($hr){
     	$hour = (int) $hr;
     	if($hour < 12){
-    		return $hr . 'AM';
+    		return str_pad($hr,2,"0",STR_PAD_LEFT) . ' AM';
     	}
 
-    	return $hr . 'PM';
+    	return str_pad(($hr - 12),2,"0",STR_PAD_LEFT) . ' PM';
     }
 }

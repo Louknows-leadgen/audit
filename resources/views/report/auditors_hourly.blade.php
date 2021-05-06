@@ -10,15 +10,16 @@
 			@csrf
 			<h5>Auditor Hourly</h5>
 			<div class="row">
-				<div class="col-md-4">
-					<select name="auditor" class="form-control">
+				<div class="col-md-4 mb-3">
+					<select name="auditor" class="form-control" required>
 						@foreach($auditors as $auditor)
 							<option value="{{ $auditor->id }}"> {{ $auditor->name }} </option>
 						@endforeach
 					</select>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-4 mb-3">
 					<input type="date" class="form-control" name="audit_dt">
+					<p class="text-danger mb-0 dt-notif"></p>
 				</div>
 				<div class="col-md-4">
 					<input type="submit" value="Search" class="btn btn-primary">

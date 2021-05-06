@@ -808,24 +808,30 @@ $(document).ready(function(){
 	$(document).on('submit','#hourly-form',function(e){
 		e.preventDefault();
 
-		var auditor = $(this).find('input[name=auditor]').val();
+		var auditor = $(this).find('[name=auditor]').val();
 		var audit_dt = $(this).find('input[name=audit_dt]').val();
 		var token = $(this).find('input[name=_token]').val();
 		var action = $(this).attr('action');
 		var method = $(this).attr('method');
 
-		$.ajax({
-			url: action,
-			method: method,
-			data: {
-				auditor: auditor,
-				audit_dt: audit_dt,
-				_token: token
-			},
-			success: function(response){
-				$('#hourly-content').html(response);
-			}
-		});
+		if(audit_dt){
+			$('.dt-notif').empty();
+			
+			$.ajax({
+				url: action,
+				method: method,
+				data: {
+					auditor: auditor,
+					audit_dt: audit_dt,
+					_token: token
+				},
+				success: function(response){
+					$('#hourly-content').html(response);
+				}
+			});
+		}else{
+			$('.dt-notif').text('Date field is required');
+		}
 	});
 
 });
