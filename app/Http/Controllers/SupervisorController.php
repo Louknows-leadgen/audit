@@ -30,7 +30,8 @@ class SupervisorController extends Controller
 
     public function index(Request $request){
     	$teams = Team::all();
-    	$servers = DB::table('calllogs')->distinct()->get('server_ip');
+    	// $servers = DB::table('calllogs')->distinct()->get('server_ip');
+        $servers = Server::all('server_ip');
     	$campaigns = DB::table('calllogs')->distinct()->get('campaign');
     	$dispositions = DB::table('calllogs')->distinct()->get('dispo');
         $users = UserEmployeeMapping::orderBy('user_id')->get();

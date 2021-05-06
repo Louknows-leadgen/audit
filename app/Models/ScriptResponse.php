@@ -136,8 +136,8 @@ class ScriptResponse extends Model
         //                         ->union($calllogs_base)
         //                         ->get();
 
-        $calllogs = CallLogsAssigned::whereDate('timestamp','>=',date('Y-m-d',strtotime($from)))
-                                    ->whereDate('timestamp','<',date('Y-m-d',strtotime($to)))
+        $calllogs = CallLogsAssigned::whereDate('audit_end','>=',date('Y-m-d',strtotime($from)))
+                                    ->whereDate('audit_end','<',date('Y-m-d',strtotime($to)))
                                     ->where('status',1)
                                     ->get();                        
 
