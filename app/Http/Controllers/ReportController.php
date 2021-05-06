@@ -27,7 +27,7 @@ class ReportController extends Controller
     	$auditor = $request->auditor;
     	$audit_dt = $request->audit_dt;
 
-    	$date = date('F d, Y');
+    	$date = date('F d, Y',strtotime($audit_dt));
     	$rows = CallLogsAssigned::hourly_count($auditor, $audit_dt);
 
     	$hours = [];
