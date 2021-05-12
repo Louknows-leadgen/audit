@@ -56,7 +56,9 @@ class LoginController extends Controller
             case 3:
                 return redirect()->route('supervisor.index');
             case 4:
-                return redirect()->route('auditor.index');  
+                return redirect()->route('auditor.index');
+            case 5:
+                return redirect()->route('ops.index');  
         }
     }
 }

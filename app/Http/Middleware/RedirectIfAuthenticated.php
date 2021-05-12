@@ -29,6 +29,8 @@ class RedirectIfAuthenticated
                     return redirect()->route('supervisor.index');
                 case 4:
                     return redirect()->route('auditor.index');  
+                case 5:
+                    return redirect()->route('ops.index');
             }
             // return redirect(RouteServiceProvider::HOME);
         }

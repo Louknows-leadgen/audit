@@ -33,6 +33,8 @@ class CheckRole
                     case 4:
                         return redirect()->route('auditor.index');
                         break;
+                    case 5:
+                        return redirect()->route('ops.index');
                 }
             }
         }else{

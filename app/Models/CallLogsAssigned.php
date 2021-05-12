@@ -126,6 +126,11 @@ class CallLogsAssigned extends Model
                    ->groupBy('hr')
                    ->orderBy('hr','asc')
                    ->get();
+    }
 
+    public static function audited_logs(){
+      return self::where('is_claimed',1)
+                 ->where('status',1)
+                 ->paginate(10);
     }
 }

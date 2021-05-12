@@ -68,4 +68,8 @@ Route::resource('teams','TeamController')->only(['show','update','store','destro
 
 Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
 
+
+Route::get('/operation','OperationAuditorController@index')->name('ops.index');
+Route::get('/operation/audited/{recording}','OperationAuditorController@audited')->name('ops.audited');
+
 Auth::routes();

@@ -62,7 +62,12 @@
 						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.manage_teams') }}">Manage Teams</a></li>
 						<li class="list-inline-item mr-4"><a href="{{ route('supervisor.assign_preference') }}">Auto Assign</a></li>
 					@endcan
-					<li class="list-inline-item mr-4"><a href="{{ route('report.index') }}">Reports</a></li>
+					@can('access',[3,4])
+						<li class="list-inline-item mr-4"><a href="{{ route('report.index') }}">Reports</a></li>
+					@endcan
+					@can('access',[5])
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.index') }}">Audited Calls</a></li>
+					@endcan
 				</ul>
 			@endauth
 		</div>
