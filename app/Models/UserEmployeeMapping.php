@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Employee;
 
 class UserEmployeeMapping extends Model
 {
@@ -28,5 +29,18 @@ class UserEmployeeMapping extends Model
     |          Custom methods
     |**********************************/
 
+    /*
+    |-------------------------------------
+    |           Custom Attributes
+    |-------------------------------------*/
 
+    protected $appends = ['team_lead'];
+
+    public function getTeamLeadAttribute(){
+        $tlid = $this->tl_employeeid;
+
+        $team_lead = Employee::find($tlid);
+
+        return $team_lead;
+    }
 }

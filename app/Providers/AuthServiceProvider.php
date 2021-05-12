@@ -34,11 +34,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('display-role', function ($user, $role_to_check) {
             switch ($user->role_id) {
                 case 1:
-                    if(in_array($role_to_check, [1,2,3,4]))
+                    if(in_array($role_to_check, [1,2,3,4,5]))
                         return true;
                     break;
                 case 2:
-                    if(in_array($role_to_check, [3,4]))
+                    if(in_array($role_to_check, [3,4,5]))
                         return true;
                     break;
             }
