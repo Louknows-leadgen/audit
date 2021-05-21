@@ -1,40 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="row">
-		<div class="col-md-10 mx-auto">
-			<div class="box">
-				<h5>Claimed Call Logs:</h5>
-				<table class="table table-bordered table-sm table-responsive w-100 d-block d-md-table">
-					<thead class="thead-dark">
-						<tr>
-							<th>Record ID</th>
-							<th>Recording Date</th>
-							<th>Agent ID</th>
-							<th>Phone</th>
-							<th>Auditor</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						@if(count($calllogs))
-							@foreach($calllogs as $calllog)
-								<tr>
-									<td><a href="{{ route('ops.audited',['recording' => $calllog->recording_id]) }}">{{ $calllog->recording_id }}</a></td>
-									<td>{{ date('m/d/Y',strtotime($calllog->timestamp)) }}</td>
-									<td>{{ $calllog->user }}</td>
-									<td>{{ $calllog->phone_number }}</td>
-									<td>{{ $calllog->auditor->name }}</td>
-									<td>{{ $calllog->status_name }}</td>
-								</tr>
-							@endforeach
-						@else
-							<tr class="text-center"><td colspan="5">Empty results</td></tr>
-						@endif
-					</tbody>
-				</table>
-				{{ $calllogs->links() }}
+
+<div class="row">
+	<div class="col-md-10 mx-auto">
+		<div class="box" style="min-height: 30rem">
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<ul class="nav nav-tabs">
+						<li class="nav-item"><a class="nav-link active">Search Call</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ route('ops.audited-list') }}">Audited Calls</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<form class="col-md-6" action="{{ route('ops.search') }}" method="get" id="op-call-search">
+					<div class="d-flex" style="gap: 1rem;">
+						<input type="text" class="form-control" name="search" required>
+						<select class="form-control" name="search-type">
+							<option value="1">phone</option>
+							<option value="2">recording id</option>
+						</select>
+						<button class="btn btn-primary">Search</button>
+					</div>
+				</form>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div id="op-call-search-result">
+						<div class="text-center">
+							<span>No search calls</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
+</div>
+
 @endsection

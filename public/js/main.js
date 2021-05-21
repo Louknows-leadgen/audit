@@ -834,6 +834,46 @@ $(document).ready(function(){
 		}
 	});
 
+
+	$(document).on('submit','#op-call-search',function(e){
+		e.preventDefault();
+
+		var url = $(this).attr('action');
+		var method = $(this).attr('method');
+		var searchtxt = $(this).find('[name=search]').val();
+		var searchtype = $(this).find('[name=search-type]').val();
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: {
+				searchtxt: searchtxt,
+				searchtype: searchtype
+			},
+			beforeSend: function(){
+				var modal = `
+					<div class='gray-bg d-flex' id='form-loading'>
+						<div style="margin: auto;">
+							<div class='spinner-grow text-info'></div>
+							<div class='spinner-grow text-info'></div>
+							<div class='spinner-grow text-info'></div>
+						</div>
+					</div>
+				`;
+
+				
+				$('body').append(modal);
+			},
+			success: function(result){
+				setTimeout(function(){
+					$('#form-loading').remove();
+				},200);
+
+				$('#op-call-search-result').html(result);
+			}
+		});
+	});
+
 });
 
 	

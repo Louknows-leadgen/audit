@@ -66,7 +66,8 @@
 						<li class="list-inline-item mr-4"><a href="{{ route('report.index') }}">Reports</a></li>
 					@endcan
 					@can('access',[5])
-						<li class="list-inline-item mr-4"><a href="{{ route('ops.index') }}">Audited Calls</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.index') }}">Home</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.audited-list') }}">Audited Calls</a></li>
 					@endcan
 				</ul>
 			@endauth

@@ -31,7 +31,9 @@ class CallLog extends Model
     }
 
 
-
+    public function user_employee_mapping(){
+        return $this->belongsTo('App\Models\UserEmployeeMapping','user','user_id');
+    }
 
     /*
     |-------------------------------------
