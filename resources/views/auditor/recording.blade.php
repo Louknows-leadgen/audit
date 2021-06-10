@@ -67,7 +67,6 @@
 					<input type="hidden" name="recording_id" value="{{ $recording_id }}">
 					<input type="hidden" name="audit_start" value="">
 					<!-- Z01 -->
-					@php $z1_response = get_responses($recording_id,1) @endphp
 					<div class="tabcontent inactive p-3" id="Z01">
 						<input type="hidden" name="responses[z1][id]" value="1">
 						<div class="row mb-2">
@@ -87,7 +86,7 @@
 									<div class="card-header bg-secondary text-white">Customer</div>
 									<div class="card-body">
 										<label>Statement (Question/Objection)</label>
-										<textarea name="responses[z1][cust_statement]" class="form-control">{{ isset($z1_response) }}</textarea>
+										<textarea name="responses[z1][cust_statement]" class="form-control"></textarea>
 									</div>
 								</div>
 							</div>

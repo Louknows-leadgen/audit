@@ -64,10 +64,12 @@ Route::get('/supervisor/call-assignment-preference/new','SupervisorController@as
 Route::post('/supervisor/call-assignment-preference/create','SupervisorController@assign_preference_create')->name('supervisor.assign_preference_create');
 Route::post('/supervisor/call-assignment-preference/{id}/update','SupervisorController@assign_preference_update')->name('supervisor.assign_preference_update');
 
+Route::get('/incident-report/form','IncidentReportController@form')->name('ir.form');
+
+
 Route::resource('teams','TeamController')->only(['show','update','store','destroy']);
 
 Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
-
 
 Route::get('/operation','OperationAuditorController@index')->name('ops.index');
 Route::get('/operation/audited/{recording}','OperationAuditorController@audited')->name('ops.audited');
