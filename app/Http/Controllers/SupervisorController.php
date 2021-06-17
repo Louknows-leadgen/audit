@@ -246,11 +246,13 @@ class SupervisorController extends Controller
 
 
     private function get_servers(){
-        $servers = [
-            (object) ['server_ip' => '38.102.225.152'],
-            (object) ['server_ip' => '38.107.183.5'],
-            (object) ['server_ip' => '38.102.225.153']
-        ];
+        // $servers = [
+        //     (object) ['server_ip' => '38.102.225.152'],
+        //     (object) ['server_ip' => '38.107.183.5'],
+        //     (object) ['server_ip' => '38.102.225.153']
+        // ];
+
+        $servers = Server::all();        
 
         return $servers;
     }
