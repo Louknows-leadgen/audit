@@ -74,4 +74,6 @@ Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
 Route::get('/operation','OperationAuditorController@index')->name('ops.index');
 Route::get('/operation/audited/{recording}','OperationAuditorController@audited')->name('ops.audited');
 
+Route::get('/incident-report','IncidentReportController@form')->name('ir.form');
+
 Auth::routes();
