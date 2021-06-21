@@ -70,6 +70,7 @@ Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
 
 
 Route::get('/operation','OperationAuditorController@index')->name('ops.index');
+Route::get('/operation/search/{type}','OperationAuditorController@search')->name('ops.search');
 Route::get('/operation/audited/{recording}','OperationAuditorController@audited')->name('ops.audited');
 
 Auth::routes();

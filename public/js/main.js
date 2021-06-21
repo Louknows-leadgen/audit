@@ -834,6 +834,26 @@ $(document).ready(function(){
 		}
 	});
 
+
+	$(document).on('click','.tbl-search',function(){
+		// initialize, hide existing active search area
+		$('.tbl-search').parent().siblings('span').removeClass('d-none').addClass('d-none');
+		$('.tbl-search').parent().parent().siblings('form').removeClass('d-none').addClass('d-none');
+		$('.tbl-search').parent().parent().siblings('form').find('input').val('');
+
+
+		// display the close button
+		$(this).parent().siblings('span').removeClass('d-none');
+		// display the form area
+		$(this).parent().parent().siblings('form').removeClass('d-none');
+	});
+
+
+	$(document).on('click','.tbl-close',function(){
+		let url = $(this).parents('table').data('baseurl');
+		window.location.href = url;
+	});
+
 });
 
 	

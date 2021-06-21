@@ -133,4 +133,18 @@ class CallLogsAssigned extends Model
                  ->where('status',1)
                  ->paginate(10);
     }
+
+
+    // Used in:
+    // Controller: OperationAuditorController 
+    // Method: search 
+    public static function scopeWhereLike($query, $column ,$value){
+      return $query->where($column,'like','%'. $value .'%');
+    }
+
+    public static function scopeWhereDateEqual($query, $column, $value){
+      $stop_date = date('Y-m-d', strtotime($value . ' +1 day'));
+      return $query->where($column,'>=',$value)
+                   ->where($column,'<',$stop_date);
+    }
 }

@@ -19,7 +19,7 @@
 					</div>
 					<div>
 						<label class="font-weight-bolder">Team Lead:</label> 
-						{{ isset($emp->team_assignment->team_supervisor->TeamSupervisor) ? $emp->team_assignment->team_supervisor->TeamSupervisor : '(No record)' }} 
+						{{ isset($emp->team_lead->full_name) ? $emp->team_lead->full_name : '(No record)' }} 
 					</div>
 					<div>
 						<label class="font-weight-bolder">Audit Type:</label>

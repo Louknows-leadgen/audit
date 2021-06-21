@@ -14,11 +14,11 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Record ID</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'record_id' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none" method="get" action="{{ route('ops.search',['type'=>'record_id']) }}">
+									<form class="{{$searchtype == 'record_id' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'record_id']) }}">
 										<div class="input-group">
-											<input type="text" class="form-control form-control-sm" name="searchtxt">
+											<input type="text" class="form-control form-control-sm" name="searchtxt" value="{{ isset($searchtxt) && $searchtype == 'record_id' ? $searchtxt : '' }}">
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
 													<i class="fa fa-search"></i>
@@ -32,11 +32,11 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Recording Date</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'recording_id' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none" method="get" action="{{ route('ops.search',['type'=>'recording_date']) }}">
+									<form class="{{$searchtype == 'recording_date' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'recording_date']) }}">
 										<div class="input-group">
-											<input type="date" class="form-control form-control-sm" name="searchtxt">
+											<input type="date" class="form-control form-control-sm" name="searchtxt" value="{{ isset($searchtxt) && $searchtype == 'recording_date' ? $searchtxt : '' }}">
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
 													<i class="fa fa-search"></i>
@@ -50,11 +50,11 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Agent ID</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'recording_id' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none" method="get" action="{{ route('ops.search',['type'=>'agent_id']) }}">
+									<form class="{{$searchtype == 'agent_id' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'agent_id']) }}">
 										<div class="input-group">
-											<input type="number" class="form-control form-control-sm" name="searchtxt">
+											<input type="number" class="form-control form-control-sm" value="{{ isset($searchtxt) && $searchtype == 'agent_id' ? $searchtxt : '' }}">
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
 													<i class="fa fa-search"></i>
@@ -106,8 +106,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							@if(count($calllogs))
-								@foreach($calllogs as $calllog)
+							@if(count($calls))
+								@foreach($calls as $calllog)
 									<tr>
 										<td><a href="{{ route('ops.audited',['recording' => $calllog->recording_id]) }}">{{ $calllog->recording_id }}</a></td>
 										<td>{{ date('m/d/Y',strtotime($calllog->timestamp)) }}</td>
@@ -122,7 +122,7 @@
 							@endif
 						</tbody>
 					</table>
-					{{ $calllogs->links() }}
+					{{ $calls->appends(['searchtxt' => $searchtxt])->links() }}
 				</div>
 			</div>
 		</div>
