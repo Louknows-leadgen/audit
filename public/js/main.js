@@ -798,8 +798,12 @@ $(document).ready(function(){
 		d.setMinutes(d.getMinutes() + utc_offset);
 
 		// PH diff from UTC
-		var ph_offset = 8 * 60; // 8 hours * 60 minutes
-		d.setMinutes(d.getMinutes() + ph_offset);
+		// var ph_offset = 8 * 60; // 8 hours * 60 minutes (GMT+8)
+		// d.setMinutes(d.getMinutes() + ph_offset);
+
+		// EST diff from UTC
+		var est_offset = -4 * 60; // 4 hours * 60 minutes (GMT-4)
+		d.setMinutes(d.getMinutes() + est_offset);
 
 		return d;
 	}
