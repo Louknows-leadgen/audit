@@ -70,9 +70,9 @@
 										</div>
 										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none">
+									<form class="d-none" method="get" action="{{ route('ops.search',['type'=>'phone']) }}">
 										<div class="input-group">
-											<input type="number" class="form-control form-control-sm">
+											<input type="number" class="form-control form-control-sm" name="searchtxt">
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
 													<i class="fa fa-search"></i>
@@ -88,11 +88,12 @@
 										</div>
 										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none">
+									<form class="d-none" method="get" action="{{ route('ops.search',['type'=>'auditor']) }}">
 										<div class="input-group">
-											<select class="form-control form-control-sm">
-												<option>Ish Costanilla</option>
-												<option>Francis Labitad Auditor</option>
+											<select class="form-control form-control-sm" name="searchtxt">
+												@foreach($auditors as $auditor)
+													<option value="{{ $auditor->id }}">{{ $auditor->name }}</option>
+												@endforeach
 											</select>
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
@@ -118,7 +119,7 @@
 									</tr>
 								@endforeach
 							@else
-								<tr class="text-center"><td colspan="5">Empty results</td></tr>
+								<tr class="text-center"><td colspan="6">Empty results</td></tr>
 							@endif
 						</tbody>
 					</table>

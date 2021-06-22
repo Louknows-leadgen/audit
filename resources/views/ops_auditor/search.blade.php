@@ -32,7 +32,7 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Recording Date</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'recording_id' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'recording_date' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
 									<form class="{{$searchtype == 'recording_date' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'recording_date']) }}">
 										<div class="input-group">
@@ -50,11 +50,11 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Agent ID</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'recording_id' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'agent_id' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
 									<form class="{{$searchtype == 'agent_id' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'agent_id']) }}">
 										<div class="input-group">
-											<input type="number" class="form-control form-control-sm" value="{{ isset($searchtxt) && $searchtype == 'agent_id' ? $searchtxt : '' }}">
+											<input type="number" class="form-control form-control-sm" name="searchtxt" value="{{ isset($searchtxt) && $searchtype == 'agent_id' ? $searchtxt : '' }}">
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
 													<i class="fa fa-search"></i>
@@ -68,11 +68,11 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Phone</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'phone' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none">
+									<form class="{{$searchtype == 'phone' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'phone']) }}">
 										<div class="input-group">
-											<input type="number" class="form-control form-control-sm">
+											<input type="number" class="form-control form-control-sm" name="searchtxt" value="{{ isset($searchtxt) && $searchtype == 'phone' ? $searchtxt : '' }}">
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
 													<i class="fa fa-search"></i>
@@ -86,13 +86,14 @@
 										<div>
 											<span class="mr-3 pointer-cursor tbl-search">Auditor</span>
 										</div>
-										<span class="fa fa-times align-middle pointer-cursor tbl-close d-none" style="font-size: 1rem"></span>
+										<span class="fa fa-times align-middle pointer-cursor tbl-close {{$searchtype == 'auditor' ? '' : 'd-none' }}" style="font-size: 1rem"></span>
 									</div>
-									<form class="d-none">
+									<form class="{{$searchtype == 'auditor' ? '' : 'd-none'}}" method="get" action="{{ route('ops.search',['type'=>'auditor']) }}">
 										<div class="input-group">
-											<select class="form-control form-control-sm">
-												<option>Ish Costanilla</option>
-												<option>Francis Labitad Auditor</option>
+											<select class="form-control form-control-sm" name="searchtxt">
+												@foreach($auditors as $auditor)
+													<option value="{{ $auditor->id }}" {{ isset($searchtxt) && $searchtype == 'auditor' && $searchtxt == $auditor->id ? 'selected' : '' }}>{{ $auditor->name }}</option>
+												@endforeach
 											</select>
 											<div class="input-group-append">
 												<button class="btn btn-sm btn-secondary" type="submit">
@@ -118,7 +119,7 @@
 									</tr>
 								@endforeach
 							@else
-								<tr class="text-center"><td colspan="5">Empty results</td></tr>
+								<tr class="text-center"><td colspan="6">Empty results</td></tr>
 							@endif
 						</tbody>
 					</table>

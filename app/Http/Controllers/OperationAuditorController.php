@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\CallLogsAssigned;
 use App\Models\UserEmployeeMapping;
+use App\Models\User;
 
 
 class OperationAuditorController extends Controller
@@ -17,8 +18,9 @@ class OperationAuditorController extends Controller
     //
     public function index(){
     	$calllogs = CallLogsAssigned::audited_logs();
-
-		return view('ops_auditor.index',compact('calllogs'));
+        $auditors = User::where('role_id',4)->get(); // auditors role list
+        
+		return view('ops_auditor.index',compact('calllogs', 'auditors'));
     }
 
 
@@ -49,26 +51,38 @@ class OperationAuditorController extends Controller
     public function search(Request $request){
         $searchtxt = $request->searchtxt;
         $searchtype = $request->type;
+        $auditors = User::where('role_id',4)->get(); // auditors role list
 
         switch ($request->type) {
             case 'record_id':
                 // recording id scope
-                $calls = CallLogsAssigned::whereLike('recording_id',$searchtxt)->paginate(10);
+                $calls = CallLogsAssigned::whereLikeCompleted('recording_id',$searchtxt)->paginate(10);
                 break; 
             case 'recording_date':
                 // recording id scope
-                $calls = CallLogsAssigned::whereDateEqual('timestamp',$searchtxt)->paginate(10);  
+                if(!isset($searchtxt)){
+                    $searchtxt = date('Y-m-d');
+                }
+                $calls = CallLogsAssigned::whereDateEqualCompleted('timestamp',$searchtxt)->paginate(10);  
                 break; 
             case 'agent_id':
                 // recording id scope
-                $calls = CallLogsAssigned::whereLike('user',$searchtxt)->paginate(10);  
+                $calls = CallLogsAssigned::whereLikeCompleted('user',$searchtxt)->paginate(10);  
+                break;  
+            case 'phone':
+                // recording id scope
+                $calls = CallLogsAssigned::whereLikeCompleted('phone_number',$searchtxt)->paginate(10);  
+                break;   
+            case 'auditor':
+                // recording id scope
+                $calls = CallLogsAssigned::where('claimed_by',$searchtxt)->paginate(10);  
                 break;        
             default:
                 # code...
                 break;
         }
 
-         return view('ops_auditor.search',compact('calls','searchtxt','searchtype'));
+         return view('ops_auditor.search',compact('calls','searchtxt','searchtype', 'auditors'));
     }
 
 
