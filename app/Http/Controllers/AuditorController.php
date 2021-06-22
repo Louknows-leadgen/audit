@@ -277,7 +277,7 @@ class AuditorController extends Controller
     public function submit_audit(Request $request){
         $recording_id = $request->recording_id;
 
-        date_default_timezone_set('Asia/Kuala_Lumpur');
+        date_default_timezone_set('America/New_York');
         $audit_end = date('Y-m-d H:i:s');
 
         foreach ($request->responses as $response) {
