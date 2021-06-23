@@ -72,5 +72,7 @@ Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
 Route::get('/operation','OperationAuditorController@index')->name('ops.index');
 Route::get('/operation/search/{type}','OperationAuditorController@search')->name('ops.search');
 Route::get('/operation/audited/{recording}','OperationAuditorController@audited')->name('ops.audited');
+Route::get('/operation/recordings/{ctr}','OperationAuditorController@recording')->name('ops.recording');
+Route::post('/operation/submit_audit','OperationAuditorController@submit_audit')->name('ops.submit_audit');
 
 Auth::routes();

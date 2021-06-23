@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\CallLogsAssigned;
+use App\Models\OperationCallAudits;
 use App\Models\UserEmployeeMapping;
+use App\Models\OpsScriptResponse;
+use App\Models\OpsAgentScriptResponse;
+use App\Models\OpsExternalScriptResponse;
 use App\Models\User;
 
 
@@ -26,25 +31,20 @@ class OperationAuditorController extends Controller
 
     public function audited($recording_id){
         $calllog = CallLogsAssigned::where('recording_id','=',$recording_id)->first();
+        $ops_id = Auth::id(); 
 
-        // $server = $calllog->server_ip;
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        // $recording_file = ['type' => $this->get_filetype($calllog->recording_url), 'url' => $calllog->recording_url];
         $recording = $this->generate_recording_url($calllog);
+        $is_audited = OperationCallAudits::IsNotAudited($calllog->ctr,$ops_id)->count() > 0 ? true : false;
         if(!empty($recording)){
             $recording_file = $recording;
-            if($calllog->recording_url != $recording['url']){
-                $calllog->recording_url = $recording['url'];
-                // $calllog->url_stage = $this->get_url_stage($recording);
-                $calllog->save();
-            }
         }else{
             $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
         }
 
-        return view('ops_auditor.audited',compact('calllog','emp','user_id','recording_file','audit_type'));
+        return view('ops_auditor.audited',compact('calllog','emp','user_id','recording_file','audit_type','is_audited'));
     }
 
 
@@ -128,4 +128,65 @@ class OperationAuditorController extends Controller
 
         return $headers['http_code'];
     }
+
+
+    public function recording($ctr){
+        $calllog = CallLogsAssigned::where('ctr','=',$ctr)->first();
+
+        $recording_id = $calllog->recording_id;
+        $user_id = $calllog->user;
+        $audit_type = $calllog->audit_type;
+        $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
+
+        $recording = $this->generate_recording_url($calllog);
+        if(!empty($recording)){
+            $recording_file = $recording;
+        }else{
+            $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
+        }
+        
+        return view('ops_auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type'));
+    }
+
+    public function submit_audit(Request $request){
+        $recording_id = $request->recording_id;
+
+        foreach ($request->responses as $response) {
+            if($this->is_not_empty($response)){
+                $scrpt_resp = OpsScriptResponse::firstOrNew(['recording_id'=>$recording_id,'script_id'=>$response['id']]);
+                $scrpt_resp->cust_statement = isset($response['cust_statement']) ? $response['cust_statement'] : null;
+                $scrpt_resp->aud_comment = isset($response['aud_comment']) ? $response['aud_comment'] : null;
+                $scrpt_resp->inc_tagging = isset($response['inc_tagging']) ? $response['inc_tagging'] : null;
+                $scrpt_resp->inapp_resp = isset($response['inapp_resp']) ? $response['inapp_resp'] : null;
+                $scrpt_resp->inc_detail = isset($response['inc_detail']) ? $response['inc_detail'] : null;
+
+                if($scrpt_resp->save()){
+                    if(isset($response['agent_correction'])){
+                        // remove records that are no longer selected
+                        OpsAgentScriptResponse::delete_if_not_exist($scrpt_resp->id,$response['agent_correction']);
+
+                        // insert only if the record does not exist
+                        foreach ($response['agent_correction'] as $agent_correction_id) {
+                            $agent_script_response = ['script_response_id' => $scrpt_resp->id,'agent_correction_id' => $agent_correction_id];
+                            OpsAgentScriptResponse::firstOrCreate($agent_script_response);
+                        }
+                    }
+
+                    if(isset($response['external_factor'])){
+                        // remove records that are no longer selected
+                        OpsExternalScriptResponse::delete_if_not_exist($scrpt_resp->id,$response['external_factor']);
+
+                        // insert only if the record does not exist
+                        foreach ($response['external_factor'] as $external_factor_id) {
+                            $external_script_response = ['script_response_id' => $scrpt_resp->id,'external_factor_id' => $external_factor_id];
+                            OpsExternalScriptResponse::firstOrCreate($external_script_response);
+                        }
+                    }
+                }
+            }
+        }
+        // update calllog status
+        return redirect()->route('auditor.my_call_logs')->with('success','Audit recorded');
+    }
+
 }
