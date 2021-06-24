@@ -7,7 +7,7 @@
 			<div class="mb-3 d-flex justify-content-between">
 				<span class="back" onclick="window.history.back();">Back</span>
 				@if(!$is_audited)
-					<a href="{{ route('ops.recording',['ctr'=>$calllog->ctr]) }}" class="btn btn-secondary">Audit</a>
+					<a href="{{ route('ops.recording',['ops_user'=>$ops_id, 'ctr'=>$calllog->ctr]) }}" class="btn btn-secondary">Audit</a>
 				@endif
 			</div>
 

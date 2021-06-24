@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<div class="mt-3 text-center">
-					<audio class="w-75" id="audio" style="outline: none;" controls>
+					<audio class="w-75" style="outline: none;" controls>
 						<source src="{{ $recording_file['url'] }}" type="audio/{{ $recording_file['type'] }}">
 					</audio>
 				</div>
@@ -64,8 +64,27 @@
 			<div class="box-bg">
 				<form action="{{ route('ops.submit_audit') }}" method="post">
 					@csrf
-					<input type="hidden" name="recording_id" value="{{ $recording_id }}">
-					<input type="hidden" name="audit_start" value="">
+					<input type="hidden" name="calllog[ctr]" value="{{ $calllog->ctr }}">
+					<input type="hidden" name="calllog[timestamp]" value="{{ $calllog->timestamp }}">
+					<input type="hidden" name="calllog[user]" value="{{ $calllog->user }}">
+					<input type="hidden" name="calllog[user_group]" value="{{ $calllog->user_group }}">
+					<input type="hidden" name="calllog[audit_type]" value="{{ $calllog->audit_type }}">
+					<input type="hidden" name="calllog[phone_number]" value="{{ $calllog->phone_number }}">
+					<input type="hidden" name="calllog[recording_id]" value="{{ $calllog->recording_id }}">
+					<input type="hidden" name="calllog[recording_filename]" value="{{ $calllog->recording_filename }}">
+					<input type="hidden" name="calllog[recording_url]" value="{{ $calllog->recording_url }}">
+					<input type="hidden" name="calllog[server_ip]" value="{{ $calllog->server_ip }}">
+					<input type="hidden" name="calllog[server_origin]" value="{{ $calllog->server_origin }}">
+					<input type="hidden" name="calllog[campaign]" value="{{ $calllog->campaign }}">
+					<input type="hidden" name="calllog[dispo]" value="{{ $calllog->dispo }}">
+					<input type="hidden" name="calllog[talk_time]" value="{{ $calllog->talk_time }}">
+					<input type="hidden" name="calllog[server_source]" value="{{ $calllog->server_source }}">
+					<input type="hidden" name="calllog[team_code]" value="{{ $calllog->team_code }}">
+					<input type="hidden" name="calllog[is_claimed]" value="{{ $calllog->is_claimed }}">
+					<input type="hidden" name="calllog[claimed_by]" value="{{ $calllog->claimed_by }}">
+					<input type="hidden" name="calllog[status]" value="{{ $calllog->status }}">
+					<input type="hidden" name="calllog[ops_user]" value="{{ $ops_user }}">
+					
 					<!-- Z01 -->
 					@php $z1_response = get_responses($recording_id,1) @endphp
 					<div class="tabcontent inactive p-3" id="Z01">
