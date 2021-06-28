@@ -858,6 +858,16 @@ $(document).ready(function(){
 		window.location.href = url;
 	});
 
+
+	$(document).on('submit','.ops-audit-remove',function(e){
+		e.preventDefault();
+
+		if(confirm("Are you sure?")){
+			this.submit();
+		}
+
+	});
+
 });
 
 	

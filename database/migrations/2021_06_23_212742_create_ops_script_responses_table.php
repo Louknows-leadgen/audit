@@ -15,7 +15,7 @@ class CreateOpsScriptResponsesTable extends Migration
     {
         Schema::create('ops_script_responses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('recording_id');
+            $table->integer('ctr');
             $table->integer('script_id');
             $table->string('cust_statement')->nullable();
             $table->string('aud_comment')->nullable();

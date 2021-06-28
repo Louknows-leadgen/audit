@@ -14,4 +14,8 @@ class AgentCorrection extends Model
     public function agent_script_responses(){
     	return $this->hasMany('App\Models\AgentScriptResponse');
     }
+
+    public function ops_agent_script_responses(){
+    	return $this->hasMany('App\Models\OpsAgentScriptResponse');
+    }
 }

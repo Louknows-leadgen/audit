@@ -67,6 +67,7 @@
 					@endcan
 					@can('access',[5])
 						<li class="list-inline-item mr-4"><a href="{{ route('ops.index') }}">Audited Calls</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.my_audits') }}">My Audits</a></li>
 					@endcan
 				</ul>
 			@endauth

@@ -20,4 +20,8 @@ class CallLogArchive extends Model
         return $this->belongsTo('App\Models\User','claimed_by');
     }
 
+
+    public function scopeDistinctDispo($query){
+        return $query->distinct()->orderBy('dispo','asc')->get('dispo');
+    }
 }

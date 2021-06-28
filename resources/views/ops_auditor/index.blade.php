@@ -4,7 +4,7 @@
 	<div class="row">
 		<div class="col-md-10 mx-auto">
 			<div class="box">
-				<h5>Claimed Call Logs:</h5>
+				<h5>QA Audited Call Logs:</h5>
 				<div class="table-responsive">
 					<table class="table table-bordered table-sm w-100 d-block d-md-table" style="min-width: 990px;" data-baseurl="{{ route('ops.index') }}">
 						<thead class="thead-dark">

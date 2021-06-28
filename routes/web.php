@@ -75,5 +75,13 @@ Route::get('/operation/audited/{recording}','OperationAuditorController@audited'
 Route::get('/operation/recordings/{ops_user}/{ctr}','OperationAuditorController@recording')->name('ops.recording');
 Route::post('/operation/submit_audit','OperationAuditorController@submit_audit')->name('ops.submit_audit');
 Route::get('/operation/my-audits','OperationAuditorController@my_audits')->name('ops.my_audits');
+Route::delete('/operation/my-audits/{ctr}','OperationAuditorController@destroy_audit')->name('ops.destroy_audit');
+Route::get('/operation/my-audits/{ctr}','OperationAuditorController@show')->name('ops.show');
+Route::get('/operation/search-preference','OperationAuditorController@search_preference')->name('ops.search_preference');
 
 Auth::routes();
+
+
+
+
+// Route::resource('products','ProductController');

@@ -43,9 +43,11 @@
 									<td>{{ $calllog->phone_number }}</td>
 									<td>
 										<div class="d-flex justify-content-center" style="gap: 20px">
-											<form action="{{ route('auditor.destroy_mylog',['ctr'=>$calllog->ctr]) }}" method="post" class="remove-mylog">
+											<a href="{{ route('ops.show',['ctr'=>$calllog->ctr]) }}" class="btn btn-sm btn-secondary">View</a>
+											<form action="{{ route('ops.destroy_audit',['ctr'=>$calllog->ctr]) }}" method="post" class="ops-audit-remove">
 												@csrf
-												<input type="submit" value="Remove" class="btn btn-danger">
+												@method('DELETE')
+												<input type="submit" value="Remove" class="btn btn-sm btn-danger">
 											</form>
 										</div>
 									</td>

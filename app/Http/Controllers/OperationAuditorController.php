@@ -21,7 +21,12 @@ class OperationAuditorController extends Controller
 		$this->middleware('checkrole:5');
 	}
 
-    //
+
+    /* 
+        url: /operation
+        method: get
+        description: display the calls audited by the qa auditor
+    */
     public function index(){
     	$calllogs = CallLogsAssigned::audited_logs();
         $auditors = User::where('role_id',4)->get(); // auditors role list
@@ -31,6 +36,7 @@ class OperationAuditorController extends Controller
 
     /* 
         url: /operation/audited/{recording}
+        method: get
         description: display the call details audited by the qa auditor
     */
     public function audited($recording_id){
@@ -41,17 +47,22 @@ class OperationAuditorController extends Controller
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
         $recording = $this->generate_recording_url($calllog);
-        $is_audited = OperationCallAudits::IsNotAudited($calllog->ctr,$ops_id)->get()->count() > 0 ? true : false;
+        $is_not_audited = OperationCallAudits::IsNotAudited($calllog->ctr);
         if(!empty($recording)){
             $recording_file = $recording;
         }else{
             $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
         }
 
-        return view('ops_auditor.audited',compact('calllog','emp','user_id','recording_file','audit_type','is_audited','ops_id'));
+        return view('ops_auditor.audited',compact('calllog','emp','user_id','recording_file','audit_type','is_not_audited','ops_id'));
     }
 
 
+    /* 
+        url: /operation/search/{type}
+        method: get
+        description: display the search result by result id, recording date, agent id, phone, auditor
+    */
     public function search(Request $request){
         $searchtxt = $request->searchtxt;
         $searchtype = $request->type;
@@ -136,6 +147,7 @@ class OperationAuditorController extends Controller
 
     /* 
         url: /operation/recordings/{ops_user}/{ctr}
+        method: get
         description: display the call details to be audited by the ops auditor
     */
     public function recording($ops_user, $ctr){
@@ -159,55 +171,102 @@ class OperationAuditorController extends Controller
         return view('ops_auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type', 'ops_user'));
     }
 
+    /* 
+        url: /operation/my-audits/{ctr}
+        method: get
+        description: display the call details to be audited by the ops auditor
+    */
+    public function show($ctr){
+        $calllog = OperationCallAudits::where('ctr',$ctr)->first();
+
+        $user_id = $calllog->user;
+        $audit_type = $calllog->audit_type;
+        $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
+        $recording = $this->generate_recording_url($calllog);
+        if(!empty($recording)){
+            $recording_file = $recording;
+        }else{
+            $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
+        }
+
+        return view('ops_auditor.show',compact('calllog','emp','user_id','recording_file','audit_type'));
+    }
+
 
     /* 
         url: /operation/submit_audit/{ops_user}
+        get: post
         description: display the call details to be audited by the ops auditor
     */
     public function submit_audit(Request $request){
-        $call = OperationCallAudits::insertToOperationCallAudits($request->calllog);
+        $ctr = $request->calllog['ctr'];
 
-        if(!empty($call)){
-            foreach ($request->responses as $response) {
-                if($this->is_not_empty($response)){
-                    $scrpt_resp = OpsScriptResponse::firstOrNew(['recording_id'=>$call->recording_id,'script_id'=>$response['id']]);
-                    $scrpt_resp->cust_statement = isset($response['cust_statement']) ? $response['cust_statement'] : null;
-                    $scrpt_resp->aud_comment = isset($response['aud_comment']) ? $response['aud_comment'] : null;
-                    $scrpt_resp->inc_tagging = isset($response['inc_tagging']) ? $response['inc_tagging'] : null;
-                    $scrpt_resp->inapp_resp = isset($response['inapp_resp']) ? $response['inapp_resp'] : null;
-                    $scrpt_resp->inc_detail = isset($response['inc_detail']) ? $response['inc_detail'] : null;
+        // make sure that the recording has not yet been audited
+        if(OperationCallAudits::IsNotAudited($ctr)){
+            $call = OperationCallAudits::insertToOperationCallAudits($request->calllog);
+            if(!empty($call)){
+                foreach ($request->responses as $response) {
+                    if($this->is_not_empty($response)){
+                        $scrpt_resp = OpsScriptResponse::firstOrNew(['ctr'=>$call->ctr,'script_id'=>$response['id']]);
+                        $scrpt_resp->cust_statement = isset($response['cust_statement']) ? $response['cust_statement'] : null;
+                        $scrpt_resp->aud_comment = isset($response['aud_comment']) ? $response['aud_comment'] : null;
+                        $scrpt_resp->inc_tagging = isset($response['inc_tagging']) ? $response['inc_tagging'] : null;
+                        $scrpt_resp->inapp_resp = isset($response['inapp_resp']) ? $response['inapp_resp'] : null;
+                        $scrpt_resp->inc_detail = isset($response['inc_detail']) ? $response['inc_detail'] : null;
 
-                    if($scrpt_resp->save()){
-                        if(isset($response['agent_correction'])){
-                            // insert only if the record does not exist
-                            foreach ($response['agent_correction'] as $agent_correction_id) {
-                                $agent_script_response = ['ops_script_response_id' => $scrpt_resp->id,'agent_correction_id' => $agent_correction_id];
-                                OpsAgentScriptResponse::firstOrCreate($agent_script_response);
+                        if($scrpt_resp->save()){
+                            if(isset($response['agent_correction'])){
+                                // insert only if the record does not exist
+                                foreach ($response['agent_correction'] as $agent_correction_id) {
+                                    $agent_script_response = ['ops_script_response_id' => $scrpt_resp->id,'agent_correction_id' => $agent_correction_id];
+                                    OpsAgentScriptResponse::firstOrCreate($agent_script_response);
+                                }
                             }
-                        }
 
-                        if(isset($response['external_factor'])){
-                            // insert only if the record does not exist
-                            foreach ($response['external_factor'] as $external_factor_id) {
-                                $external_script_response = ['ops_script_response_id' => $scrpt_resp->id,'external_factor_id' => $external_factor_id];
-                                OpsExternalScriptResponse::firstOrCreate($external_script_response);
+                            if(isset($response['external_factor'])){
+                                // insert only if the record does not exist
+                                foreach ($response['external_factor'] as $external_factor_id) {
+                                    $external_script_response = ['ops_script_response_id' => $scrpt_resp->id,'external_factor_id' => $external_factor_id];
+                                    OpsExternalScriptResponse::firstOrCreate($external_script_response);
+                                }
                             }
                         }
                     }
                 }
             }
+            return redirect()->route('ops.my_audits')->with('success','Audit recorded');
+        }else{
+            return redirect()->route('ops.my_audits')->with('failed','This record has been audited already');
         }
 
-        return redirect()->route('ops.my_audits')->with('success','Audit recorded');
 
     }
 
 
+
+    /* 
+        url: /operation/my-audits
+        method: get
+        description: delete the call audited by the ops team lead
+    */
     public function my_audits(){
         $calllogs = OperationCallAudits::myAudits(Auth::id())->paginate(10);
         // $scripts = Script::all();
 
         return view('ops_auditor.my_audits',compact('calllogs'));
+    }
+
+
+    /* 
+        url: /operation/my-audits/{ctr}
+        method: delete
+        description: delete the call audited by the ops team lead
+    */
+    public function destroy_audit($ctr){
+        $audit = OperationCallAudits::where('ctr',$ctr)->first();
+        $audit->deleteCallAudit();
+
+        return redirect()->route('ops.my_audits')->with('success','Audit deleted');
     }
 
 
@@ -219,6 +278,31 @@ class OperationAuditorController extends Controller
         }
 
         return $ret;
+    }
+
+
+
+    /* 
+        url: /operation/search-preference
+        method: get
+        description: display the custom search page
+    */
+    public function search_preference(Request $request){
+        $users = UserEmployeeMapping::orderBy('user_id')->get();
+        $dispositions = CallLogArchive::distinctDispo();
+
+        // $calllogs = [];
+
+        $from = isset($request->from) ? $request->from : '';
+        $to = isset($request->to) ? $request->to : '';
+        $dispo = isset($request->dispo) ? $request->dispo : [];
+        $user = isset($request->user) ? $request->user : '';
+
+       
+
+
+        return view('ops_auditor.search_preference',compact('users','dispositions','from','to','dispo','user'));
+
     }
 
 }

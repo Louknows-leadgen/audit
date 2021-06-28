@@ -30,11 +30,21 @@ class OperationCallAudits extends Model
 		'ops_user'
 	];
 
+
+	/*
+    |-------------------------------------
+    |			Associations
+    |-------------------------------------*/
+
+    public function ops_script_responses(){
+        return $this->hasMany('App\Models\OpsScriptResponse','ctr','ctr');
+    }
+
+
    // Scopes
 
-    public static function scopeIsNotAudited($query, $ctr, $user){
-    	return $query->where('ctr',$ctr)
-    	             ->where('ops_user',$user);
+    public static function scopeIsNotAudited($query, $ctr){
+    	return $query->where('ctr',$ctr)->get()->count()  > 0 ? false : true;
     }
 
     public static function scopeMyAudits($query,$value){
@@ -68,5 +78,14 @@ class OperationCallAudits extends Model
 				 ]);
 
     	return $audit;
+    }
+
+    public function deleteCallAudit(){
+    	$call_audit = $this;
+    	if($call_audit->delete()){
+    		foreach ($call_audit->ops_script_responses as $ops_script_response){
+    			$ops_script_response->deleteOpsScriptResponse();
+    		}
+    	}
     }
 }
