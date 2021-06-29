@@ -13,6 +13,7 @@ use App\Models\OpsScriptResponse;
 use App\Models\OpsAgentScriptResponse;
 use App\Models\OpsExternalScriptResponse;
 use App\Models\User;
+use App\Models\CallLog;
 
 
 class OperationAuditorController extends Controller
@@ -151,7 +152,7 @@ class OperationAuditorController extends Controller
         description: display the call details to be audited by the ops auditor
     */
     public function recording($ops_user, $ctr){
-        $calllog = CallLogsAssigned::where('ctr','=',$ctr)->first();
+        $calllog = CallLog::where('ctr','=',$ctr)->first();
         if(empty($calllog)){
             $calllog = CallLogArchive::where('ctr','=',$ctr)->first();
         }
@@ -291,17 +292,29 @@ class OperationAuditorController extends Controller
         $users = UserEmployeeMapping::orderBy('user_id')->get();
         $dispositions = CallLogArchive::distinctDispo();
 
-        // $calllogs = [];
-
-        $from = isset($request->from) ? $request->from : '';
-        $to = isset($request->to) ? $request->to : '';
+        $calls = [];
+        $from = isset($request->from) ? $request->from : null;
+        $to = isset($request->to) ? $request->to : null;
         $dispo = isset($request->dispo) ? $request->dispo : [];
         $user = isset($request->user) ? $request->user : '';
+        $is_submit = isset($request->submit) ? 1 : 0;
+        $ops_id = Auth::id(); 
 
-       
+        if($is_submit){
+            $calls = CallLog::whereBetweenDates('timestamp',$from,$to);
+            if($calls->count()){
+                $calls = $calls->whereDispoIn($dispo)
+                               ->whereUserIs($user)
+                               ->paginate(20);
+            }else{
+                $calls = CallLogArchive::whereBetweenDates('timestamp',$from,$to)
+                                  ->whereDispoIn($dispo)
+                                  ->whereUserIs($user)
+                                  ->paginate(20);
+            }
+        }
 
-
-        return view('ops_auditor.search_preference',compact('users','dispositions','from','to','dispo','user'));
+        return view('ops_auditor.search_preference',compact('is_submit','calls','users','dispositions','from','to','dispo','user','ops_id'));
 
     }
 
