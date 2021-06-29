@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\CallLogArchive;
-use App\Models\RecordingScript;
 use \DateTime;
 
 class CallLog extends Model
@@ -239,66 +238,6 @@ class CallLog extends Model
     //     return $ca_numrows || $c_numrows ? 1 : 0; // return 1 if there are records updated. else 0
     // }
 
-    public static function release_user_calls($user_id){
-        $calls_archived = CallLogArchive::where('claimed_by','=',$user_id)
-                                        ->where('status','!=',1)
-                                        ->get();
-
-
-        foreach ($calls_archived as $ca) {
-            $ca->is_claimed = 0;
-            $ca->claimed_by = 0;
-            $ca->save();
-
-            // remove answers from recording_scripts table
-            RecordingScript::remove_responses($ca->recording_id);
-        }
-
-
-        $calls = self::where('claimed_by','=',$user_id)
-                     ->where('status','!=',1)
-                     ->get();
-
-        foreach ($calls as $call) {
-            $call->is_claimed = 0;
-            $call->claimed_by = 0;
-            $call->save();
-
-            // remove answers from recording_scripts table
-            RecordingScript::remove_responses($call->recording_id);
-        }
-    }
-
-    public static function release_calls($team_id){
-        $calls_archived = CallLogArchive::where('team_code','=',$team_id)
-                                        ->where('status','!=',1)
-                                        ->get();
-
-        foreach ($calls_archived as $ca) {
-            $ca->is_claimed = 0;
-            $ca->claimed_by = 0;
-            $ca->team_code = null;
-            $ca->save();
-
-            // remove answers from recording_scripts table
-            RecordingScript::remove_responses($ca->recording_id);
-        }
-                                        
-
-        $calls = self::where('team_code','=',$team_id)
-                     ->where('status','!=',1)
-                     ->get();
-
-        foreach ($calls as $call) {
-            $call->is_claimed = 0;
-            $call->claimed_by = 0;
-            $call->team_code = null;
-            $call->save();
-
-            // remove answers from recording_scripts table
-            RecordingScript::remove_responses($call->recording_id);
-        }
-    }
 
     public static function agents_audited(){
         return self::where('status','=',1)

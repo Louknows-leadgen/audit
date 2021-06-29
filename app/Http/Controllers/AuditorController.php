@@ -333,4 +333,40 @@ class AuditorController extends Controller
         return $ret;
     }
 
+
+     /* 
+        url: /auditor/search-preference
+        method: get
+        description: display the custom search page
+    */
+    public function search_preference(Request $request){
+        $users = UserEmployeeMapping::orderBy('user_id')->get();
+        $dispositions = CallLogArchive::distinctDispo();
+
+        $calls = [];
+        $from = isset($request->from) ? $request->from : null;
+        $to = isset($request->to) ? $request->to : null;
+        $dispo = isset($request->dispo) ? $request->dispo : [];
+        $user = isset($request->user) ? $request->user : '';
+        $is_submit = isset($request->submit) ? 1 : 0;
+        $ops_id = Auth::id(); 
+
+        if($is_submit){
+            $calls = CallLog::whereBetweenDates('timestamp',$from,$to);
+            if($calls->count()){
+                $calls = $calls->whereDispoIn($dispo)
+                               ->whereUserIs($user)
+                               ->paginate(20);
+            }else{
+                $calls = CallLogArchive::whereBetweenDates('timestamp',$from,$to)
+                                  ->whereDispoIn($dispo)
+                                  ->whereUserIs($user)
+                                  ->paginate(20);
+            }
+        }
+
+        return view('auditor.search_preference',compact('is_submit','calls','users','dispositions','from','to','dispo','user','ops_id'));
+
+    }
+
 }

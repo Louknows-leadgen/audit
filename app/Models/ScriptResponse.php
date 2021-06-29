@@ -41,6 +41,10 @@ class ScriptResponse extends Model
         return $this->belongsTo('App\Models\CallLogArchive','recording_id','recording_id');
     }
 
+    public function calllogs_assigned(){
+        return $this->belongsTo('App\Models\CallLogArchive','recording_id','recording_id');
+    }
+
     public function script(){
         return $this->belongsTo('App\Models\Script');
     }
@@ -243,4 +247,18 @@ class ScriptResponse extends Model
 
         return $headers['http_code'];
     }
+
+
+
+    public function deleteScriptResponse(){
+        foreach ($this->agent_script_responses as $agent_script_response) {
+            $agent_script_response->delete();
+        }
+        foreach ($this->external_script_response as $external_script_response) {
+            $external_script_response->delete();
+        }
+
+        $this->delete();
+    }
+
 }

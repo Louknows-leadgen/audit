@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Team;
 use App\Models\User;
-use App\Models\CallLog;
+use App\Models\CallLogsAssigned;
 use DB;
 
 class TeamController extends Controller
@@ -53,8 +53,8 @@ class TeamController extends Controller
     public function destroy($team_id){
     	$team = Team::find($team_id); 	
 
-    	// remove all responses from the recordings assigned by the calls assigned by that team (excluding completed ones), and set them to available again
-    	CallLog::release_calls($team_id);
+    	// remove all responses from the recordings assigned by the calls assigned by that team and set them to available again
+    	CallLogsAssigned::release_calls($team_id);
 
     	// unassign users from the team
     	foreach ($team->user_teams as $user) {

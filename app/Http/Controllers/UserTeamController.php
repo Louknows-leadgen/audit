@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserTeam;
-use App\Models\CallLog;
+use App\Models\CallLogsAssigned;
 
 class UserTeamController extends Controller
 {
@@ -22,7 +22,7 @@ class UserTeamController extends Controller
     public function destroy($user_team_id){
     	$user_team = UserTeam::find($user_team_id);
 
-    	CallLog::release_user_calls($user_team->user_id);
+    	CallLogsAssigned::release_user_calls($user_team->user_id,$user_team_id);
     	$user_team->delete();
     }   
 }

@@ -44,6 +44,7 @@ Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');
 Route::get('/auditor/my-audits','AuditorController@audits_form_page')->name('auditor.my-audits');
 Route::get('/auditor/count-audits','AuditorController@audits_form_page_count')->name('auditor.count-audits');
+Route::get('/auditor/search-preference','AuditorController@search_preference')->name('auditor.search_preference');
 
 Route::get('/reports','ReportController@index')->name('report.index');
 Route::get('/reports/calllog-responses','ReportController@calllog_responses')->name('report.calllog_responses');

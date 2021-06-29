@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\CallLogArchive;
+use App\Models\CallLog;
 
 class CallLogsAssigned extends Model
 {
@@ -132,6 +134,67 @@ class CallLogsAssigned extends Model
       return self::where('is_claimed',1)
                  ->where('status',1)
                  ->paginate(10);
+    }
+
+
+    public static function release_calls($team_id){
+        $assigned_calls = self::where('team_code',$team_id);
+
+        foreach ($assigned_calls->get() as $call){
+            // delete responses
+            foreach ($call->script_responses as $script_response) {
+              $script_response->deleteScriptResponse();
+            }
+
+            $callog = CallLog::find($call->ctr);
+
+            // search in archive table if not found on callog table
+            if(empty($callog))
+                $callog = CallLogArchive::find($call->ctr);
+
+            // if callog is found, then free up the team assigned
+            if(!empty($callog)){
+                $callog->team_code = null;
+                $callog->is_claimed = 0;
+                $callog->claimed_by = 0;
+                $callog->status = 0;
+                $callog->save();
+            }
+        }
+
+        // bulk remove the calls on the calls assigned table
+        $assigned_calls->delete();
+    }
+
+    public static function release_user_calls($user_id, $user_team_id){
+        $assigned_calls = self::where('team_code',$user_team_id)
+                              ->where('claimed_by',$user_id);
+
+        foreach ($assigned_calls->get() as $call){
+            // delete responses
+            foreach ($call->script_responses as $script_response) {
+              $script_response->deleteScriptResponse();
+            }
+
+            $callog = CallLog::find($call->ctr);
+
+            // search in archive table if not found on callog table
+            if(empty($callog))
+                $callog = CallLogArchive::find($call->ctr);
+
+            // if callog is found, then free up the team assigned
+            if(!empty($callog)){
+                $callog->team_code = null;
+                $callog->is_claimed = 0;
+                $callog->claimed_by = 0;
+                $callog->status = 0;
+                $callog->save();
+            }
+        }
+
+        // bulk remove the calls on the calls assigned table
+        $assigned_calls->delete();
+
     }
 
 
