@@ -66,7 +66,9 @@
 						<li class="list-inline-item mr-4"><a href="{{ route('report.index') }}">Reports</a></li>
 					@endcan
 					@can('access',[5])
-						<li class="list-inline-item mr-4"><a href="{{ route('ops.index') }}">Audited Calls</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.index') }}">QA Audited Calls</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.my_audits') }}">My Audits</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('ops.search_preference') }}">Custom Search Calls</a></li>
 					@endcan
 				</ul>
 			@endauth

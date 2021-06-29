@@ -306,18 +306,35 @@ class CallLog extends Model
                    ->get('user');
     }
 
-    // public static function findby_recording_id($recording_id){
-    //     // return self::where('recording_id','=',$recording_id)->first();
-    //     $calllog = self::where('recording_id','=',$recording_id)
-    //                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-    //                    ->first();
-        
-    //     if(empty($calllog)){
-    //         $calllog = CallLogArchive::where('recording_id','=',$recording_id)
-    //                                  ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-    //                                  ->first();
-    //     }
 
-    //     return $calllog;
-    // }
+    // Scopes
+    public function scopeDistinctDispo($query){
+        return $query->distinct()->orderBy('dispo','asc')->get('dispo');
+    }
+
+    public function scopeWhereBetweenDates($query, $col, $from = null, $to = null){
+        if(empty($from) || empty($to)){
+            date_default_timezone_set('America/New_York');
+            $currdt = date('Y-m-d');
+            $from = date('Y-m-d',strtotime($currdt . ' -2 days'));
+            $to = date('Y-m-d',strtotime($currdt . ' -1 days'));
+        }
+
+        return $query->where($col,'>=', $from)
+                     ->where($col,'<', $to);
+    }
+
+    public function scopeWhereDispoIn($query, $dispo = []){
+        if(empty($dispo))
+            return $query;
+        
+        return $query->whereIn('dispo',$dispo);
+    }
+
+    public function scopeWhereUserIs($query, $user = null){
+        if(empty($user))
+            return $query;
+
+        return $query->where('user',$user);
+    }
 }

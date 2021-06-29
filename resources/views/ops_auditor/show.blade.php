@@ -6,9 +6,6 @@
 
 			<div class="mb-3 d-flex justify-content-between">
 				<span class="back" onclick="window.history.back();">Back</span>
-				@if($is_not_audited)
-					<a href="{{ route('ops.recording',['ops_user'=>$ops_id, 'ctr'=>$calllog->ctr]) }}" class="btn btn-secondary">Audit</a>
-				@endif
 			</div>
 
 			<div class="box-bg p-3">
@@ -56,8 +53,8 @@
 							</tr>
 						</thead>
 						<tbody>
-						@if(count($calllog->script_responses))
-							@foreach($calllog->script_responses as $sr)
+						@if(count($calllog->ops_script_responses))
+							@foreach($calllog->ops_script_responses as $sr)
 								<tr>
 									<td>{{ $sr->script->name }}</td>
 									<td>{{ $sr->cust_statement }}</td>
@@ -66,12 +63,12 @@
 									<td>{{ $sr->inapp_resp }}</td>
 									<td>{{ $sr->inc_detail }}</td>
 									<td>
-										@foreach($sr->agent_script_responses as $call_asr)
+										@foreach($sr->ops_agent_script_responses as $call_asr)
 											<div>- {{ $call_asr->agent_correction->name }}</div>
 										@endforeach
 									</td>
 									<td>
-										@foreach($sr->external_script_response as $call_esr)
+										@foreach($sr->ops_external_script_responses as $call_esr)
 											<div>- {{ $call_esr->external_factor->name }}</div>
 										@endforeach
 									</td>

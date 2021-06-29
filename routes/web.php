@@ -72,8 +72,22 @@ Route::resource('teams','TeamController')->only(['show','update','store','destro
 Route::resource('user_teams','UserTeamController')->only(['store','destroy']);
 
 Route::get('/operation','OperationAuditorController@index')->name('ops.index');
+Route::get('/operation/search/{type}','OperationAuditorController@search')->name('ops.search');
 Route::get('/operation/audited/{recording}','OperationAuditorController@audited')->name('ops.audited');
+Route::get('/operation/recordings/{ops_user}/{ctr}','OperationAuditorController@recording')->name('ops.recording');
+Route::post('/operation/submit_audit','OperationAuditorController@submit_audit')->name('ops.submit_audit');
+Route::get('/operation/my-audits','OperationAuditorController@my_audits')->name('ops.my_audits');
+Route::delete('/operation/my-audits/{ctr}','OperationAuditorController@destroy_audit')->name('ops.destroy_audit');
+Route::get('/operation/my-audits/{ctr}','OperationAuditorController@show')->name('ops.show');
+Route::get('/operation/search-preference','OperationAuditorController@search_preference')->name('ops.search_preference');
+
 
 Route::get('/incident-report','IncidentReportController@form')->name('ir.form');
 
 Auth::routes();
+
+
+
+
+// Route::resource('products','ProductController');
+

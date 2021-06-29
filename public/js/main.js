@@ -798,8 +798,12 @@ $(document).ready(function(){
 		d.setMinutes(d.getMinutes() + utc_offset);
 
 		// PH diff from UTC
-		var ph_offset = 8 * 60; // 8 hours * 60 minutes
-		d.setMinutes(d.getMinutes() + ph_offset);
+		// var ph_offset = 8 * 60; // 8 hours * 60 minutes (GMT+8)
+		// d.setMinutes(d.getMinutes() + ph_offset);
+
+		// EST diff from UTC
+		var est_offset = -4 * 60; // 4 hours * 60 minutes (GMT-4)
+		d.setMinutes(d.getMinutes() + est_offset);
 
 		return d;
 	}
@@ -832,6 +836,36 @@ $(document).ready(function(){
 		}else{
 			$('.dt-notif').text('Date field is required');
 		}
+	});
+
+
+	$(document).on('click','.tbl-search',function(){
+		// initialize, hide existing active search area
+		$('.tbl-search').parent().siblings('span').removeClass('d-none').addClass('d-none');
+		$('.tbl-search').parent().parent().siblings('form').removeClass('d-none').addClass('d-none');
+		$('.tbl-search').parent().parent().siblings('form').find('input').val('');
+
+
+		// display the close button
+		$(this).parent().siblings('span').removeClass('d-none');
+		// display the form area
+		$(this).parent().parent().siblings('form').removeClass('d-none');
+	});
+
+
+	$(document).on('click','.tbl-close',function(){
+		let url = $(this).parents('table').data('baseurl');
+		window.location.href = url;
+	});
+
+
+	$(document).on('submit','.ops-audit-remove',function(e){
+		e.preventDefault();
+
+		if(confirm("Are you sure?")){
+			this.submit();
+		}
+
 	});
 
 });
