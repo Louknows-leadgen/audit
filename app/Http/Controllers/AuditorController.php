@@ -356,11 +356,15 @@ class AuditorController extends Controller
             if($calls->count()){
                 $calls = $calls->whereDispoIn($dispo)
                                ->whereUserIs($user)
+                               ->whereNull('team_code')
+                               ->where('talk_time','>=',30)
                                ->paginate(20);
             }else{
                 $calls = CallLogArchive::whereBetweenDates('timestamp',$from,$to)
                                   ->whereDispoIn($dispo)
                                   ->whereUserIs($user)
+                                  ->whereNull('team_code')
+                                  ->where('talk_time','>=',30)
                                   ->paginate(20);
             }
         }
