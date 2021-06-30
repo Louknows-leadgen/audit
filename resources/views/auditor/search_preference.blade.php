@@ -40,6 +40,9 @@
 				</div>
 			</div>
 			<div class="col-md-8">
+				<div class="alert cl-alert" style="display: none;">
+					<strong></strong><span></span>
+				</div>
 				<div class="box">
 					<table class="table table-bordered table-responsive w-100 d-block d-md-table">
 						<thead class="thead-dark">
@@ -69,8 +72,15 @@
 										<td>{{ $call->dispo }}</td>
 										<td>{{ $call->talk_time }}</td>
 										<td>{{ date('m/d/Y h:i A',strtotime($call->timestamp)) }}</td>
-										<td>
-											<a href="{{ route('ops.recording',['ctr'=>$call->ctr,'ops_user'=>$ops_id]) }}" class="btn btn-sm btn-primary">Audit</a>
+										<td class="text-center">
+											<form action="{{ route('auditor.search_claim_call') }}" 
+												  method="post"
+												  class="claim-call">
+												<input type="hidden" 
+													   name="call_id" 
+													   value="{{ $call->ctr }}">
+												<button class="btn btn-sm btn-primary"> Claim </button>
+											</form>
 										</td>
 									</tr>
 								@endforeach

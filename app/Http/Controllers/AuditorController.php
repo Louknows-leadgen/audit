@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Rules\CallIsClaimed;
+use App\Rules\SearchCallIsAvailable;
 use App\Models\CallLog;
 use App\Models\CallLogArchive;
 use App\Models\CallLogsAssigned;
@@ -371,6 +372,39 @@ class AuditorController extends Controller
 
         return view('auditor.search_preference',compact('is_submit','calls','users','dispositions','from','to','dispo','user','ops_id'));
 
+    }
+
+
+    public function search_claim_call(Request $request){
+        $validator = Validator::make($request->all(),[
+            'call_id' => ['required', new SearchCallIsAvailable]
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['errors'=>$validator->getMessageBag()->toArray()]);
+        }else{
+            $call_id = $request->call_id;
+            $calllog = CallLog::find($call_id);
+            if(empty($calllog)){
+                $calllog = CallLogArchive::find($call_id);
+            }
+
+            $user = Auth::user();
+
+            if($user->user_teams->count()){
+                $calllog->team_code = $user->user_teams[0]->team_code;
+                $calllog->is_claimed = 1;
+                $calllog->claimed_by = $user->id;
+                if($calllog->save()){
+                    CallLogsAssigned::insertFromCallLog($calllog);
+                    return response()->json(['success'=>'Successfully claimed the call log']);
+                }else{
+                    return response()->json(['errors'=>['Something went wrong']]);
+                }
+            }else{
+                return response()->json(['errors'=>['You are not assigned to any team.']]);
+            }
+        }
     }
 
 }

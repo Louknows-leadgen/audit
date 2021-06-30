@@ -14,6 +14,30 @@ class CallLogsAssigned extends Model
     protected $table = 'calllogs_assigned';
     protected $primaryKey = 'ctr';
 
+    protected $fillable = [
+      'ctr',
+      'timestamp',
+      'user',
+      'user_group',
+      'audit_type',
+      'phone_number',
+      'recording_id',
+      'recording_filename',
+      'recording_url',
+      'server_ip',
+      'server_origin',
+      'campaign',
+      'dispo',
+      'talk_time',
+      'server_source',
+      'team_code',
+      'is_claimed',
+      'created_at',
+      'updated_at',
+      'claimed_by',
+      'status'
+    ];
+
 
     /*
     |-------------------------------------
@@ -70,6 +94,36 @@ class CallLogsAssigned extends Model
                    ->where('is_claimed','=',0)
                    ->select('ctr')
                    ->exists();
+    }
+
+    public static function is_not_assigned($call_id){
+       return empty(self::find($call_id));
+    }
+
+    public static function insertFromCallLog($calllog){
+      return self::create([
+                'ctr' => $calllog->ctr,
+                'timestamp' => $calllog->timestamp,
+                'user' => $calllog->user,
+                'user_group' => $calllog->user_group,
+                'audit_type' => $calllog->audit_type,
+                'phone_number' => $calllog->phone_number,
+                'recording_id' => $calllog->recording_id,
+                'recording_filename' => $calllog->recording_filename,
+                'recording_url' => $calllog->recording_url,
+                'server_ip' => $calllog->server_ip,
+                'server_origin' => $calllog->server_origin,
+                'campaign' => $calllog->campaign,
+                'dispo' => $calllog->dispo,
+                'talk_time' => $calllog->talk_time,
+                'server_source' => $calllog->server_source,
+                'team_code' => $calllog->team_code,
+                'is_claimed' => $calllog->is_claimed,
+                'created_at' => $calllog->created_at,
+                'updated_at' => $calllog->updated_at,
+                'claimed_by' => $calllog->claimed_by,
+                'status' => $calllog->status
+             ]);
     }
 
     public static function bulk_claim($auditor_id, $calllogs){

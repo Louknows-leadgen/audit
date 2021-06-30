@@ -55,6 +55,7 @@
 						<li class="list-inline-item mr-4"><a href="{{ route('auditor.index') }}">Team Available Logs</a></li>
 						<li class="list-inline-item mr-4"><a href="{{ route('auditor.team_claimed') }}">Team Claimed Logs</a></li>
 						<li class="list-inline-item mr-4"><a href="{{ route('call.search') }}">Search Calls</a></li>
+						<li class="list-inline-item mr-4"><a href="{{ route('auditor.search_preference') }}">Custom Search</a></li>
 						<li class="list-inline-item mr-4"><a href="{{ route('auditor.my_call_logs') }}">My Logs</a></li>
 					@endcan
 					@can('access',[3])

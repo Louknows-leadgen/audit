@@ -258,11 +258,12 @@ $(document).ready(function(){
                 	notif.children('span').append(response.success);
                 	notif.removeClass('alert-success alert-danger')
                 		 .addClass('alert-success');
+
+                	row_cntr.children('td').fadeOut(700,function(){
+		    			row_cntr.remove();
+		    		});
 	    		}
 	    		
-	    		row_cntr.children('td').fadeOut(700,function(){
-	    			row_cntr.remove();
-	    		});
 	    		notif.fadeIn(300,function(){
                 	setTimeout(function(){
                 		notif.fadeOut(300);
