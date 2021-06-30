@@ -41,6 +41,7 @@ Route::get('/auditor/my-logs/{recording}','AuditorController@recording')->name('
 Route::post('/auditor/my-logs/{ctr}/destroy','AuditorController@destroy_mylog')->name('auditor.destroy_mylog');
 Route::post('/auditor/claim_call','AuditorController@claim_call')->name('auditor.claim_call');
 Route::post('/auditor/search_claim_call','AuditorController@search_claim_call')->name('auditor.search_claim_call');
+Route::post('/auditor/bulk_search_claim_call','AuditorController@bulk_search_claim_call')->name('auditor.bulk_search_claim_call');
 Route::post('/auditor/bulk_claim','AuditorController@bulk_claim')->name('auditor.bulk_claim');
 Route::post('/auditor/submit_audit','AuditorController@submit_audit')->name('auditor.submit_audit');
 Route::get('/auditor/my-audits','AuditorController@audits_form_page')->name('auditor.my-audits');

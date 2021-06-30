@@ -869,6 +869,62 @@ $(document).ready(function(){
 
 	});
 
+	$(document).on('submit','#bulk-search-claim',function(e){
+		e.preventDefault();
+
+		let form = $(this);
+		let formData = new FormData(this);
+		let url = $(this).attr('action');
+		let method = $(this).attr('method');
+		let notif = $('.cl-alert');
+		// console.log($(this).serializeArray());
+
+		$.ajax({
+			url: url,
+			data: formData,
+			processData: false,
+			contentType: false,
+			type: method,
+			beforeSend: function(){
+				$('.gray-bg').css({'display':'block'});
+			},
+			complete: function(){
+				$('.gray-bg').css({'display':'none'});
+			},
+			success: function(response){
+				notif.children('strong').empty();
+				notif.children('span').empty();
+
+				if(!$.isEmptyObject(response.errors)){
+					notif.children('strong').append('Error! ');
+					notif.removeClass('alert-success alert-danger')
+					     .addClass('alert-danger');
+                    for (var key in response.errors) {
+					    if (Object.prototype.hasOwnProperty.call(response.errors, key)) {
+					        notif.children('span').append(response.errors[key]);
+					    }
+					}
+                }else{
+                	var rows = form.find('[name]:checked').parents('tr');
+                	rows.children().fadeOut(700,function(){
+                		rows.remove();
+                	});
+
+                	notif.children('strong').append('Success! ');
+                	notif.children('span').append(response.success);
+                	notif.removeClass('alert-success alert-danger')
+                		 .addClass('alert-success');
+                }
+
+                notif.fadeIn(300,function(){
+                	setTimeout(function(){
+                		notif.fadeOut(300);
+                	},2000);
+                },location.reload());
+			}
+		});
+	});
+
 });
 
 	

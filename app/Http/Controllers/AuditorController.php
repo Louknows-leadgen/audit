@@ -407,4 +407,33 @@ class AuditorController extends Controller
         }
     }
 
+
+    public function bulk_search_claim_call(Request $request){
+       $calllogs = $request->calllogs;
+
+       $user = Auth::user();
+
+        if($user->user_teams->count()){
+            foreach ($calllogs as $call){
+               if(CallLogsAssigned::is_not_assigned($call)){
+                    $calllog = CallLog::find($call);
+                    if(empty($calllog)){
+                        $calllog = CallLogArchive::find($call);
+                    }
+
+                    $calllog->team_code = $user->user_teams[0]->team_code;
+                    $calllog->is_claimed = 1;
+                    $calllog->claimed_by = $user->id;
+
+                    if($calllog->save()){
+                        CallLogsAssigned::insertFromCallLog($calllog);
+                    }
+               }
+            }
+            return response()->json(['success'=>'Successfully claimed the call logs']);
+        }else{
+            return response()->json(['errors'=>['You are not assigned to any team.']]);
+        }
+    }
+
 }

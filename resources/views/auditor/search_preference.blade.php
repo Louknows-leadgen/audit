@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+
+	<div class="gray-bg">
+		<div class="d-flex flex-column align-items-center justify-content-center h-100">
+			<div class="text-light">Please wait</div>
+			<div>
+				<div class="spinner-grow text-info"></div>
+				<div class="spinner-grow text-info"></div>
+				<div class="spinner-grow text-info"></div>
+			</div>
+		</div>
+	</div>
+
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-3">
@@ -44,49 +56,54 @@
 					<strong></strong><span></span>
 				</div>
 				<div class="box">
-					<table class="table table-bordered table-responsive w-100 d-block d-md-table">
-						<thead class="thead-dark">
-							<tr>
-								<th>User</th>
-								<th>Recording</th>
-								<th>Dispo</th>
-								<th>Talk Time</th>
-								<th>Call Date (EST)</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							@if(!$is_submit)
-								<tr class="text-center">
-									<td colspan="6">Enter Search Options</td>
+					<form action="{{ route('auditor.bulk_search_claim_call') }}" method="post" id="bulk-search-claim">
+						@csrf
+						<button class="btn btn-secondary mb-3">Bulk Claim</button>
+						<table class="table table-bordered table-responsive w-100 d-block d-md-table">
+							<thead class="thead-dark">
+								<tr>
+									<th></th>
+									<th>User</th>
+									<th>Recording</th>
+									<th>Dispo</th>
+									<th>Talk Time</th>
+									<th>Call Date (EST)</th>
 								</tr>
-							@elseif(!$calls->count())
-								<tr class="text-center">
-									<td colspan="6">No results found</td>
-								</tr>
-							@else
-								@foreach($calls as $call)
-									<tr>
-										<td>{{ $call->user }}</td>
-										<td>{{ $call->recording_id }}</td>
-										<td>{{ $call->dispo }}</td>
-										<td>{{ $call->talk_time }}</td>
-										<td>{{ date('m/d/Y h:i A',strtotime($call->timestamp)) }}</td>
-										<td class="text-center">
-											<form action="{{ route('auditor.search_claim_call') }}" 
-												  method="post"
-												  class="claim-call">
-												<input type="hidden" 
-													   name="call_id" 
-													   value="{{ $call->ctr }}">
-												<button class="btn btn-sm btn-primary"> Claim </button>
-											</form>
-										</td>
+							</thead>
+							<tbody>
+								@if(!$is_submit)
+									<tr class="text-center">
+										<td colspan="6">Enter Search Options</td>
 									</tr>
-								@endforeach
-							@endif
-						</tbody>
-					</table>
+								@elseif(!$calls->count())
+									<tr class="text-center">
+										<td colspan="6">No results found</td>
+									</tr>
+								@else
+									@foreach($calls as $call)
+										<tr>
+											<td class="text-center">
+												<div class="app-checkbox d-inline-block">
+													<input type="checkbox" 
+														   name="calllogs[]"
+														   id="cl-{{ $call->ctr }}"
+														   value="{{ $call->ctr }}">
+													<label class="checkmark" 
+														   for="cl-{{ $call->ctr }}">   	
+													</label>
+												</div>
+											</td>
+											<td>{{ $call->user }}</td>
+											<td>{{ $call->recording_id }}</td>
+											<td>{{ $call->dispo }}</td>
+											<td>{{ $call->talk_time }}</td>
+											<td>{{ date('m/d/Y h:i A',strtotime($call->timestamp)) }}</td>
+										</tr>
+									@endforeach
+								@endif
+							</tbody>
+						</table>
+					</form>	
 					@if($is_submit)
 						{{ $calls->appends(['from'=>$from,'to'=>$to,'dispo'=>$dispo,'user'=>$user,'submit'=>$is_submit]) }}
 					@endif
