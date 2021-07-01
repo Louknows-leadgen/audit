@@ -81,6 +81,7 @@ class AuditorController extends Controller
     public function recording($recording_id){
         $calllog = CallLogsAssigned::where('recording_id','=',$recording_id)->first();
 
+
         // $server = $calllog->server_ip;
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
@@ -97,8 +98,23 @@ class AuditorController extends Controller
         }else{
             $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
         }
+
+        date_default_timezone_set('America/New_York');
+        // set for ir data
+        $ir = [
+            'audit_type' => $audit_type,
+            'agent_id' => $user_id,
+            'team_lead' => isset($emp->team_lead->employeeid) ? $emp->team_lead->employeeid : '',
+            'employee_id' => $emp->employeeid,
+            'call_date' => date('Y-m-d',strtotime($calllog->timestamp)),
+            'evaluation_date' => date('Y-m-d'),
+            'dispo' => $calllog->dispo,
+            'btn' => $calllog->phone_number,
+            'duration' => $calllog->talk_time,
+            'evaluator' => 'Q.A Section'
+        ];
         
-        return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type'));
+        return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type','ir'));
     }
 
     public function recording_completed($recording_id){

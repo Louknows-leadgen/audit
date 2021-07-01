@@ -661,13 +661,84 @@ $(document).ready(function(){
 		mp3.pause();
 	});
 
-	$(document).on('click','.lolztp',function(){
-		var user = $(this).data('user');
-		var name = $(this).data('name');
-		var url = 'https://docs.google.com/forms/d/e/1FAIpQLSd54spuX-aeDfHC1K5wUbkl3pQR47xQX8HHf0vWIbnY-3a4Yw/viewform?usp=pp_url&entry.1707684629=Internal+Audit&entry.1851153735='+user+'&entry.1437949203='+name;
+	$(document).on('click','.lolztp',async function(){
+		// var user = $(this).data('user');
+		// var name = $(this).data('name');
+		// var url = 'https://docs.google.com/forms/d/e/1FAIpQLSd54spuX-aeDfHC1K5wUbkl3pQR47xQX8HHf0vWIbnY-3a4Yw/viewform?usp=pp_url&entry.1707684629=Internal+Audit&entry.1851153735='+user+'&entry.1437949203='+name;
+		let audit_type = $(this).data('audit-type');
+		let team_lead = $(this).data('team-lead');
+		let employee_id = $(this).data('employee-id');
+		let dispo = $(this).data('dispo');
+		
+
+		// window.open(url);
+		let employee = await getEmployeeDetails(employee_id);
+		let tl = await getEmployeeDetails(team_lead);
+
+		let ir_audit = irAuditType(audit_type);
+		let ir_agentid = "entry.1851153735=" + $(this).data('agent-id');
+		let ir_agentname = "entry.1437949203=" + [employee.lastname.trim(),employee.firstname.trim()].join(', ');
+		let ir_tlemail = "entry.1801741412=" + tl.email1;
+		let ir_program = irLocation(employee.site);
+		let ir_calldate = "entry.840862681=" + $(this).data('call-date');
+		let ir_evaluationdate = "entry.413333179=" + $(this).data('evaluation-date');
+		let ir_dispo = irDispo(dispo);
+		let ir_btn = "entry.99465882=" + $(this).data('btn');
+		let ir_duration = "entry.737129467=" + $(this).data('duration');
+		let ir_evaluator = "entry.382342443=" + $(this).data('evaluator');
+
+		var url = "https://docs.google.com/forms/d/e/1FAIpQLSd54spuX-aeDfHC1K5wUbkl3pQR47xQX8HHf0vWIbnY-3a4Yw/viewform?usp=pp_url&";
+		url = url + [ir_audit,ir_agentid,ir_agentname,ir_tlemail,ir_program,ir_calldate,ir_evaluationdate,ir_dispo,ir_btn,ir_duration,ir_evaluator].join('&');
 
 		window.open(url);
+
 	});
+
+	async function getEmployeeDetails(employeeid){
+		let url = `http://local.digicononline.com/api/employee/prlemployeemaster.php?employeeid=${employeeid}`;
+
+		let employee;
+		await fetch(url).then(res => res.json()).then(data => { employee = data });
+		return employee;
+	}
+
+	function irLocation(site){
+		if(site.search(/ny/i)){
+			return 'entry.1102475292=Insurance - NY';
+		}
+		return 'entry.1102475292=Insurance - ADG';
+	}
+
+	function irAuditType(audit_type){
+		if(audit_type.search(/internal/i) != -1){
+			return 'entry.1707684629=Internal Audit';
+		}else if(audit_type.search(/flag/i) != -1){
+			return 'entry.1707684629=Flagged calls';
+		}else{
+			return 'entry.1707684629='+audit_type;
+		}
+	}
+
+	function irDispo(dispo){
+		if(dispo.search(/TrSuc/i) != -1)
+			return "entry.558636940=Transfer Success";
+		else if(dispo.search(/TRHUP/i) != -1)
+			return "entry.558636940=Transfer Hung up";
+		else if(dispo.search(/VM/i) != -1)
+			return "entry.558636940=Voicemail";
+		else if(dispo.search(/RING/i) != -1)
+			return "entry.558636940=Ring";
+		else if(dispo.search(/DTO/i) != -1)
+			return "entry.558636940=DTO";
+		else if(dispo.search(/InsHUP/i) != -1)
+			return "entry.558636940=Insurance Hung up";
+		else if(dispo.search(/TrFail/i) != -1)
+			return "entry.558636940=Transfer Fail";
+		else if(dispo.search(/DEAD/i) != -1)
+			return "entry.558636940=Dead";
+		else
+			return "entry.558636940=__other_option__&entry.558636940.other_option_response="+dispo;
+	}
 
 	$(document).on('click','.in_response',function(){
 		var inp_container = $(this).siblings('div');

@@ -72,8 +72,16 @@
 						<div class="row mb-2">
 							<div class="col-md-12">
 								<span class="btn btn-primary lolztp" 
-								      data-user="{{ isset($user_id) ? $user_id : '' }}" 
-								      data-name="{{ isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' }}">
+								      data-audit-type="{{ $ir['audit_type'] }}"
+								      data-agent-id="{{ $ir['agent_id'] }}"
+								      data-team-lead="{{ $ir['team_lead'] }}"
+								      data-employee-id="{{ $ir['employee_id'] }}"
+								      data-call-date="{{ $ir['call_date'] }}"
+								      data-evaluation-date="{{ $ir['evaluation_date'] }}"
+								      data-dispo="{{ $ir['dispo'] }}"
+								      data-btn="{{ $ir['btn'] }}"
+								      data-duration="{{ $ir['duration'] }}"
+								      data-evaluator="{{ $ir['evaluator'] }}">
 									LOL/ZTP
 								</span>
 								<button class="btn btn-danger">Call Ends</button>
