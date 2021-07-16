@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
@@ -18,7 +17,7 @@
 				</form>
 				<hr class="my-3">
 				<div class="table-responsive">
-					@if(!empty($calllog))
+					@if(count($calllogs))
 						<table class="table table-bordered">
 							<thead class="thead-light">
 								<tr class="text-center">
@@ -29,6 +28,7 @@
 								</tr>
 							</thead>
 							<tbody>
+								@foreach($calllogs as $calllog)
 								<tr class="text-center">
 									<td>{{ $calllog->phone_number }}</td>
 									<td>{{ $calllog->user }}</td>
@@ -50,6 +50,7 @@
 										</form>
 									</td>
 								</tr>
+								@endforeach
 							</tbody>
 						</table>
 					@else

@@ -26,18 +26,27 @@ class CallLogController extends Controller
     public function search(Request $request){
         $phone_number = $request->phone_number;
         
-        $calllog = [];
+        $calllogs = [];
+        // if(!empty($phone_number)){
+        //     $calllogs = CallLogsAssigned::where('phone_number',$phone_number)->get();
+        //     if(!count($calllogs)){
+        //         $calllogs = CallLog::where('phone_number',$phone_number)->get();
+        //         if(!count($calllogs)){
+        //             $calllogs = CallLogArchive::where('phone_number',$phone_number)->get();
+        //         }
+        //     }
+        // }
         if(!empty($phone_number)){
-            $calllog = CallLogsAssigned::where('phone_number',$phone_number)->first();
-            if(empty($calllog)){
-                $calllog = CallLog::where('phone_number',$phone_number)->first();
-                if(empty($calllog)){
-                    $calllog = CallLogArchive::where('phone_number',$phone_number)->first();
-                }
-            }
+            $calllogs_assigned = CallLogsAssigned::select('ctr','phone_number','user','dispo')->where('phone_number',$phone_number);
+            $calllog = CallLog::select('ctr','phone_number','user','dispo')->where('phone_number',$phone_number);
+            $calllogs = CallLogArchive::select('ctr','phone_number','user','dispo')
+                                             ->where('phone_number',$phone_number)
+                                             ->union($calllogs_assigned)
+                                             ->union($calllog)
+                                             ->get();
         }
 
-        return view('call_log.search_page',compact('calllog','phone_number'));
+        return view('call_log.search_page',compact('calllogs','phone_number'));
     }
 
     // public function tag_call(Request $request){
@@ -114,15 +123,15 @@ class CallLogController extends Controller
                 $cla->status = $call->status;
                 $cla->save();
             }  
+            return redirect()->route('auditor.recording',['recording'=>$call->recording_id]);
         }else{
             $userid = Auth::id();
             $call->is_claimed = 1;
             $call->claimed_by = $userid;
             $call->audit_type = $audit_type;
             $call->save();
+            return redirect()->route('call.search');
         }
-
-        return redirect()->route('auditor.recording',['recording'=>$call->recording_id]);
 
     }
 
