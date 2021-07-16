@@ -138,8 +138,8 @@ class OperationAuditorController extends Controller
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch , CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,15);
-        curl_setopt($ch,CURLOPT_TIMEOUT,30);
+        curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,45);
+        curl_setopt($ch,CURLOPT_TIMEOUT,45);
         $data = curl_exec($ch);
         $headers = curl_getinfo($ch);
         curl_close($ch);
