@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::get('/recording/check-url','Api\RecordingController@check_url')->name('api.recording.check_url');
+Route::get('/recording/{server}/{date}/{filename}','Api\RecordingController@recording_url')->name('api.recording.recording_url');

@@ -25,6 +25,7 @@ class AuditorController extends Controller
 		$this->middleware('checkrole:4');
 	}
 
+   
     //
     public function index(){
     	$calllogs = CallLogsAssigned::team_available_logs(Auth::id());

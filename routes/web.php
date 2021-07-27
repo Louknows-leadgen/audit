@@ -48,6 +48,7 @@ Route::get('/auditor/my-audits','AuditorController@audits_form_page')->name('aud
 Route::get('/auditor/count-audits','AuditorController@audits_form_page_count')->name('auditor.count-audits');
 Route::get('/auditor/search-preference','AuditorController@search_preference')->name('auditor.search_preference');
 
+
 Route::get('/reports','ReportController@index')->name('report.index');
 Route::get('/reports/calllog-responses','ReportController@calllog_responses')->name('report.calllog_responses');
 Route::get('/reports/auditors-hourly','ReportController@auditors_hourly')->name('report.auditors_hourly');
