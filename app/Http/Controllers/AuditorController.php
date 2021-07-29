@@ -87,19 +87,7 @@ class AuditorController extends Controller
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        // $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
-        $recording = $this->generate_recording_url($calllog);
-        if(!empty($recording)){
-            $recording_file = $recording;
-            if($calllog->recording_url != $recording['url']){
-                $calllog->recording_url = $recording['url'];
-                $calllog->url_stage = $this->get_url_stage($recording);
-                $calllog->save();
-            }
-        }else{
-            $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
-        }
-
+        
         date_default_timezone_set('America/New_York');
         // set for ir data
         $ir = [
@@ -115,7 +103,7 @@ class AuditorController extends Controller
             'evaluator' => 'Q.A Section'
         ];
         
-        return view('auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type','ir'));
+        return view('auditor.recording',compact('calllog','emp','user_id','recording_id','audit_type','ir'));
     }
 
     public function recording_completed($recording_id){
@@ -125,9 +113,8 @@ class AuditorController extends Controller
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording_file = ['type' => $this->get_filetype($calllog->recording_url), 'url' => $calllog->recording_url];
 
-        return view('auditor.recording_completed',compact('calllog','emp','user_id','recording_file','audit_type'));
+        return view('auditor.recording_completed',compact('calllog','emp','user_id','audit_type'));
     }
 
     public function result($recording_id){

@@ -47,15 +47,9 @@ class OperationAuditorController extends Controller
         $user_id = $calllog->user;
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
-        $recording = $this->generate_recording_url($calllog);
         $is_not_audited = OperationCallAudits::IsNotAudited($calllog->ctr);
-        if(!empty($recording)){
-            $recording_file = $recording;
-        }else{
-            $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
-        }
-
-        return view('ops_auditor.audited',compact('calllog','emp','user_id','recording_file','audit_type','is_not_audited','ops_id'));
+        
+        return view('ops_auditor.audited',compact('calllog','emp','user_id','audit_type','is_not_audited','ops_id'));
     }
 
 
@@ -164,14 +158,8 @@ class OperationAuditorController extends Controller
         $audit_type = $calllog->audit_type;
         $emp = UserEmployeeMapping::firstWhere('user_id',$user_id);
 
-        $recording = $this->generate_recording_url($calllog);
-        if(!empty($recording)){
-            $recording_file = $recording;
-        }else{
-            $recording_file = ['type' => 'wav', 'url' => $calllog->recording_url];
-        }
         
-        return view('ops_auditor.recording',compact('calllog','emp','user_id','recording_id','recording_file','audit_type', 'ops_user'));
+        return view('ops_auditor.recording',compact('calllog','emp','user_id','recording_id','audit_type', 'ops_user'));
     }
 
     /* 
