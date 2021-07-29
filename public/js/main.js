@@ -996,6 +996,107 @@ $(document).ready(function(){
 		});
 	});
 
+	$('#audio').ready(async function(){
+		let wav_url = $('[name=wav_url]').val();
+		let mp3_url = $('[name=mp3_url]').val();
+		let archive_url = $('[name=archive_url]').val();
+		let check_url_api = $('[name=check_url_api]').val();
+		let ctr = $('[name=callid]').val();
+
+		wav_check_url_api = '/api/recording/check-url/?' + new URLSearchParams({url: wav_url});
+		mp3_check_url_api = '/api/recording/check-url/?' + new URLSearchParams({url: mp3_url});
+		archive_check_url_api = '/api/recording/check-url/?' + new URLSearchParams({url: archive_url});
+
+		let default_url_obj = {
+							      url: wav_url,
+							      type: "wav"
+						      };
+
+		
+  		let prom_wav = new Promise((resolve, reject) => {
+  			fetch(wav_check_url_api)
+			.then(res => {
+				if(res.ok){
+					res.json()
+					   .then(data => {
+					   		if(data.http_code == 200)
+					   			resolve(data)
+					   		else
+					   			reject()
+					   })
+				}
+				else
+					reject()
+			})
+  		})
+
+  		let prom_mp3 = new Promise((resolve, reject) => {
+  			fetch(mp3_check_url_api)
+			.then(res => {
+				if(res.ok){
+					res.json()
+					   .then(data => {
+					   		if(data.http_code == 200)
+					   			resolve(data)
+					   		else
+					   			reject()
+					   })
+				}
+				else
+					reject()
+			})
+  		})
+
+  		let prom_arch = new Promise((resolve, reject) => {
+  			fetch(archive_check_url_api)
+			.then(res => {
+				if(res.ok){
+					res.json()
+					   .then(data => {
+					   		if(data.http_code == 200)
+					   			resolve(data)
+					   		else
+					   			reject()
+					   })
+				}
+				else
+					reject()
+			})
+  		})
+
+
+		Promise.any([prom_wav,prom_mp3,prom_arch])
+		       .then(data => {
+	          		reCreateAudio(data)
+	          		sendUpdateCallUrl(ctr, data.url)
+		       }).catch((err) => {
+	          		reCreateAudio(default_url_obj)
+	          		sendUpdateCallUrl(ctr, default_url_obj.url)
+		       })
+
+	});
+
+	function reCreateAudio(data){
+		let html = `<audio class="w-75" id="audio" style="outline: none;" controls>
+						<source src="${data.url}" type="audio/${data.type}">
+					</audio>`
+
+		$('#audio-container').html(html)
+	}
+
+	function sendUpdateCallUrl(ctr, url){
+		fetch('/api/calllog/update-recording-url',{
+			method: 'PUT',
+			headers: {
+				'Content-Type' : 'application/json'
+			},
+			body: JSON.stringify({
+				ctr: ctr,
+				url: url
+			})
+		})
+	}
+
 });
 
 	

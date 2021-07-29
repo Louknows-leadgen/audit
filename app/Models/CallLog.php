@@ -37,10 +37,53 @@ class CallLog extends Model
     |           Custom Attributes
     |-------------------------------------*/
 
-    protected $appends = ['status_name'];
+    protected $appends = ['status_name','hangup_reason','recording_urls'];
 
     public function getStatusNameAttribute(){
         return $this->status == 1 ? 'Completed' : 'Not Started';
+    }
+
+    public function getHangupReasonAttribute(){
+        $param_server = $this->server_ip;
+        $param_recording_id = $this->recording_id;
+        $param_phone = $this->phone_number;
+        $param_user = $this->user;
+        
+        $hangup_api_url = "http://api.iamleadgen.net/hup/hangup_reason.php?server=$param_server&recording_id=$param_recording_id&phone=$param_phone&user=$param_user";
+
+        $ch=curl_init();
+        $timeout=5; // 5 seconds
+
+        curl_setopt($ch, CURLOPT_URL, $hangup_api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+
+        $json_resp=curl_exec($ch);
+        curl_close($ch);
+
+        $resp = json_decode($json_resp);
+
+        // if error is received, then return that error instead
+        if(isset($resp->error))
+            return $resp->error;
+
+        // if no error, then return the hangup reason
+        if(isset($resp->term_reason))
+            return $resp->term_reason;
+
+        // will be executed if  term_reason is null
+        return  "No result";
+    }
+
+    public function getRecordingUrlsAttribute(){
+        $date = date('Y-m-d',strtotime($this->timestamp));
+        $wav_url = "http://{$this->server_origin}/RECORDINGS/{$this->recording_filename}-all.wav";
+        $mp3_url = "http://{$this->server_origin}/RECORDINGS/MP3/{$this->recording_filename}-all.mp3";
+        $arch_url = "http://38.102.225.164/archive/{$date}/{$this->recording_filename}-all.mp3";
+        $check_url_api = route('api.recording.check_url');
+
+        return (object) ['wav' => $wav_url, 'mp3' => $mp3_url, 'archive' => $arch_url, 'check_url_api' => $check_url_api];
     }
 
     /*
@@ -48,26 +91,6 @@ class CallLog extends Model
     |           Custom Functions
     |-------------------------------------*/
 
-    // public static function search_call_logs($from,$to,$sid,$campaign,$dispo){
-    //     $from = date_create_from_format("m/d/Y g:i A",$from);
-    //     $from_dt = $from->format('Y-m-d');
-    //     $from_time = $from->format('G:i');
-
-    //     $to = date_create_from_format("m/d/Y g:i A",$to);
-    //     $to_dt = $to->format('Y-m-d');
-    //     $to_time = $to->format('G:i');
-
-    //     $calls = DB::table('calllogs')
-    //              ->where('timestamp','>=',$from)
-    //              ->where('timestamp','<=',$to)
-    //              ->whereIn('server_ip',$sid)
-    //              ->whereIn('campaign',$campaign)
-    //              ->whereIn('dispo',$dispo)
-    //              ->whereNull('team_code')
-    //              ->get();
-
-    //     return $calls;
-    // }
 
     public static function search_call_logs_test(){
         $user = 1;
@@ -166,79 +189,7 @@ class CallLog extends Model
                    ->paginate(10);
     }
 
-    // public static function team_claimed_logs($auditor_id){
-    //     $user = User::find($auditor_id);
-    //     $user_teams = $user->user_teams;
-    //     $teams = [];
-
-    //     foreach ($user_teams as $user_team) {
-    //         array_push($teams,$user_team->team_code);
-    //     }
-
-    //     $call_archived = CallLogArchive::whereIn('team_code',$teams)
-    //                      ->where('is_claimed','=',1)
-    //                      ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
-
-    //     return self::whereIn('team_code',$teams)
-    //                ->where('is_claimed','=',1)
-    //                ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-    //                ->union($call_archived)
-    //                ->paginate(10);
-    // }
-
-
-    // public static function my_call_logs($auditor_id){
-    //     $call_archived = CallLogArchive::where('claimed_by','=', $auditor_id)
-    //                                    ->where('status','=', 0)
-    //                                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
-
-    //     return self::where('claimed_by','=', $auditor_id)
-    //                ->where('status','=', 0)
-    //                ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-    //                ->union($call_archived)
-    //                ->paginate(10);
-    // }
-
-
-    // public static function my_call_logs_completed($auditor_id){
-    //     $call_archived = CallLogArchive::where('claimed_by','=', $auditor_id)
-    //                                    ->where('status','=', 1)
-    //                                    ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status');
-
-    //     return self::where('claimed_by','=', $auditor_id)
-    //                ->where('status','=', 1)
-    //                ->select('ctr','timestamp','user','user_group','phone_number','recording_id','recording_filename','server_ip','server_origin','campaign','dispo','talk_time','team_code','is_claimed','claimed_by','status')
-    //                ->union($call_archived)
-    //                ->paginate(10);
-    // }
-
-
-    // public static function is_available($call_id){
-    //     $call_archived = CallLogArchive::where('ctr','=',$call_id)
-    //                                    ->where('is_claimed','=',0)
-    //                                    ->select('ctr');
-
-    //     return self::where('ctr','=',$call_id)
-    //                ->where('is_claimed','=',0)
-    //                ->select('ctr')
-    //                ->union($call_archived)
-    //                ->exists();
-    // }
-
-
-    // public static function bulk_claim($auditor_id, $calllogs){
-    //     $ca_numrows = CallLogArchive::whereIn('ctr',$calllogs)
-    //                                 ->where('is_claimed','=',0)
-    //                                 ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
-
-    //     $c_numrows = self::whereIn('ctr',$calllogs)
-    //                      ->where('is_claimed','=',0)
-    //                      ->update(['is_claimed'=>1, 'claimed_by'=>$auditor_id]);
-
-    //     return $ca_numrows || $c_numrows ? 1 : 0; // return 1 if there are records updated. else 0
-    // }
-
-
+    
     public static function agents_audited(){
         return self::where('status','=',1)
                    ->groupBy('user')

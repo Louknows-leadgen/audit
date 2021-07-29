@@ -12,18 +12,19 @@
 			</div>
 
 			<div class="box-bg p-3">
-				<div class="d-flex flex-wrap justify-content-around">
-					<div><label class="font-weight-bolder">User ID:</label> {{ isset($user_id) ? $user_id : '' }} </div>
+				<div class="grid-3-column width-46-em mx-auto">
+					<div>
+						<label class="font-weight-bolder">User ID:</label> {{ isset($user_id) ? $user_id : '' }}
+					</div>
 					<div>
 						<label class="font-weight-bolder">Name:</label> 
-						{{ 
-							isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)' 
-						}} 
+						{{isset($emp->employee->full_name) ? $emp->employee->full_name : '(No record)'}} 
 					</div>
 					<div>
 						<label class="font-weight-bolder">Team Lead:</label> 
 						{{ isset($emp->team_lead->full_name) ? $emp->team_lead->full_name : '(No record)' }} 
 					</div>
+							
 					<div>
 						<label class="font-weight-bolder">Audit Type:</label>
 						{{ ucwords($audit_type) }}
@@ -32,11 +33,22 @@
 						<label class="font-weight-bolder">Dispo:</label>
 						{{ ucwords($calllog->dispo) }}
 					</div>
+					<div>
+						<label class="font-weight-bolder">HUP Reason:</label>
+						{{ ucwords($calllog->hangup_reason) }}
+					</div>
 				</div>
 				<div class="mt-3 text-center">
-					<audio class="w-75" style="outline: none;" controls>
-						<source src="{{ $recording_file['url'] }}" type="audio/{{ $recording_file['type'] }}">
-					</audio>
+					<div id="audio-container">
+						<!-- Will be updated through ajax -->
+						<audio class="w-75" id="audio" style="outline: none;" controls>
+							<source>
+						</audio>
+					</div>
+					<input type="hidden" name="wav_url" value="{{ $calllog->recording_urls->wav }}">
+					<input type="hidden" name="mp3_url" value="{{ $calllog->recording_urls->mp3 }}">
+					<input type="hidden" name="archive_url" value="{{ $calllog->recording_urls->archive }}">
+					<input type="hidden" name="callid" value="{{ $calllog->ctr }}">
 				</div>
 			</div>
 		</div>

@@ -18,4 +18,5 @@ use Illuminate\Http\Request;
 // });
 
 Route::get('/recording/check-url','Api\RecordingController@check_url')->name('api.recording.check_url');
-Route::get('/recording/{server}/{date}/{filename}','Api\RecordingController@recording_url')->name('api.recording.recording_url');
+
+Route::put('/calllog/update-recording-url','Api\CallLogController@update_recording_url')->name('api.calllog.upd_recording_url');

@@ -11942,3 +11942,24 @@ div[data-tabcontent].actv {
   cursor: pointer;
 }
 
+.grid-3-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2rem;
+}
+
+.width-50-em {
+  max-width: 50rem;
+}
+
+.width-46-em {
+  max-width: 46rem;
+}
+
+@media (max-width: 723px) {
+  .grid-3-column {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+  }
+}
+

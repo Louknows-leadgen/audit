@@ -7,20 +7,7 @@ use Illuminate\Http\Request;
 
 class RecordingController extends Controller
 {
-    //
-    public function recording_url($server_origin, $date, $filename){
-		$urls = (object)[
-			'wav' => "http://$server_origin/RECORDINGS/$filename-all.wav",
-			'mp3' => "http://$server_origin/RECORDINGS/MP3/$filename-all.mp3",
-			'arch' => "http://38.102.225.164/archive/${date}/$filename-all.mp3"
-		];
-
-		// return view('api.recording.recording_url',compact('urls'));
-
-		return view('api.recording.recording_url',compact('urls'));
-    }
-
-
+    
 	public function check_url(Request $request) {
 		$url = trim($request->url);
 		$path_parts = pathinfo($url);
@@ -42,7 +29,6 @@ class RecordingController extends Controller
 	    	'http_code' => $headers['http_code']
 	    ];
 
-	    // return $headers['http_code'];
 	    return response()->json($url_meta);
 	}
 }
