@@ -59,6 +59,8 @@ class CallLog extends Model
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 
+        session_write_close();
+
         $json_resp=curl_exec($ch);
         curl_close($ch);
 
