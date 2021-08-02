@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Api\Recording;
 
 class RecordingController extends Controller
 {
@@ -31,4 +32,9 @@ class RecordingController extends Controller
 
 	    return response()->json($url_meta);
 	}
+
+
+	// public function hangup_reason(Request $request){
+		
+	// }
 }

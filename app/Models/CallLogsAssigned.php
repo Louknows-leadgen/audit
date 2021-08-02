@@ -67,36 +67,41 @@ class CallLogsAssigned extends Model
     }
 
     public function getHangupReasonAttribute(){
-        $param_server = $this->server_ip;
-        $param_recording_id = $this->recording_id;
-        $param_phone = $this->phone_number;
-        $param_user = $this->user;
+      $param_server = $this->server_ip;
+      $param_recording_id = $this->recording_id;
+      $param_phone = $this->phone_number;
+      $param_user = $this->user;
+
+      $env = ["38.102.225.152" => "cl1",
+              "38.102.225.153" => "cl2",
+              "38.107.183.3"   => "cl3",
+              "161.49.118.21"  => "cl4"];
+
+      if(isset($env[$param_server]))
+          return $this->queryHangupReason($env[$param_server], $param_recording_id, $param_phone, $param_user);
+      else
+          return 'Server not found';
+      
+    }
+
+    private function queryHangupReason($server, $recording_id, $phone, $user){
+        $vlog = DB::connection($server)->table('recording_log as rl')
+                                       ->leftJoin('vicidial_log as vl','vl.lead_id','=','rl.lead_id')
+                                       ->select('vl.term_reason')
+                                       ->where('rl.recording_id',$recording_id)
+                                       ->where('vl.user',$user)
+                                       ->where('vl.phone_number',$phone)->get();
+
+        $vlog_arch = DB::connection($server)->table('recording_log as rl')
+                                            ->leftJoin('vicidial_log_archive as vl','vl.lead_id','=','rl.lead_id')
+                                            ->select('vl.term_reason')
+                                            ->where('rl.recording_id',$recording_id)
+                                            ->where('vl.user',$user)
+                                            ->where('vl.phone_number',$phone)->get();
         
-        $hangup_api_url = "http://api.iamleadgen.net/hup/hangup_reason.php?server=$param_server&recording_id=$param_recording_id&phone=$param_phone&user=$param_user";
 
-        $ch=curl_init();
-        $timeout=5; // 5 seconds
-
-        curl_setopt($ch, CURLOPT_URL, $hangup_api_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-
-        $json_resp=curl_exec($ch);
-        curl_close($ch);
-
-        $resp = json_decode($json_resp);
-
-        // if error is received, then return that error instead
-        if(isset($resp->error))
-            return $resp->error;
-
-        // if no error, then return the hangup reason
-        if(isset($resp->term_reason))
-            return $resp->term_reason;
-
-        // will be executed if  term_reason is null
-        return  "No result";
+        $merged = $vlog->merge($vlog_arch)->first();
+        return isset($merged->term_reason) ? $merged->term_reason : 'No Result';
     }
 
 
