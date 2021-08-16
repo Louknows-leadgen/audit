@@ -14,6 +14,7 @@ use App\Models\OpsAgentScriptResponse;
 use App\Models\OpsExternalScriptResponse;
 use App\Models\User;
 use App\Models\CallLog;
+use App\Models\Disposition;
 
 
 class OperationAuditorController extends Controller
@@ -280,7 +281,8 @@ class OperationAuditorController extends Controller
     */
     public function search_preference(Request $request){
         $users = UserEmployeeMapping::orderBy('user_id')->get();
-        $dispositions = CallLogArchive::distinctDispo();
+        // $dispositions = CallLogArchive::distinctDispo();
+        $dispositions = Disposition::allDispo();
 
         $calls = [];
         $from = isset($request->from) ? $request->from : null;
