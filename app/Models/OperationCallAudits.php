@@ -52,7 +52,7 @@ class OperationCallAudits extends Model
         return $this->status == 1 ? 'Completed' : 'Not Started';
     }
 
-    public function getHangupReasonAttribute(){
+   public function getHangupReasonAttribute(){
         $param_server = $this->server_ip;
         $param_recording_id = $this->recording_id;
         $param_phone = $this->phone_number;
@@ -61,7 +61,9 @@ class OperationCallAudits extends Model
         $env = ["38.102.225.152" => "cl1",
                 "38.102.225.153" => "cl2",
                 "38.107.183.3"   => "cl3",
-                "161.49.118.21"  => "cl4"];
+                "161.49.118.21"  => "cl4",
+                "161.49.118.20"  => "cl5",
+                "207.188.12.131" => "cl6"];
 
         if(isset($env[$param_server]))
             return $this->queryHangupReason($env[$param_server], $param_recording_id, $param_phone, $param_user);
