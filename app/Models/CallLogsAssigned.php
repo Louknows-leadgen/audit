@@ -109,12 +109,37 @@ class CallLogsAssigned extends Model
 
     public function getRecordingUrlsAttribute(){
         $date = date('Y-m-d',strtotime($this->timestamp));
-        $wav_url = "http://{$this->server_origin}/RECORDINGS/{$this->recording_filename}-all.wav";
-        $mp3_url = "http://{$this->server_origin}/RECORDINGS/MP3/{$this->recording_filename}-all.mp3";
-        $arch_url = "http://38.102.225.164/archive/{$date}/{$this->recording_filename}-all.mp3";
+        $host = $this->getHost();
+        $wav_url = "{$host}/RECORDINGS/{$this->recording_filename}-all.wav";
+        $mp3_url = "{$host}/RECORDINGS/MP3/{$this->recording_filename}-all.mp3";
+        $arch_url = "{$host}/archive/{$date}/{$this->recording_filename}-all.mp3";
         $check_url_api = route('api.recording.check_url');
 
         return (object) ['wav' => $wav_url, 'mp3' => $mp3_url, 'archive' => $arch_url, 'check_url_api' => $check_url_api];
+    }
+
+    public function getHost(){
+        if ($this->server_ip == '207.188.12.131') // cl6 recording url host
+            return $this->cluster6Host();
+        else
+            return "http://{$this->server_origin}";
+    }
+
+    public function cluster6Host(){
+        $server_origin = $this->server_origin;
+        $hosts = [
+            '207.188.12.131' => 'https://leadgen.phdialer.com',
+            '207.188.12.22' => 'https://phxt22.phxdcnet.com',
+            '207.188.12.238' => 'http://207.188.12.238',
+            '207.188.12.239' => 'http://207.188.12.239',
+            '207.188.12.24' => 'https://phxt24.phxdcnet.com',
+            '207.188.12.33' => 'https://phxt33.phxdcnet.com',
+            '207.188.12.34' => 'https://phxt34.phxdcnet.com',
+            '207.188.12.35' => 'https://phxt35.phxdcnet.com',
+            '207.188.12.65' => 'http://207.188.12.65'
+        ];
+
+        return $hosts[$server_origin];
     }
 
      /*
