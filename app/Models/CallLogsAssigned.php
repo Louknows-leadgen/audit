@@ -120,7 +120,10 @@ class CallLogsAssigned extends Model
     }
 
     public function getHost(){
-        return Host::where('server',$this->server_origin)->first()->hostname;
+        if(isset(Host::where('server',$this->server_origin)->first()->hostname))
+            return Host::where('server',$this->server_origin)->first()->hostname;
+
+        return "http://{$this->server_origin}";
     }
 
     
