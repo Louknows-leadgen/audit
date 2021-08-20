@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Host;
 
 class OperationCallAudits extends Model
 {
@@ -104,30 +105,10 @@ class OperationCallAudits extends Model
     }
 
     public function getHost(){
-        if ($this->server_ip == '207.188.12.131') // cl6 recording url host
-            return $this->cluster6Host();
-        else
-            return "http://{$this->server_origin}";
+        return Host::where('server',$this->server_origin)->first()->hostname;
     }
 
-    public function cluster6Host(){
-        $server_origin = $this->server_origin;
-        $hosts = [
-            '207.188.12.131' => 'https://leadgen.phdialer.com',
-            '207.188.12.22' => 'https://phxt22.phxdcnet.com',
-            '207.188.12.238' => 'http://207.188.12.238',
-            '207.188.12.239' => 'http://207.188.12.239',
-            '207.188.12.24' => 'https://phxt24.phxdcnet.com',
-            '207.188.12.33' => 'https://phxt33.phxdcnet.com',
-            '207.188.12.34' => 'https://phxt34.phxdcnet.com',
-            '207.188.12.35' => 'https://phxt35.phxdcnet.com',
-            '207.188.12.65' => 'http://207.188.12.65'
-        ];
-
-        return $hosts[$server_origin];
-    }
-
-
+    
    // Scopes
 
     public static function scopeIsNotAudited($query, $ctr){
